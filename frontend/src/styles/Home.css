@@ -1,5 +1,15 @@
+/* General reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fdf9; /* light greenish background */
+  color: #222;
+}
+
+/* Hero section */
 .hero {
-  background: linear-gradient(rgba(0, 100, 0, 0.7), rgba(0, 100, 0, 0.7)),
+  background: linear-gradient(rgba(0, 100, 0, 0.8), rgba(0, 100, 0, 0.8)),
     url("https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1350&q=80")
       center/cover;
   color: white;
@@ -9,28 +19,43 @@
 
 .hero h1 {
   font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
 }
 
 .hero-btn {
-  background: #009639;
+  background: #009639; /* KCB light green */
   color: white;
-  padding: 12px 20px;
+  padding: 12px 24px;
   border-radius: 6px;
   text-decoration: none;
-  margin-top: 20px;
-  display: inline-block;
   font-weight: bold;
+  transition: background 0.3s ease;
 }
 
 .hero-btn:hover {
   background: #00b84f;
 }
 
+/* About & Get Started sections */
 .about, .get-started-section {
   padding: 60px 20px;
   text-align: center;
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
+  background: white;
+  margin-top: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+}
+
+.about h2, .get-started-section h2 {
+  color: #006400;
+  margin-bottom: 20px;
 }
 
 .get-started-link {
@@ -38,9 +63,11 @@
   margin-top: 15px;
   background: #006400;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 18px;
   border-radius: 5px;
   text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
 }
 
 .get-started-link:hover {

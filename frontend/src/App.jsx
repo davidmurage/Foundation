@@ -10,16 +10,16 @@ import Login from "./pages/Login";
 function App() {
   return (
     <>
-    <Router>
-      <Navbar />
-      <Routes>
+    <Routes>
+      
+      
         <Route path="/" element={<Home />} />
         {/*<Route path="/about" element={<About />} />*/}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-      </Routes>
-      <Footer />
-    </Router>
+      
+      
+    </Routes>
     </>
   );
 }
