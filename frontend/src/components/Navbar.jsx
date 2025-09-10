@@ -28,7 +28,7 @@ export default function Navbar() {
         <li>
           <Link to="/register" className="get-started" onClick={() => setIsOpen(false)}>Get Started</Link>
         </li>
-        <li><Link to="/login" onClick={() => setIsOpen(false)}>Login</Link></li>
+        {/*<li><Link to="/login" onClick={() => setIsOpen(false)}>Login</Link></li>*/}
       </ul>
     </nav>
   );
