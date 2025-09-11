@@ -1,116 +1,74 @@
 import React, { useState } from "react";
-import axios from "axios";
-import "../../styles/StudentDashboard.css";
+import ProfileView from "./student/ProfileView";
+import ProfileEdit from "./student/ProfileEdit";
+import "../styles/StudentDashboard.css";
 
 export default function StudentDashboard() {
-  const token = localStorage.getItem("token");
-  const [profile, setProfile] = useState({
-    admissionNo: "",
-    course: "",
-    year: "",
-    institution: "",
-    contact: "",
-    photo: null,
-  });
-  const [preview, setPreview] = useState(null);
-  const [message, setMessage] = useState("");
+  const [activeTab, setActiveTab] = useState("home");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setProfile({ ...profile, photo: file });
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      for (const key in profile) {
-        formData.append(key, profile[key]);
-      }
-
-      const res = await axios.post(
-        "http://localhost:5000/api/student/profile",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setMessage("Profile saved successfully!");
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Error saving profile");
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/login";
   };
 
   return (
-    <div className="dashboard-container">
-      <h2>🎓 Student Dashboard</h2>
-      <p>Welcome! Please complete your profile below.</p>
+    <div className="dashboard-layout">
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
+        <h2>KCB Portal</h2>
+        <ul>
+          <li
+            className={activeTab === "home" ? "active" : ""}
+            onClick={() => setActiveTab("home")}
+          >
+            🏠 Dashboard
+          </li>
+          <li
+            className={activeTab === "profile" ? "active" : ""}
+            onClick={() => setActiveTab("profile")}
+          >
+            👤 My Profile
+          </li>
+          <li
+            className={activeTab === "documents" ? "active" : ""}
+            onClick={() => setActiveTab("documents")}
+          >
+            📄 Documents
+          </li>
+          <li
+            className={activeTab === "performance" ? "active" : ""}
+            onClick={() => setActiveTab("performance")}
+          >
+            📊 Performance
+          </li>
+          <li onClick={handleLogout} className="logout">
+            🚪 Logout
+          </li>
+        </ul>
+      </aside>
 
-      {message && <p className="message">{message}</p>}
+      {/* Main Content */}
+      <main className="dashboard-content">
+        {/* Hamburger for mobile */}
+        <button
+          className="sidebar-toggle"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          ☰
+        </button>
 
-      <form onSubmit={handleSubmit} className="profile-form">
-        <div className="profile-photo">
-          {preview ? (
-            <img src={preview} alt="Profile Preview" />
-          ) : (
-            <div className="placeholder">Upload Photo</div>
-          )}
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-        </div>
+        {activeTab === "home" && (
+          <>
+            <h2>🎓 Student Dashboard</h2>
+            <p>Welcome! Use the sidebar to navigate your tasks.</p>
+          </>
+        )}
 
-        <input
-          type="text"
-          name="admissionNo"
-          placeholder="Admission Number"
-          value={profile.admissionNo}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="course"
-          placeholder="Course"
-          value={profile.course}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Year of Study"
-          value={profile.year}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="institution"
-          placeholder="University / College / TVET"
-          value={profile.institution}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="contact"
-          placeholder="Contact Number"
-          value={profile.contact}
-          onChange={handleChange}
-          required
-        />
-
-        <button type="submit">Save Profile</button>
-      </form>
+        {activeTab === "profile" && <ProfileView setActiveTab={setActiveTab} />}
+        {activeTab === "profile-edit" && <ProfileEdit setActiveTab={setActiveTab} />}
+      </main>
     </div>
   );
 }

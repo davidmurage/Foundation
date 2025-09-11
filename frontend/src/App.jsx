@@ -9,19 +9,27 @@ import Login from "./pages/Login";
 import StudentDashboard from "./pages/students/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import StudentProfileSetup from "./pages/students/StudentProfileSetup";
 
 function App() {
   return (
     <>
     <Routes>
-      
-      
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        {/*<Route path="/about" element={<About />} />*/}
+        <Route path="/about" element={<About />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
+        {/* Student Routes */}
+        <Route
+          path="/profile-setup"
+          element={
+            <ProtectedRoute role="student">
+              <StudentProfileSetup />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/student-dashboard"
           element={
@@ -30,6 +38,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Admin Route */}
         <Route
           path="/admin-dashboard"
           element={
@@ -38,9 +48,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      
-      
-    </Routes>
+      </Routes>
     </>
   );
 }

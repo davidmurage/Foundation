@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Auth.css";
 import { API_URL } from "../utils/config";
 
 export default function Login() {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -19,14 +15,20 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await axios.post(`${API_URL}/api/auth/login`, form);
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
+
       setMessage("Login successful!");
-      // Redirect based on role
+
       if (res.data.role === "admin") {
         window.location.href = "/admin-dashboard";
       } else {
-        window.location.href = "/student-dashboard";
+        if (res.data.profileIncomplete) {
+          window.location.href = "/profile-setup";
+        } else {
+          window.location.href = "/student-dashboard";
+        }
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "Invalid credentials");
@@ -56,11 +58,6 @@ export default function Login() {
         />
         <button type="submit">Login</button>
       </form>
-
-      {/* Sign Up link */}
-      <p className="switch-auth">
-        Don't have an account? <Link to="/register">Sign Up</Link>
-      </p>
     </div>
   );
 }
