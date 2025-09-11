@@ -1,0 +1,87 @@
+.dashboard-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 100, 0, 0.1);
+  text-align: center;
+}
+
+.dashboard-container h2 {
+  color: #006400;
+  margin-bottom: 10px;
+}
+
+.dashboard-container p {
+  color: #444;
+}
+
+.message {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #009639;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.profile-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.profile-form input:focus {
+  border: 1px solid #009639;
+  outline: none;
+}
+
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #009639;
+}
+
+.placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #aaa;
+  font-size: 0.9rem;
+}
+
+.profile-form button {
+  background: #006400;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.profile-form button:hover {
+  background: #009639;
+}
