@@ -10,6 +10,7 @@ import StudentDashboard from "./pages/students/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import StudentProfileSetup from "./pages/students/StudentProfileSetup";
+import Documents from "./pages/students/Documents";
 
 function App() {
   return (
@@ -35,6 +36,15 @@ function App() {
           element={
             <ProtectedRoute role="student">
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/documents"
+          element={
+            <ProtectedRoute role="student">
+              <Documents />
             </ProtectedRoute>
           }
         />

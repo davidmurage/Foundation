@@ -175,6 +175,23 @@
 .sidebar .logout:hover {
   background: #dc143c;
 }
+/* For desktop, sidebar is always open */
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important;
+    position: relative;
+  }
+
+  .sidebar-toggle {
+    display: none; /* Hide hamburger on desktop */
+  }
+
+  .dashboard-content {
+    flex: 1;
+    padding: 40px;
+    margin-left: 220px; /* Push content so it's not under sidebar */
+  }
+}
 
 /* Collapsed sidebar (mobile) */
 .sidebar.collapsed {

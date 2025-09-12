@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ProfileView from "./ProfileView";
 import ProfileEdit from "./ProfileEdit";
+import Documents from "./Documents"; // ✅ import Documents page
 import "../../styles/StudentDashboard.css";
 
 export default function StudentDashboard() {
@@ -78,6 +79,9 @@ export default function StudentDashboard() {
         {activeTab === "profile-edit" && (
           <ProfileEdit setActiveTab={setActiveTab} />
         )}
+        
+        {/* ✅ Add documents tab */}
+        {activeTab === "documents" && <Documents />}
       </main>
     </div>
   );
