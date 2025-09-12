@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/StudentDashboard.css";
+import "../../styles/StudentDashboard.css";
 import { API_URL } from "../../utils/config";
 
 export default function StudentProfileSetup() {
@@ -35,19 +35,24 @@ export default function StudentProfileSetup() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      for (const key in profile) {
-        formData.append(key, profile[key]);
+      formData.append("admissionNo", profile.admissionNo);
+      formData.append("course", profile.course);
+      formData.append("year", profile.year);
+      formData.append("institution", profile.institution);
+      formData.append("contact", profile.contact);
+      if (profile.photo) {
+        formData.append("photo", profile.photo); // must match upload.single("photo")
       }
 
-      await axios.post(`${API_URL}}/api/student/profile`, formData, {
+      await axios.post(`${API_URL}/api/student/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
       navigate("/student-dashboard"); // redirect after success
     } catch (err) {
+      console.error("PROFILE ERROR:", err.response?.data || err.message);
       setMessage(err.response?.data?.message || "Error saving profile");
     }
   };

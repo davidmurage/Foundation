@@ -3,7 +3,7 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../utils/cloudinary.js";
 import StudentProfile from "../models/StudentProfile.js";
-import authMiddleware from "../middleware/auth.js";
+import auth, { requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -18,8 +18,12 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 // Create/Update Profile
-router.post("/profile", authMiddleware, upload.single("photo"), async (req, res) => {
+router.post("/profile", auth, requireRole('student'), upload.single("photo"), async (req, res) => {
   try {
+      console.log("REQ.USER:", req.user);
+      console.log("REQ.BODY:", req.body);
+      console.log("REQ.FILE:", req.file);
+
     const { admissionNo, course, year, institution, contact } = req.body;
 
     const profileData = {
@@ -45,7 +49,7 @@ router.post("/profile", authMiddleware, upload.single("photo"), async (req, res)
 });
 
 // Get current student profile
-router.get("/profile", authMiddleware, async (req, res) => {
+router.get("/profile", auth, requireRole('student'), async (req, res) => {
   try {
     const profile = await StudentProfile.findOne({ userId: req.user.id });
     if (!profile) return res.json(null);

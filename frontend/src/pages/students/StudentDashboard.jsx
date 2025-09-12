@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import ProfileView from "./student/ProfileView";
-import ProfileEdit from "./student/ProfileEdit";
-import "../styles/StudentDashboard.css";
+import ProfileView from "./ProfileView";
+import ProfileEdit from "./ProfileEdit";
+import "../../styles/StudentDashboard.css";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("home");
