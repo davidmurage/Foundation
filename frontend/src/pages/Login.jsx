@@ -58,6 +58,10 @@ export default function Login() {
         />
         <button type="submit">Login</button>
       </form>
+      {/* Sign in link */}
+      <p className="switch-auth">
+        Already have an account? <Link to="/register">Sign Un</Link>
+      </p>
     </div>
   );
 }
