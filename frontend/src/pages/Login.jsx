@@ -61,7 +61,7 @@ export default function Login() {
       </form>
       {/* Sign in link */}
       <p className="switch-auth">
-        Already have an account? <Link to="/register">Sign Un</Link>
+        Already have an account? <Link to="/register">Sign Up</Link>
       </p>
     </div>
   );
