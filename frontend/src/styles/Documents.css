@@ -1,5 +1,5 @@
 .docs-container {
-  max-width: 700px;
+  max-width: 900px;
   margin: 30px auto;
   padding: 20px;
   background: white;
@@ -7,6 +7,7 @@
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Upload Form */
 .docs-form {
   display: flex;
   flex-direction: column;
@@ -91,6 +92,7 @@
   margin-top: 15px;
 }
 
+/* Table */
 .docs-table {
   width: 100%;
   border-collapse: collapse;
@@ -99,9 +101,84 @@
 .docs-table th, .docs-table td {
   border: 1px solid #ddd;
   padding: 10px;
+  text-align: left;
 }
 
 .docs-table th {
   background: #006400;
   color: white;
+}
+
+.delete-btn {
+  background: #c62828;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #e53935;
+}
+
+/* ========================= */
+/* 📱 Responsive Styling */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .docs-container {
+    padding: 15px;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .upload-btn {
+    width: 100%;
+  }
+
+  .docs-table,
+  .docs-table thead,
+  .docs-table tbody,
+  .docs-table th,
+  .docs-table td,
+  .docs-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .docs-table thead {
+    display: none; /* Hide table headers on small screens */
+  }
+
+  .docs-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    background: #f9fdf9;
+  }
+
+  .docs-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 8px 5px;
+  }
+
+  .docs-table td:last-child {
+    border-bottom: none;
+  }
+
+  .docs-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #006400;
+  }
 }

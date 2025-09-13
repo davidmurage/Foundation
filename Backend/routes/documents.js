@@ -7,17 +7,18 @@ import auth, { requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Cloudinary storage
+// ✅ Cloudinary storage (auto-detects images, pdf, docs)
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "kcb_documents",
-    allowed_formats: ["pdf", "jpg", "jpeg", "png"],
+    resource_type: "auto", // 🔑 auto-detect file type (image/raw)
   },
 });
+
 const upload = multer({ storage });
 
-// Upload Document
+// 📤 Upload Document
 router.post(
   "/upload",
   auth,
@@ -25,10 +26,20 @@ router.post(
   upload.single("document"),
   async (req, res) => {
     try {
-      const { name,yearOfStudy, admissionNo, institutionType, academicPeriod, documentType } = req.body;
+      const {
+        name,
+        yearOfStudy,
+        admissionNo,
+        institutionType,
+        academicPeriod,
+        documentType,
+      } = req.body;
 
-      if (!req.file) return res.status(400).json({ message: "File upload failed" });
+      if (!req.file) {
+        return res.status(400).json({ message: "File upload failed" });
+      }
 
+      // Save metadata in MongoDB
       const newDoc = new StudentDocument({
         userId: req.user.id,
         name,
@@ -37,11 +48,15 @@ router.post(
         institutionType,
         academicPeriod,
         documentType,
-        fileUrl: req.file.path,
+        fileUrl: req.file.path, // ✅ Cloudinary URL
       });
 
       await newDoc.save();
-      res.json({ message: "Document uploaded successfully", document: newDoc });
+
+      res.json({
+        message: "Document uploaded successfully",
+        document: newDoc,
+      });
     } catch (err) {
       console.error("UPLOAD ERROR:", err);
       res.status(500).json({ message: err.message });
@@ -49,14 +64,35 @@ router.post(
   }
 );
 
-// Get documents for logged-in student
+// 📥 Get documents for logged-in student
 router.get("/", auth, requireRole("student"), async (req, res) => {
   try {
-    const docs = await StudentDocument.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const docs = await StudentDocument.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(docs);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+// 🗑️ Delete document
+router.delete("/:id", auth, requireRole("student"), async (req, res) => {
+  try {
+    const doc = await StudentDocument.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id, // ensure students can only delete their own
+    });
+
+    if (!doc) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    res.json({ message: "Document deleted successfully", id: req.params.id });
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 export default router;
