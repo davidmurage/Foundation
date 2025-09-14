@@ -11,6 +11,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import StudentProfileSetup from "./pages/students/StudentProfileSetup";
 import Documents from "./pages/students/Documents";
+import Performance from "./pages/students/Performance";
+
 
 function App() {
   return (
@@ -45,6 +47,14 @@ function App() {
           element={
             <ProtectedRoute role="student">
               <Documents />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/performance"
+          element={
+            <ProtectedRoute role="student">
+              <Performance />
             </ProtectedRoute>
           }
         />

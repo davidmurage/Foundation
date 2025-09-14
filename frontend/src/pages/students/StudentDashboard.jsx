@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import ProfileView from "./ProfileView";
 import ProfileEdit from "./ProfileEdit";
-import Documents from "./Documents"; // ✅ import Documents page
-import "../../styles/StudentDashboard.css";
+import Documents from "./Documents";
+import "../../styles/StudentDashboard.css"; 
+import Performance from "./Performance";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("home");
@@ -80,8 +81,11 @@ export default function StudentDashboard() {
           <ProfileEdit setActiveTab={setActiveTab} />
         )}
         
-        {/* ✅ Add documents tab */}
+        {/*Add documents tab */}
         {activeTab === "documents" && <Documents />}
+
+        {/*Add documents tab */}
+        {activeTab === "performance" && <Performance />}
       </main>
     </div>
   );
