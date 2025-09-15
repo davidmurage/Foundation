@@ -1,0 +1,63 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: #f5f7f5;
+}
+.admin-sidebar {
+  background: #064e3b; /* deep green */
+  color: #fff;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.admin-sidebar.collapsed { transform: translateX(-100%); position: fixed; z-index: 1000; }
+.admin-sidebar .brand { font-weight: 700; margin-bottom: 20px; }
+.admin-sidebar nav a {
+  display: block; color: #cde7d8; text-decoration: none;
+  padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+}
+.admin-sidebar nav a.active, .admin-sidebar nav a:hover { background: #0b7a52; color: #fff; }
+.logout-btn {
+  margin-top: 12px; background: #b91c1c; color: #fff; border: 0;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+}
+.admin-hamburger {
+  display: none; position: fixed; top: 12px; left: 12px; z-index: 1100;
+  background: #064e3b; color: #fff; border: 0; border-radius: 8px; padding: 8px 10px; cursor: pointer;
+}
+.admin-content { padding: 20px; }
+
+.admin-filterbar {
+  display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 16px;
+}
+.admin-filterbar input, .admin-filterbar select {
+  padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff;
+}
+.admin-filterbar button {
+  background: #006400; color: #fff; border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer;
+}
+.admin-filterbar button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.admin-table-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.06); overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+.admin-table thead th { background: #006400; color: #fff; position: sticky; top: 0; }
+
+.mini-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+
+.admin-student-card { display: grid; grid-template-columns: 160px 1fr; gap: 16px; background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.profile-avatar { width: 140px; height: 140px; border-radius: 999px; object-fit: cover; background: #eaf6ef; }
+.profile-avatar.placeholder { display: inline-block; }
+
+.admin-chart-wrap { background: #fff; border-radius: 12px; padding: 10px 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+.btn-link { color: #006400; text-decoration: underline; }
+
+@media (max-width: 992px) {
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-sidebar { width: 260px; }
+  .admin-hamburger { display: block; }
+  .admin-student-card { grid-template-columns: 1fr; }
+}

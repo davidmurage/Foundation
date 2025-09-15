@@ -7,11 +7,14 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/students/StudentDashboard";
-import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import StudentProfileSetup from "./pages/students/StudentProfileSetup";
 import Documents from "./pages/students/Documents";
 import Performance from "./pages/students/Performance";
+import AdminLayout from "./pages/admin/AdminDashboard";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminStudentDetail from "./pages/admin/AdminStudentDetail";
+
 
 
 function App() {
@@ -59,15 +62,23 @@ function App() {
           }
         />
 
-        {/* Admin Route */}
         <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+  path="/admin"
+  element={
+    <ProtectedRoute role="admin">
+      <AdminLayout />
+    </ProtectedRoute>
+  }
+>
+  {/* Default page when admin hits /admin-dashboard 
+  <Route index element={<AdminStudents />} />*/}
+
+  {/* List of students */}
+  <Route path="students" element={<AdminStudents />} />
+
+  {/* Detail page for one student */}
+  <Route path="students/:userId" element={<AdminStudentDetail />} />
+</Route>
       </Routes>
     </>
   );
