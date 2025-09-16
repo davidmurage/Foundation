@@ -23,7 +23,7 @@ export default function AdminLayout() {
         <nav>
           {/* Link to list, not to a param */}
           <NavLink
-            to="/admin/students"
+            to="/admin-dashboard/students"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             👥 Students

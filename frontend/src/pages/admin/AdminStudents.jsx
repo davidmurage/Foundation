@@ -92,7 +92,7 @@ export default function AdminStudents() {
                 <td>{r.course}</td>
                 <td>{r.year}</td>
                 <td>
-                  <Link to={`/admin/students/${r.userId}`} className="btn-link">View</Link>
+                  <Link to={`/admin-dashboard/students/${r.userId}`} className="btn-link">View</Link>
                 </td>
               </tr>
             ))}
