@@ -14,6 +14,7 @@ import Performance from "./pages/students/Performance";
 import AdminLayout from "./pages/admin/AdminDashboard";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminStudentDetail from "./pages/admin/AdminStudentDetail";
+import AdminOverview from "./pages/admin/AdminOverview";
 
 
 
@@ -78,6 +79,9 @@ function App() {
 
   {/* Detail page for one student */}
   <Route path="students/:userId" element={<AdminStudentDetail />} />
+
+  {/* Admin overview*/}
+  <Route path="overview" element={<AdminOverview/>}/>
 </Route>
       </Routes>
     </>
