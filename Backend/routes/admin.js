@@ -78,6 +78,101 @@ router.get("/students", auth, requireRole("admin"), async (req, res) => {
   }
 });
 
+/*ADMIN OVERVIEW STATS*/
+router.get("/stats", auth, requireRole("admin"), async (req, res) => {
+  try {
+    // Count all students
+    const totalStudents = await User.countDocuments({ role: "student" });
+
+    // Students with profile completed
+    const profiledStudents = await StudentProfile.countDocuments();
+
+    // All uploaded documents
+    const totalDocuments = await StudentDocument.countDocuments();
+
+    // Count transcripts only
+    const totalTranscripts = await StudentDocument.countDocuments({
+      documentType: "Transcript",
+    });
+
+    // Average GPA across all performance records
+    const gpaAgg = await Performance.aggregate([
+      { $match: { gpa: { $ne: null } } },
+      { $group: { _id: null, avgGpa: { $avg: "$gpa" } } },
+    ]);
+    const avgGpa =
+      gpaAgg.length > 0 ? Number(gpaAgg[0].avgGpa).toFixed(2) : null;
+
+    // Students per institution (based on profiles)
+    const studentsByInstitution = await StudentProfile.aggregate([
+      {
+        $group: {
+          _id: "$institutionType",
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    // Documents by type (fee structure, transcript, etc.)
+    const docsByType = await StudentDocument.aggregate([
+      {
+        $group: {
+          _id: "$documentType",
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    // Average GPA by year of study
+    const gpaByYear = await Performance.aggregate([
+      { $match: { gpa: { $ne: null } } },
+      {
+        $group: {
+          _id: "$yearOfStudy",
+          avgGpa: { $avg: "$gpa" },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    res.json({
+      totalStudents,
+      profiledStudents,
+      totalDocuments,
+      totalTranscripts,
+      avgGpa,
+      studentsByInstitution,
+      docsByType,
+      gpaByYear,
+    });
+  } catch (err) {
+    console.error("ADMIN STATS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/*LATEST DOCUMENTS (for dashboard)*/
+router.get(
+  "/latest-documents",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const docs = await StudentDocument.find({})
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .populate("userId", "fullName email");
+
+      res.json(docs);
+    } catch (err) {
+      console.error("LATEST DOCS ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
 /**
  * GET /api/admin/student/:userId
  * Returns: profile, documents, performance (completed + pending slots)
