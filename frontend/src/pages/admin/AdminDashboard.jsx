@@ -24,7 +24,7 @@ export default function AdminLayout() {
         <nav>
           <NavLink to="/admin-dashboard/overview" end>🏠 Overview</NavLink>
           <NavLink to="/admin-dashboard/students">👥 Students</NavLink>
-          <NavLink to="/admin/admin-users">🛡 Admin Users</NavLink>
+          <NavLink to="/admin-dashboard/admin-users">🛡 Admin Users</NavLink>
           <NavLink to="/admin/institutions">🏫 Institutions</NavLink>
           <NavLink to="/admin/documents">📄 Documents</NavLink>
           <NavLink to="/admin/performance">📊 Performance</NavLink>

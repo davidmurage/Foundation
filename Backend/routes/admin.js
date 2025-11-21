@@ -173,7 +173,7 @@ router.get(
   }
 );
 
-/**
+/*
  * GET /api/admin/student/:userId
  * Returns: profile, documents, performance (completed + pending slots)
  */
@@ -215,6 +215,87 @@ router.get("/student/:userId", auth, requireRole("admin"), async (req, res) => {
   } catch (err) {
     console.error("ADMIN student detail error:", err);
     res.status(500).json({ message: err.message });
+  }
+});
+
+/* ============================
+   GET ALL ADMIN USERS
+============================= */
+router.get("/", auth, requireRole("admin"), async (req, res) => {
+  try {
+    const admins = await User.find({ role: "admin" }).select("-password");
+    res.json(admins);
+  } catch (err) {
+    console.error("GET ADMIN USERS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ============================
+   CREATE NEW ADMIN USER
+============================= */
+router.post("/", auth, requireRole("admin"), async (req, res) => {
+  try {
+    const { fullName, email, password } = req.body;
+
+    if (!fullName || !email || !password)
+      return res.status(400).json({ message: "All fields are required" });
+
+    const exists = await User.findOne({ email });
+    if (exists)
+      return res.status(400).json({ message: "Email already exists" });
+
+    const newAdmin = await User.create({
+      fullName,
+      email,
+      password,
+      role: "admin",
+    });
+
+    res.json({
+      message: "Admin created successfully",
+      admin: {
+        id: newAdmin._id,
+        fullName: newAdmin.fullName,
+        email: newAdmin.email,
+      },
+    });
+  } catch (err) {
+    console.error("CREATE ADMIN ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ============================
+   UPDATE AN ADMIN USER
+============================= */
+router.put("/:id", auth, requireRole("admin"), async (req, res) => {
+  try {
+    const { fullName, email } = req.body;
+
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { fullName, email },
+      { new: true }
+    ).select("-password");
+
+    res.json({ message: "Admin updated", admin: updated });
+  } catch (err) {
+    console.error("UPDATE ADMIN ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ============================
+   DELETE ADMIN USER
+============================= */
+router.delete("/:id", auth, requireRole("admin"), async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Admin deleted" });
+  } catch (err) {
+    console.error("DELETE ADMIN ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
