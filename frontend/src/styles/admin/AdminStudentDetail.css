@@ -1,0 +1,148 @@
+/* ===============================
+   PAGE WRAPPER
+================================*/
+.admin-page-content {
+  width: 100%;
+  padding: 20px;
+}
+
+.admin-page-content h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #003300;
+}
+
+/* ===============================
+   PROFILE CARD
+================================*/
+.admin-student-card {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.profile-avatar.placeholder {
+  background: #e0e0e0;
+}
+
+.admin-student-card .right {
+  flex: 1;
+}
+
+.admin-student-card .grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 10px;
+  column-gap: 20px;
+  font-size: 15px;
+}
+
+@media (max-width: 650px) {
+  .admin-student-card {
+    flex-direction: column;
+    text-align: left;
+  }
+  .admin-student-card .grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* ===============================
+   SECTION TITLES
+================================*/
+.section-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #004d00;
+}
+
+/* ===============================
+   CHART WRAPPER
+================================*/
+.admin-chart-wrap {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+
+.admin-chart-wrap canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+@media (max-width: 600px) {
+  .admin-chart-wrap canvas {
+    height: 220px !important;
+  }
+}
+
+/* ===============================
+   DOCUMENT TABLE
+================================*/
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.admin-table th {
+  background: #f5fff5;
+  font-weight: 700;
+  color: #003f00;
+  text-align: left;
+}
+
+.btn-link {
+  color: #006400;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Table Fix */
+@media (max-width: 600px) {
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 6px;
+    font-size: 14px;
+  }
+}

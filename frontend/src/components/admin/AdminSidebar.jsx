@@ -1,10 +1,19 @@
-import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import "../../styles/Admin.css";
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import "../../styles/admin/AdminSidebar.css";
 
-export default function AdminLayout() {
-  // Sidebar default state: open on desktop, collapsed on mobile
+export default function AdminSidebar() {
   const [open, setOpen] = useState(window.innerWidth > 992);
+
+  // Auto-collapse when screen becomes small
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 992) setOpen(true);
+      else setOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -12,15 +21,20 @@ export default function AdminLayout() {
     window.location.href = "/login";
   };
 
-  // Close sidebar on mobile after clicking a link
   const handleLinkClick = () => {
-    if (window.innerWidth <= 992) {
-      setOpen(false);
-    }
+    if (window.innerWidth <= 992) setOpen(false);
   };
 
   return (
-    <div className="admin-layout">
+    <>
+      {/* HAMBURGER BUTTON — MOBILE ONLY */}
+      <button
+        className="admin-hamburger"
+        onClick={() => setOpen(!open)}
+      >
+        ☰
+      </button>
+
       {/* SIDEBAR */}
       <aside className={`admin-sidebar ${open ? "open" : "collapsed"}`}>
         <div className="brand">KCB Admin</div>
@@ -38,7 +52,7 @@ export default function AdminLayout() {
             🛡 Admin Users
           </NavLink>
 
-          <NavLink to="/admin/institutions" onClick={handleLinkClick}>
+          <NavLink to="/admin-dashboard/institutions" onClick={handleLinkClick}>
             🏫 Institutions
           </NavLink>
 
@@ -59,16 +73,6 @@ export default function AdminLayout() {
           🚪 Logout
         </button>
       </aside>
-
-      {/* HAMBURGER */}
-      <button className="admin-hamburger" onClick={() => setOpen(!open)}>
-        ☰
-      </button>
-
-      {/* CONTENT 
-      <main className="admin-content">
-        <Outlet />
-      </main>*/}
-    </div>
+    </>
   );
 }

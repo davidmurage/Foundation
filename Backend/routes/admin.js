@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import StudentProfile from "../models/StudentProfile.js";
 import StudentDocument from "../models/StudentDocument.js";
 import Performance from "../models/Performance.js";
+import Institution from "../models/Institution.js";
 
 const router = express.Router();
 
@@ -25,6 +26,22 @@ function expectedPeriods(institutionType, currentYear) {
     }
   }
   return list;
+}
+
+// Helper: build filter object from query
+function buildFilter(query) {
+  const filter = {};
+  if (query.type) filter.type = query.type;
+  if (query.county) filter.county = query.county;
+  if (query.active === "true") filter.isActive = true;
+  if (query.active === "false") filter.isActive = false;
+
+  if (query.search) {
+    const regex = new RegExp(query.search, "i");
+    filter.$or = [{ name: regex }, { county: regex }, { location: regex }];
+  }
+
+  return filter;
 }
 
 /**
@@ -298,5 +315,199 @@ router.delete("/:id", auth, requireRole("admin"), async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+/**
+ * GET /api/admin/institutions
+ * List institutions with filters + search
+ */
+router.get(
+  "/",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const filter = buildFilter(req.query);
+      const institutions = await Institution.find(filter)
+        .sort({ createdAt: -1 })
+        .lean();
+
+      res.json(institutions);
+    } catch (err) {
+      console.error("INSTITUTIONS LIST ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+/**
+ * POST /api/admin/institutions
+ * Create institution
+ */
+router.post(
+  "/",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const { name, type, county, location, code, logoUrl, description, isActive } = req.body;
+
+      if (!name || !type) {
+        return res.status(400).json({ message: "Name and type are required" });
+      }
+
+      const exists = await Institution.findOne({ name: name.trim() });
+      if (exists) {
+        return res
+          .status(400)
+          .json({ message: "Institution with this name already exists" });
+      }
+
+      const inst = await Institution.create({
+        name: name.trim(),
+        type,
+        county,
+        location,
+        code,
+        logoUrl,
+        description,
+        isActive: isActive !== undefined ? isActive : true,
+        createdBy: req.user.id,
+      });
+
+      res.status(201).json(inst);
+    } catch (err) {
+      console.error("INSTITUTION CREATE ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+/**
+ * PUT /api/admin/institutions/:id
+ * Update institution
+ */
+router.put(
+  "/:id",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const update = req.body;
+
+      const inst = await Institution.findByIdAndUpdate(id, update, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!inst) return res.status(404).json({ message: "Not found" });
+
+      res.json(inst);
+    } catch (err) {
+      console.error("INSTITUTION UPDATE ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+/**
+ * DELETE /api/admin/institutions/:id
+ * Delete institution
+ */
+router.delete(
+  "/:id",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const inst = await Institution.findByIdAndDelete(id);
+      if (!inst) return res.status(404).json({ message: "Not found" });
+
+      res.json({ message: "Institution deleted" });
+    } catch (err) {
+      console.error("INSTITUTION DELETE ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+/**
+ * GET /api/admin/institutions/:id
+ * Detail + stats:
+ *  - studentCount
+ *  - documentCount
+ *  - avgGpa
+ *  - performanceByYear
+ *  - topStudents (basic list)
+ */
+router.get(
+  "/:id",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const inst = await Institution.findById(id).lean();
+      if (!inst) return res.status(404).json({ message: "Not found" });
+
+      // Profiles for that institution (by name)
+      const profiles = await StudentProfile.find({
+        institution: inst.name,
+      }).select("userId fullName admissionNo course year photo");
+
+      const userIds = profiles.map((p) => p.userId);
+
+      // Documents for those users
+      const documentCount = await StudentDocument.countDocuments({
+        userId: { $in: userIds },
+      });
+
+      // Performance records
+      const perfRecords = await Performance.find({
+        userId: { $in: userIds },
+        gpa: { $ne: null },
+      }).lean();
+
+      let avgGpa = null;
+      if (perfRecords.length) {
+        const sum = perfRecords.reduce((acc, p) => acc + (p.gpa || 0), 0);
+        avgGpa = +(sum / perfRecords.length).toFixed(2);
+      }
+
+      // GPA by year for chart
+      const perfByYear = {};
+      for (const p of perfRecords) {
+        const y = p.yearOfStudy || "Unknown";
+        if (!perfByYear[y]) perfByYear[y] = { count: 0, sum: 0 };
+        perfByYear[y].count += 1;
+        perfByYear[y].sum += p.gpa || 0;
+      }
+
+      const performanceByYear = Object.entries(perfByYear)
+        .map(([year, v]) => ({
+          year,
+          avgGpa: +(v.sum / v.count).toFixed(2),
+        }))
+        .sort((a, b) => a.year.localeCompare(b.year));
+
+      res.json({
+        institution: inst,
+        stats: {
+          studentCount: profiles.length,
+          documentCount,
+          avgGpa,
+          performanceByYear,
+        },
+        students: profiles,
+      });
+    } catch (err) {
+      console.error("INSTITUTION DETAIL ERROR:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
 
 export default router;

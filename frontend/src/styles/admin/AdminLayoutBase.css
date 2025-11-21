@@ -1,0 +1,74 @@
+/* ============================================
+   GLOBAL ADMIN LAYOUT (APPLICABLE TO ALL PAGES)
+=============================================== */
+
+.admin-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f9fafb;
+  overflow-x: hidden;
+}
+
+/* SIDEBAR stays fixed width */
+.admin-sidebar {
+  width: 250px;
+  min-width: 250px;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ============ MOBILE RESPONSIVE ============ */
+
+@media (max-width: 992px) {
+  .admin-sidebar {
+    position: fixed;
+    left: -260px;
+    width: 240px;
+    min-width: 240px;
+    transition: 0.3s ease;
+    z-index: 1000;
+  }
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .admin-content {
+    padding: 18px;
+    margin-left: 0;
+  }
+}
+
+/* Layout wrapper for all admin pages */
+.admin-layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7f8;
+  box-sizing: border-box;
+}
+
+/* Sidebar is handled inside AdminSidebar.css */
+.admin-main-content {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  min-width: 0; /* IMPORTANT: Prevent content being pushed right */
+}
+
+/* Mobile: sidebar collapses, content full width */
+@media (max-width: 992px) {
+  .admin-layout-wrapper {
+    flex-direction: column;
+  }
+  .admin-main-content {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,314 @@
+/* HEADER */
+.institutions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.institutions-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #003300;
+}
+
+/* Add button – reuse from admin users if you like */
+.institutions-header .add-btn {
+  background: #009639;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.institutions-header .add-btn:hover {
+  background: #007c30;
+}
+
+/* FILTER BAR */
+.institutions-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.institutions-filterbar input,
+.institutions-filterbar select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.institutions-filterbar input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.institutions-filterbar button {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #0055cc;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.institutions-filterbar button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  .institutions-filterbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .institutions-filterbar button {
+    width: 100%;
+  }
+}
+
+/* TABLE */
+.institutions-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.institutions-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+.institutions-table th,
+.institutions-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+
+.institutions-table th {
+  background: #f3fff3;
+  text-align: left;
+  font-weight: 700;
+  color: #004d00;
+}
+
+.institutions-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Logo */
+.inst-logo-mini {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-active {
+  background: #e3ffe7;
+  color: #006b1f;
+}
+
+.badge-inactive {
+  background: #ffe9e9;
+  color: #c62828;
+}
+
+/* Actions cell */
+.actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actions-cell .btn-link {
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #009639;
+  color: #009639;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.actions-cell .btn-link:hover {
+  background: #eafff0;
+}
+
+.actions-cell .edit-btn,
+.actions-cell .delete-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions-cell .edit-btn {
+  background: #0055cc;
+  color: #fff;
+}
+
+.actions-cell .edit-btn:hover {
+  background: #003f99;
+}
+
+.actions-cell .delete-btn {
+  background: #c62828;
+  color: #fff;
+}
+
+.actions-cell .delete-btn:hover {
+  background: #9b1c1c;
+}
+
+@media (max-width: 600px) {
+  .institutions-table th,
+  .institutions-table td {
+    padding: 10px 8px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+  }
+
+  .actions-cell .btn-link,
+  .actions-cell .edit-btn,
+  .actions-cell .delete-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* MODAL – reuse pattern from AdminUsers, just minor tweaks */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  z-index: 999;
+}
+
+.modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 460px;
+  padding: 22px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.modal h3 {
+  margin: 0 0 14px 0;
+  font-size: 20px;
+  color: #003300;
+}
+
+.modal label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.modal textarea {
+  resize: vertical;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: #009639;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background: #007c30;
+}
+
+.cancel-btn {
+  background: #888;
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background: #666;
+}
+
+@media (max-width: 480px) {
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}
