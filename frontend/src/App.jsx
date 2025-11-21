@@ -15,6 +15,7 @@ import AdminLayout from "./pages/admin/AdminDashboard";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminStudentDetail from "./pages/admin/AdminStudentDetail";
 import AdminOverview from "./pages/admin/AdminOverview";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 
 
@@ -82,6 +83,9 @@ function App() {
 
   {/* Admin overview*/}
   <Route path="overview" element={<AdminOverview/>}/>
+
+  {/* list of Admin*/}
+  <Route path="admin-users" element={<AdminUsers/>}/>
 </Route>
       </Routes>
     </>
