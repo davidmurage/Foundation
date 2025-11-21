@@ -11,11 +11,13 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import StudentProfileSetup from "./pages/students/StudentProfileSetup";
 import Documents from "./pages/students/Documents";
 import Performance from "./pages/students/Performance";
-import AdminLayout from "./pages/admin/AdminDashboard";
 import AdminStudents from "./pages/admin/AdminStudents";
 import AdminStudentDetail from "./pages/admin/AdminStudentDetail";
 import AdminOverview from "./pages/admin/AdminOverview";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminInstitutions from "./pages/admin/AdminInstitutions";
+import AdminInstitutionDetail from "./pages/admin/AdminInstitutionDetail";
 
 
 
@@ -86,6 +88,12 @@ function App() {
 
   {/* list of Admin*/}
   <Route path="admin-users" element={<AdminUsers/>}/>
+
+  {/* list of institutions*/}
+  <Route path="institutions" element={<AdminInstitutions/>}/>
+
+  {/* Institutions details*/}
+  <Route path="institutions/:id" element={<AdminInstitutionDetail/>}/>
 </Route>
       </Routes>
     </>

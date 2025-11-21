@@ -1,0 +1,156 @@
+.inst-detail-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.inst-main-info {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.inst-logo-large {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: contain;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.inst-logo-large.placeholder {
+  background: #f0f0f0;
+}
+
+.inst-main-info h2 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  color: #003300;
+}
+
+.inst-meta {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: #e3fff0;
+  color: #006b3a;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.meta-pill {
+  background: #f3f3f3;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.inst-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #444;
+}
+
+.inst-stats-pills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  min-width: 90px;
+  text-align: center;
+}
+
+.pill-label {
+  display: block;
+  font-size: 11px;
+  color: #666;
+}
+
+.pill-value {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #003300;
+}
+
+/* Cards */
+.inst-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.inst-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #003300;
+}
+
+.inst-chart-wrap {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Students table */
+.inst-students-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.inst-students-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+}
+
+.inst-students-table th,
+.inst-students-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+
+.inst-students-table th {
+  background: #f3fff3;
+  color: #004d00;
+  font-weight: 700;
+}
+
+.muted {
+  font-size: 13px;
+  color: #777;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .inst-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inst-stats-pills {
+    width: 100%;
+  }
+
+  .inst-chart-wrap {
+    max-width: 100%;
+  }
+}
