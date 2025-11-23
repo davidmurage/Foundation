@@ -1,0 +1,268 @@
+/* ===========================
+   SETTINGS HEADER
+=========================== */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #003300;
+}
+
+.settings-header-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* ===========================
+   TABS
+=========================== */
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 6px;
+}
+
+.tab-btn {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  transition: 0.18s ease;
+}
+
+.tab-btn:hover {
+  background: #f3fff3;
+  color: #006400;
+}
+
+.tab-btn.active {
+  background: #009639;
+  color: #ffffff;
+}
+
+/* ===========================
+   PANELS
+=========================== */
+.settings-panel {
+  margin-top: 10px;
+}
+
+.settings-panel h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #003300;
+}
+
+.settings-subtitle {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* ===========================
+   CARDS / FORMS
+=========================== */
+.settings-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.settings-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #004d00;
+}
+
+/* 2-column layout used in Profile/System forms */
+.settings-two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .settings-two-column {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Generic grids */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 820px) {
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Inputs */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid #cfcfcf;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+/* Checkbox group */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-top: 2px;
+}
+
+/* Buttons */
+.save-btn {
+  margin-top: 10px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #009639;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.save-btn.secondary {
+  background: #0055cc;
+}
+
+.save-btn:hover:not(:disabled) {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ===========================
+   MESSAGE
+=========================== */
+.settings-message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3fff3;
+  color: #004d00;
+  font-size: 13px;
+}
+
+/* ===========================
+   AUDIT LOG TABLE
+=========================== */
+.settings-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+.settings-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+}
+
+.settings-table th,
+.settings-table td {
+  padding: 10px 10px;
+  font-size: 13px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.settings-table th {
+  text-align: left;
+  background: #f3fff3;
+  font-weight: 700;
+  color: #004d00;
+}
+
+.settings-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===========================
+   RESPONSIVENESS
+=========================== */
+@media (max-width: 600px) {
+  .settings-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .settings-table th,
+  .settings-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}

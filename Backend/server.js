@@ -7,6 +7,7 @@ import studentRoutes from "./routes/student.js";
 import documentRoutes from "./routes/documents.js";
 import performanceRoutes from "./routes/performance.js";
 import adminRoutes from "./routes/admin.js";
+import adminSettingsRoutes from "./routes/adminSettings.js";
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use("/api/student", studentRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/perfomance", performanceRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/settings", adminSettingsRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

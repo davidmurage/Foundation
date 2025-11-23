@@ -56,15 +56,15 @@ export default function AdminSidebar() {
             🏫 Institutions
           </NavLink>
 
-          <NavLink to="/admin/documents" onClick={handleLinkClick}>
+          {/*<NavLink to="/admin/documents" onClick={handleLinkClick}>
             📄 Documents
           </NavLink>
 
           <NavLink to="/admin/performance" onClick={handleLinkClick}>
             📊 Performance
-          </NavLink>
+          </NavLink>*/}
 
-          <NavLink to="/admin/settings" onClick={handleLinkClick}>
+          <NavLink to="/admin-dashboard/settings" onClick={handleLinkClick}>
             ⚙️ Settings
           </NavLink>
         </nav>
