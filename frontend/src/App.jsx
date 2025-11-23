@@ -18,6 +18,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminInstitutions from "./pages/admin/AdminInstitutions";
 import AdminInstitutionDetail from "./pages/admin/AdminInstitutionDetail";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 
 
@@ -94,6 +95,9 @@ function App() {
 
   {/* Institutions details*/}
   <Route path="institutions/:id" element={<AdminInstitutionDetail/>}/>
+
+  {/* Settings*/}
+  <Route path="settings" element={<AdminSettings/>}/>
 </Route>
       </Routes>
     </>
