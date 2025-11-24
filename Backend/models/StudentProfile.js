@@ -8,6 +8,12 @@ const studentProfileSchema = new mongoose.Schema({
   institution: String,
   contact: String,
   photo: String, // Cloudinary URL
+  status: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: "pending"
+},
+adminFeedback: { type: String, default: "" }
 }, { timestamps: true });
 
 export default mongoose.model("StudentProfile", studentProfileSchema);

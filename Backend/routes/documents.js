@@ -7,6 +7,9 @@ import Performance from "../models/Performance.js";
 import auth, { requireRole } from "../middleware/auth.js";
 import axios from "axios";
 import { toPlainText, extractGpa } from "../utils/transcriptParser.js";
+import Settings from "../models/Settings.js";
+import User from "../models/User.js";
+import { pushNotification } from "../utils/notify.js";
 
 const router = express.Router();
 
@@ -55,26 +58,42 @@ router.post(
         fileUrl: req.file.path, // Cloudinary URL
       });
 
-      // If transcript → parse for GPA/grades
+      // Load settings + student info
+      const settings = await Settings.findOne();
+      const student = await User.findById(req.user.id);
+      const adminId = settings?.system?.adminUserId || null;
+
+      // Send admin notification ONLY if enabled
+      if (settings?.notifications?.notifyAdminOnNewDocument) {
+        await pushNotification({
+          userId: adminId,
+          title: "New Document Uploaded",
+          message: `${student.fullName} uploaded a ${documentType} document.`,
+          email: settings.system.notificationEmail,
+        });
+      }
+
+      //  Transcript parsing (GPA extraction)
       if (documentType === "Transcript") {
         try {
-          // Download file back from Cloudinary
+          // Download Cloudinary file
           const fileRes = await axios.get(req.file.path, {
             responseType: "arraybuffer",
           });
+
           const buffer = Buffer.from(fileRes.data);
 
-          // Extract plain text
+          // Convert to plain text
           const text = await toPlainText(buffer, {
             mimetype: req.file.mimetype || "",
             originalname: req.file.originalname || "",
           });
 
-          // Pull GPA/Grade info
+          // Extract grades
           const { gpa, rawAverage, meanGrade } = extractGpa(text);
           const status = gpa === null ? "pending" : "complete";
 
-          // Save/update performance
+          // Save/update performance entry
           await Performance.findOneAndUpdate(
             { userId: req.user.id, yearOfStudy, academicPeriod },
             {
@@ -91,6 +110,7 @@ router.post(
         }
       }
 
+      //Response to student
       res.json({
         message: "Document uploaded successfully",
         document: newDoc,
@@ -101,6 +121,7 @@ router.post(
     }
   }
 );
+
 
 /**
  * Get all documents for logged-in student

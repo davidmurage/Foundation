@@ -137,6 +137,7 @@ export default function AdminStudents() {
             </tbody>
           </table>
         </div>
+        
       </main>
     </div>
   );

@@ -1,6 +1,9 @@
 /* ===============================
    PAGE WRAPPER
 ================================*/
+.admin-content{
+  margin-left: 0;
+}
 .admin-page-content {
   width: 100%;
   padding: 20px;
@@ -145,4 +148,49 @@
     padding: 10px 6px;
     font-size: 14px;
   }
+}
+
+/* Approval Buttons */
+.approval-actions {
+  margin-top: 25px;
+  display: flex;
+  gap: 12px;
+}
+
+.approve-btn {
+  background: #009639;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.reject-btn {
+  background: #c62828;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.approve-btn:hover {
+  background: #007c30;
+}
+
+.reject-btn:hover {
+  background: #9b1c1c;
+}
+
+/* Reject Modal */
+.reject-modal textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  resize: vertical;
 }

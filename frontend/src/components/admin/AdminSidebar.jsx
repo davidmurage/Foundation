@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "../../styles/admin/AdminSidebar.css";
+import NotificationBell from "./NotificationBell";
 
 export default function AdminSidebar() {
   const [open, setOpen] = useState(window.innerWidth > 992);
@@ -38,6 +39,8 @@ export default function AdminSidebar() {
       {/* SIDEBAR */}
       <aside className={`admin-sidebar ${open ? "open" : "collapsed"}`}>
         <div className="brand">KCB Admin</div>
+
+        <NotificationBell />
 
         <nav>
           <NavLink to="/admin-dashboard/overview" onClick={handleLinkClick} end>
