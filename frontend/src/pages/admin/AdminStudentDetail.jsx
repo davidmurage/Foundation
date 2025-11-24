@@ -4,7 +4,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { API_URL } from "../../utils/config";
 
-// COMPONENTS
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
 // ChartJS
@@ -20,7 +19,7 @@ import {
 import { Line } from "react-chartjs-2";
 
 import "../../styles/admin/AdminStudentDetail.css";
-import "../../styles/admin/AdminLayoutBase.css"; // GLOBAL LAYOUT
+import "../../styles/admin/AdminLayoutBase.css";
 
 ChartJS.register(
   LineElement,
@@ -44,6 +43,49 @@ export default function AdminStudentDetail() {
 
   const [loading, setLoading] = useState(true);
 
+  // === ADDED ===
+  const [rejectModal, setRejectModal] = useState(false);
+  const [rejectionMessage, setRejectionMessage] = useState("");
+
+  // === ADDED: Approve Handler ===
+  const handleApprove = async () => {
+    try {
+      await axios.put(
+        `${API_URL}/api/student/${userId}/approve`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Profile approved successfully.");
+    } catch (err) {
+      console.error(err);
+      alert("Error approving profile");
+    }
+  };
+
+  // === ADDED: Reject Handler ===
+  const handleRejectSubmit = async () => {
+    if (!rejectionMessage.trim()) {
+      alert("Please enter a rejection reason.");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${API_URL}/api/student/${userId}/reject`,
+        { message: rejectionMessage },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert("Profile rejected successfully.");
+      setRejectModal(false);
+      setRejectionMessage("");
+    } catch (err) {
+      console.error(err);
+      alert("Error rejecting profile");
+    }
+  };
+
+  // Load student data
   useEffect(() => {
     (async function () {
       try {
@@ -63,9 +105,6 @@ export default function AdminStudentDetail() {
 
   const { user, profile, documents, performance } = data;
 
-  /* -----------------------
-      CHART CONFIG
-  ------------------------ */
   const labels = performance.map(
     (p) => `${p.yearOfStudy} • ${p.academicPeriod}`
   );
@@ -113,16 +152,12 @@ export default function AdminStudentDetail() {
 
   return (
     <div className="admin-layout">
-      {/* SIDEBAR */}
       <AdminSidebar />
 
-      {/* MAIN CONTENT */}
       <main className="admin-content">
         <h2>👤 Student Profile</h2>
 
-        {/* ==========================
-            PROFILE CARD
-        ========================== */}
+        {/* PROFILE CARD */}
         <div className="admin-student-card">
           <div className="left">
             {profile?.photo ? (
@@ -144,17 +179,13 @@ export default function AdminStudentDetail() {
           </div>
         </div>
 
-        {/* ==========================
-            PERFORMANCE GRAPH
-        ========================== */}
+        {/* PERFORMANCE GRAPH */}
         <h3 className="section-title">📊 Performance</h3>
         <div className="admin-chart-wrap">
           <Line data={chartData} options={options} />
         </div>
 
-        {/* ==========================
-            DOCUMENTS TABLE
-        ========================== */}
+        {/* DOCUMENTS TABLE */}
         <h3 className="section-title">📄 Documents</h3>
 
         <div className="admin-table-wrap">
@@ -199,6 +230,45 @@ export default function AdminStudentDetail() {
             </tbody>
           </table>
         </div>
+
+        {/* === ADDED — APPROVAL BUTTONS === */}
+        <div className="approval-actions">
+          <button className="approve-btn" onClick={handleApprove}>
+            Approve Profile
+          </button>
+          <button className="reject-btn" onClick={() => setRejectModal(true)}>
+            Reject Profile
+          </button>
+        </div>
+
+        {/* === ADDED — REJECTION MODAL === */}
+        {rejectModal && (
+          <div className="modal-overlay">
+            <div className="modal reject-modal">
+              <h3>Reject Profile</h3>
+              <p>Please explain why this profile is being rejected.</p>
+
+              <textarea
+                rows="5"
+                value={rejectionMessage}
+                onChange={(e) => setRejectionMessage(e.target.value)}
+                placeholder="Describe the issue or corrections needed…"
+              />
+
+              <div className="modal-actions">
+                <button className="save-btn" onClick={handleRejectSubmit}>
+                  Submit Rejection
+                </button>
+                <button
+                  className="cancel-btn"
+                  onClick={() => setRejectModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

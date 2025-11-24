@@ -2,6 +2,7 @@ import Settings from "../models/Settings.js";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import AuditLog from "../models/AuditLog.js";
+import Notification from "../models/Notification.js";
 
 export const getSettingsDoc = async () => {
   let doc = await Settings.findOne({});
@@ -50,6 +51,24 @@ export const updateNotifications = async (req, res) => {
   settings.notifications = { ...settings.notifications, ...req.body };
   await settings.save();
   res.json({ message: "Notification settings updated" });
+};
+
+export const getAdminNotifications = async (req, res) => {
+  try {
+    const notes = await Notification.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    res.json(notes);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to load notifications" });
+  }
+};
+
+export const markNotificationRead = async (req, res) => {
+  try {
+    await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
+    res.json({ message: "Marked as read" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update" });
+  }
 };
 
 export const getSecurity = async (req, res) => {

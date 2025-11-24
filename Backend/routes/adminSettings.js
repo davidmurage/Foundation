@@ -13,6 +13,8 @@ import {
   getSecurity,
   updateSecurity,
   getAuditLogs,
+  getAdminNotifications,
+  markNotificationRead,
 } from "../controllers/settingsController.js";
 
 import { logAdminAction } from "../middleware/adminLogger.js";
@@ -67,6 +69,9 @@ router.put(
   logAdminAction("Updated Security Settings"),
   updateSecurity
 );
+
+router.get("/", auth, requireRole("admin"), getAdminNotifications);
+router.put("/:id/read", auth, requireRole("admin"), markNotificationRead);
 
 // LOGS
 router.get("/logs", auth, requireRole("admin"), getAuditLogs);
