@@ -1,0 +1,488 @@
+/* ===========================================================
+   LAYOUT WRAPPER
+=========================================================== */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f7f9fb;
+  font-family: "Inter", sans-serif;
+  position: relative;
+}
+
+/* ===========================================================
+   SIDEBAR
+=========================================================== */
+.sidebar {
+  width: 240px;
+  background: #003300;
+  color: #fff;
+  padding: 25px 18px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  z-index: 50;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+.sidebar h2 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 15px;
+}
+
+.sidebar ul li.active,
+.sidebar ul li:hover {
+  background: #009639;
+}
+
+.sidebar ul li.logout {
+  background: #c62828;
+  margin-top: 40px;
+}
+
+.sidebar ul li.logout:hover {
+  background: #a01f1f;
+}
+
+/* ===========================================================
+   MOBILE HAMBURGER
+=========================================================== */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 60;
+  background: #009639;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  font-size: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
+/* ===========================================================
+   MAIN CONTENT
+=========================================================== */
+.dashboard-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 25px;
+  transition: 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+
+/* ===========================================================
+   TOP BAR
+=========================================================== */
+.dashboard-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.dashboard-topbar h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #003300;
+}
+
+.topbar-subtitle {
+  margin-top: 3px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* ===========================================================
+   NOTIFICATION BELL + DROPDOWN
+=========================================================== */
+.notif-wrapper {
+  position: relative;
+}
+
+.notif-bell {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 14px;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  font-size: 17px;
+}
+
+.notif-count {
+  position: absolute;
+  top: -5px;
+  right: -4px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 280px;
+  max-height: 350px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  padding: 10px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.notif-dropdown h4 {
+  margin: 0 0 8px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.notif-empty {
+  color: #777;
+  text-align: center;
+  padding: 12px;
+}
+
+.notif-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notif-dropdown li {
+  padding: 8px 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.notif-title {
+  font-weight: 600;
+}
+
+.notif-time {
+  font-size: 12px;
+  color: #777;
+}
+
+/* ===========================================================
+   HOME CARDS GRID
+=========================================================== */
+.home-section {
+  margin-top: 15px;
+}
+
+.home-cards-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 992px) {
+  .home-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .home-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================
+   HOME CARD
+=========================================================== */
+.home-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  transition: 0.25s;
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+}
+
+.home-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-icon {
+  font-size: 22px;
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #003300;
+}
+
+.home-card-main {
+  margin: 12px 0;
+}
+
+.home-card-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #009639;
+}
+
+.home-card-label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+}
+
+.home-card-text {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+/* ===========================================================
+   PROFILE STATUS BADGES
+=========================================================== */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-badge.approved {
+  background: #e0ffe5;
+  color: #007a28;
+}
+
+.status-badge.rejected {
+  background: #ffe0e0;
+  color: #c62828;
+}
+
+.status-badge.pending,
+.status-badge.incomplete {
+  background: #fff3cd;
+  color: #a67c00;
+}
+
+.home-card-note {
+  background: #fff5e6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+/* ===========================================================
+   PILLS (documents)
+=========================================================== */
+.home-card-doc-grid {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.pill {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-approved {
+  background: #d9f7e4;
+  color: #008a3d;
+}
+
+.pill-pending {
+  background: #fff3cd;
+  color: #9c6f00;
+}
+
+.pill-rejected {
+  background: #ffe1e1;
+  color: #c62828;
+}
+
+.pill-missing {
+  background: #e0e0e0;
+  color: #555;
+}
+
+/* ===========================================================
+   HOME CARD BUTTON
+=========================================================== */
+.home-card-btn {
+  display: inline-block;
+  background: #009639;
+  color: white;
+  padding: 9px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  margin-top: 5px;
+  transition: 0.25s;
+}
+
+.home-card-btn:hover {
+  background: #007f31;
+}
+
+/* ===========================================================
+   QUICK ACTIONS
+=========================================================== */
+.home-bottom-row {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .home-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.quick-actions-card,
+.info-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.quick-actions-card h3,
+.info-card h3 {
+  margin-top: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #003300;
+}
+
+.quick-actions-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 12px;
+}
+
+.qa-btn {
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: none;
+  background: #0066cc;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.qa-btn:hover {
+  background: #004a96;
+}
+
+.qa-note {
+  font-size: 13px;
+  color: #555;
+}
+
+/* ===========================================================
+   INFO CARD
+=========================================================== */
+.info-card ul {
+  padding-left: 18px;
+  color: #444;
+}
+
+.info-card li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* ===========================================================
+   ERROR MESSAGES
+=========================================================== */
+.error-msg {
+  padding: 12px;
+  background: #ffe0e0;
+  color: #c62828;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* ===========================
+   FIX: Prevent sidebar hiding
+=========================== */
+.sidebar {
+  width: 240px !important;
+  display: block !important;
+  transform: translateX(0) !important;
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  background: #003300 !important;
+}
+
+.dashboard-content {
+  margin-left: 240px !important;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%) !important;
+  }
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .dashboard-content {
+    margin-left: 0 !important;
+  }
+}

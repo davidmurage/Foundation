@@ -1,65 +1,95 @@
+/* =============================
+   NAVBAR (Modern Banking Style)
+============================= */
+
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #006400;
-  padding: 15px 40px;
-  color: white;
-  position: sticky;
-  top: 0;
+
+  /* Glass effect */
+  background: rgba(0, 30, 0, 0.55);
+  backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
   z-index: 1000;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(0, 30, 0, 0.88);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 
 .navbar-logo img {
-  height: 50px;
+  height: 44px;
+  filter: brightness(1.1);
 }
 
-/* Default links */
+/* =============================
+   DESKTOP NAV LINKS
+============================= */
+
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 28px;
 }
 
 .navbar-links li a {
   text-decoration: none;
-  color: white;
+  font-size: 0.96rem;
+  color: #ffffff;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: 0.25s ease;
 }
 
 .navbar-links li a:hover {
-  color: #ffd700;
+  color: #baf7cf;
 }
 
+/* CTA button */
 .get-started {
-  background: #009639;
-  padding: 8px 15px;
-  border-radius: 5px;
+  background: #00b050;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
 .get-started:hover {
-  background: #00b84f;
+  background: #02c75b;
+  box-shadow: 0 6px 22px rgba(0,176,80,0.35);
 }
 
-/* Hamburger */
+/* =============================
+   HAMBURGER (Mobile)
+============================= */
+
 .hamburger {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 25px;
+  width: 27px;
   height: 20px;
   cursor: pointer;
 }
 
 .hamburger span {
   height: 3px;
+  border-radius: 20px;
   background: white;
-  border-radius: 3px;
-  transition: 0.3s;
+  transition: 0.35s ease;
 }
 
-/* Hamburger animation when open */
+/* Animation */
 .hamburger.open span:nth-child(1) {
   transform: rotate(45deg) translateY(8px);
 }
@@ -72,7 +102,10 @@
   transform: rotate(-45deg) translateY(-8px);
 }
 
-/* Mobile view */
+/* =============================
+   MOBILE NAV MENU
+============================= */
+
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -80,17 +113,28 @@
 
   .navbar-links {
     position: absolute;
-    top: 70px;
+    top: 72px;
     right: 0;
-    background: #006400;
-    width: 220px;
-    flex-direction: column;
-    padding: 20px;
-    gap: 15px;
+    width: 240px;
+
     display: none;
+    flex-direction: column;
+
+    padding: 22px 20px;
+    gap: 20px;
+
+    background: rgba(0, 40, 0, 0.92);
+    border-left: 1px solid rgba(255,255,255,0.08);
+
+    animation: slideIn 0.3s ease forwards;
   }
 
   .navbar-links.active {
     display: flex;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
   }
 }

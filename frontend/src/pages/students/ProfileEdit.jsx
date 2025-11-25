@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
+import "../../styles/student/ProfileEdit.css"
 
 export default function ProfileEdit({ setActiveTab }) {
   const token = localStorage.getItem("token");

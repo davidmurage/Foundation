@@ -1,7 +1,15 @@
 .footer {
-  background: #006400;
-  color: white;
+  background: #022c22;
+  padding: 28px 16px;
   text-align: center;
-  padding: 20px;
-  margin-top: 40px;
+  color: #e7fbea;
+  font-size: 0.95rem;
+  margin-top: 60px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer p {
+  margin: 0;
+  opacity: 0.85;
+  letter-spacing: 0.3px;
 }
