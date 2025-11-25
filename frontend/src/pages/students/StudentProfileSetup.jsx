@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../../styles/StudentDashboard.css";
+import "../../styles/student/StudentDashboard.css";
 import { API_URL } from "../../utils/config";
 
 export default function StudentProfileSetup() {

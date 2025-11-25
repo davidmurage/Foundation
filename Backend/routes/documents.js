@@ -16,9 +16,12 @@ const router = express.Router();
 // Cloudinary storage (auto handles pdf, doc, images, etc.)
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
+  params: async(req, file) => {
+    return{
     folder: "kcb_documents",
     resource_type: "auto", // lets Cloudinary decide
+    public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`
+    };
   },
 });
 const upload = multer({ storage });

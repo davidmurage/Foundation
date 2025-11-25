@@ -19,6 +19,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminInstitutions from "./pages/admin/AdminInstitutions";
 import AdminInstitutionDetail from "./pages/admin/AdminInstitutionDetail";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AboutUs from "./pages/AboutUs";
 
 
 
@@ -31,6 +32,7 @@ function App() {
         {/*<Route path="/about" element={<About />} />*/}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<AboutUs/>}/>
 
         {/* Student Routes */}
         <Route

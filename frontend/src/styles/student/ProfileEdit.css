@@ -1,0 +1,147 @@
+/* =======================================
+   EDIT PROFILE PAGE
+======================================= */
+
+.profile-edit {
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.profile-edit h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #003300;
+  margin-bottom: 18px;
+}
+
+/* Message */
+.message {
+  background: #e8ffe8;
+  color: #006b1f;
+  padding: 10px 12px;
+  border-left: 4px solid #009639;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* =======================================
+   FORM
+======================================= */
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  max-width: 520px;
+}
+
+/* =======================================
+   PHOTO UPLOAD
+======================================= */
+
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 3px solid #009639;
+}
+
+.profile-photo .placeholder {
+  width: 120px;
+  height: 120px;
+  background: #f3f3f3;
+  border-radius: 12px;
+  border: 2px dashed #009639;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #009639;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-photo input {
+  margin-top: 6px;
+}
+
+/* =======================================
+   INPUTS
+======================================= */
+
+.profile-form input,
+.profile-form select {
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: 0.2s;
+}
+
+.profile-form input:focus,
+.profile-form select:focus {
+  border-color: #009639;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 150, 57, 0.3);
+}
+
+/* =======================================
+   SAVE BUTTON
+======================================= */
+
+.profile-form button {
+  margin-top: 8px;
+  background: #009639;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 150, 57, 0.35);
+}
+
+.profile-form button:hover {
+  background: #007c30;
+  transform: translateY(-2px);
+}
+
+/* =======================================
+   RESPONSIVE
+======================================= */
+
+@media (max-width: 480px) {
+  .profile-edit h2 {
+    font-size: 20px;
+  }
+
+  .profile-form {
+    padding: 16px;
+  }
+
+  .profile-photo img,
+  .profile-photo .placeholder {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
