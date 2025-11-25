@@ -25,11 +25,9 @@ export default function Login() {
       if (res.data.role === "admin") {
         window.location.href = "/admin-dashboard";
       } else {
-        if (res.data.profileIncomplete) {
-          window.location.href = "/profile-setup";
-        } else {
-          window.location.href = "/student-dashboard";
-        }
+        window.location.href = res.data.profileIncomplete
+          ? "/profile-setup"
+          : "/student-dashboard";
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "Invalid credentials");
@@ -38,8 +36,11 @@ export default function Login() {
 
   return (
     <div className="auth-container">
+      <Link to="/" className="back-home">← Back Home</Link>
+
       <h2>Sign In</h2>
       {message && <p className="message">{message}</p>}
+
       <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="email"
@@ -57,11 +58,16 @@ export default function Login() {
           onChange={handleChange}
           required
         />
+
         <button type="submit">Login</button>
       </form>
-      {/* Sign in link */}
+
+      <p className="forgot-pass">
+        <Link to="/forgot-password">Forgot Password?</Link>
+      </p>
+
       <p className="switch-auth">
-        Already have an account? <Link to="/register">Sign Up</Link>
+        Don't have an account? <Link to="/register">Sign Up</Link>
       </p>
     </div>
   );

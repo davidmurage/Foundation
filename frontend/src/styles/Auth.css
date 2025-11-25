@@ -62,3 +62,35 @@
 .switch-auth a:hover {
   text-decoration: underline;
 }
+
+/* Back Home Button */
+.back-home {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #006400;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back-home:hover {
+  text-decoration: underline;
+}
+
+/* Forgot Password link */
+.forgot-pass {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.forgot-pass a {
+  color: #006400;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.forgot-pass a:hover {
+  text-decoration: underline;
+}
+
