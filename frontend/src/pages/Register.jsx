@@ -22,10 +22,10 @@ export default function Register() {
     try {
       const res = await axios.post(`${API_URL}/api/auth/register`, {
         ...form,
-        role: "student", // force role to student
+        role: "student",
       });
       setMessage(res.data.message);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
       setMessage(err.response?.data?.message || "Something went wrong");
     }
@@ -33,6 +33,8 @@ export default function Register() {
 
   return (
     <div className="auth-container">
+      <Link to="/" className="back-home">← Back Home</Link>
+
       <h2>Create Account</h2>
       {message && <p className="message">{message}</p>}
 
@@ -65,7 +67,6 @@ export default function Register() {
         <button type="submit">Sign Up</button>
       </form>
 
-      {/* Sign in link */}
       <p className="switch-auth">
         Already have an account? <Link to="/login">Sign In</Link>
       </p>
