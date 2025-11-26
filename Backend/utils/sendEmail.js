@@ -1,4 +1,3 @@
-// backend/utils/sendEmail.js
 import nodemailer from "nodemailer";
 
 export async function sendEmail({ to, subject, html, text }) {
@@ -6,6 +5,7 @@ export async function sendEmail({ to, subject, html, text }) {
     // Create transporter
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || "smtp.gmail.com",
+      service: "gmail",
       port: process.env.EMAIL_PORT ? Number(process.env.EMAIL_PORT) : 587,
       secure: false, // TLS
       auth: {

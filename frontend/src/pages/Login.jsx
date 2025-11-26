@@ -23,7 +23,7 @@ export default function Login() {
       setMessage("Login successful!");
 
       if (res.data.role === "admin") {
-        window.location.href = "/admin-dashboard";
+        window.location.href = "/admin-dashboard/overview";
       } else {
         window.location.href = res.data.profileIncomplete
           ? "/profile-setup"
