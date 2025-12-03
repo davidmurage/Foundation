@@ -19,7 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/documents", documentRoutes);
-app.use("/api/perfomance", performanceRoutes);
+app.use("/api/performance", performanceRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
 

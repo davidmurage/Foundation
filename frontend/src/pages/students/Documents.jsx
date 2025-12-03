@@ -47,31 +47,22 @@ export default function Documents() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("admissionNo", form.admissionNo);
-      formData.append("yearOfStudy", form.yearOfStudy);
-      formData.append("institutionType", form.institutionType);
-      formData.append("academicPeriod", form.academicPeriod);
-      formData.append("documentType", form.documentType);
-      if (form.document) formData.append("document", form.document);
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
 
-      const res = await axios.post(
-        `${API_URL}/api/documents/upload`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.post(`${API_URL}/api/documents/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setMessage(res.data.message);
       setDocs([res.data.document, ...docs]);
-      setShowForm(false); // close modal after upload
+      setShowForm(false);
     } catch (err) {
       setMessage(err.response?.data?.message || "Upload failed");
     }
   };
 
-  // Delete document
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
       try {
@@ -102,6 +93,7 @@ export default function Documents() {
 
       {/* Filter Bar */}
       <div className="filter-bar">
+        {/* Year filter */}
         <select
           name="yearOfStudy"
           value={filters.yearOfStudy}
@@ -117,6 +109,7 @@ export default function Documents() {
           <option value="5">Year 5</option>
         </select>
 
+        {/* Academic period filter */}
         <select
           name="academicPeriod"
           value={filters.academicPeriod}
@@ -125,14 +118,25 @@ export default function Documents() {
           }
         >
           <option value="">All Periods</option>
-          <option value="Semester 1">Semester 1</option>
-          <option value="Semester 2">Semester 2</option>
-          <option value="Semester 3">Semester 3</option>
+
+          {/* UNIVERSITY FILTER OPTIONS */}
+          <option value="Sem 1 & Sem 2 (Combined)">
+            Year Transcript (2 Semesters)
+          </option>
+
+          <option value="Sem 1 & Sem 2 & Sem 3 (Combined)">
+            Year Transcript (3 Semesters)
+          </option>
+
+          <option value="Attachment">Attachment</option>
+
+          {/* TVET remains unchanged */}
           <option value="Term 1">Term 1</option>
           <option value="Term 2">Term 2</option>
           <option value="Term 3">Term 3</option>
         </select>
 
+        {/* Document type filter */}
         <select
           name="documentType"
           value={filters.documentType}
@@ -148,7 +152,7 @@ export default function Documents() {
         </select>
       </div>
 
-      {/* Upload New Button */}
+      {/* Upload new document */}
       <button className="upload-btn" onClick={() => setShowForm(true)}>
         + Upload New Document
       </button>
@@ -167,6 +171,7 @@ export default function Documents() {
                 onChange={handleChange}
                 required
               />
+
               <input
                 type="text"
                 name="admissionNo"
@@ -203,7 +208,7 @@ export default function Documents() {
                 <option value="TVET">TVET / College</option>
               </select>
 
-              {/* Academic Period */}
+              {/* Academic Period — Dynamic */}
               {form.institutionType === "University" && (
                 <select
                   name="academicPeriod"
@@ -211,12 +216,32 @@ export default function Documents() {
                   onChange={handleChange}
                   required
                 >
-                  <option value="">Select Semester</option>
-                  <option value="Semester 1">Semester 1</option>
-                  <option value="Semester 2">Semester 2</option>
-                  <option value="Semester 3">Semester 3</option>
+                  <option value="">Select  Period</option>
+
+                  <option value="Sem 1">
+                    Semester 1
+                  </option>
+
+                  <option value="Sem 2">
+                    Semester 2
+                  </option>
+
+                  <option value="Sem 3">
+                    Semester 3
+                  </option>
+
+                  {/* NEW: Combined year transcripts */}
+                  <option value="Semester 1&2">
+                    Semester 1 &amp; 2 - Combined Year 
+                  </option>
+                  <option value="Semester 1&2&3">
+                    Semester 1, 2 &amp; 3 - Combined Year 
+                  </option>
+
+                  <option value="Attachment">Attachment</option>
                 </select>
               )}
+
               {form.institutionType === "TVET" && (
                 <select
                   name="academicPeriod"
@@ -274,22 +299,29 @@ export default function Documents() {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-  {filteredDocs.map((doc) => (
-    <tr key={doc._id}>
-      <td data-label="Year">{doc.yearOfStudy}</td>
-      <td data-label="Period">{doc.academicPeriod}</td>
-      <td data-label="Type">{doc.documentType}</td>
-      <td data-label="Uploaded">{new Date(doc.createdAt).toLocaleDateString()}</td>
-      <td data-label="Action">
-        <a href={doc.fileUrl} target="_blank" rel="noreferrer">View</a>
-        {" | "}
-        <button className="delete-btn" onClick={() => handleDelete(doc._id)}>Delete</button>
-      </td>
-    </tr>
-  ))}
-</tbody>
 
+        <tbody>
+          {filteredDocs.map((doc) => (
+            <tr key={doc._id}>
+              <td>{doc.yearOfStudy}</td>
+              <td>{doc.academicPeriod}</td>
+              <td>{doc.documentType}</td>
+              <td>{new Date(doc.createdAt).toLocaleDateString()}</td>
+              <td>
+                <a href={doc.fileUrl} target="_blank" rel="noreferrer">
+                  View
+                </a>
+                {" | "}
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(doc._id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );

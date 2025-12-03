@@ -43,11 +43,11 @@ export default function AdminStudentDetail() {
 
   const [loading, setLoading] = useState(true);
 
-  // === ADDED ===
+  // Reject modal
   const [rejectModal, setRejectModal] = useState(false);
   const [rejectionMessage, setRejectionMessage] = useState("");
 
-  // === ADDED: Approve Handler ===
+  // Approve profile
   const handleApprove = async () => {
     try {
       await axios.put(
@@ -62,7 +62,7 @@ export default function AdminStudentDetail() {
     }
   };
 
-  // === ADDED: Reject Handler ===
+  // Reject profile
   const handleRejectSubmit = async () => {
     if (!rejectionMessage.trim()) {
       alert("Please enter a rejection reason.");
@@ -105,7 +105,10 @@ export default function AdminStudentDetail() {
 
   const { user, profile, documents, performance } = data;
 
-  const labels = performance.map(
+  /* -----------------------
+     CHART 1: GPA BY PERIOD
+  ------------------------ */
+  const periodLabels = performance.map(
     (p) => `${p.yearOfStudy} • ${p.academicPeriod}`
   );
 
@@ -113,11 +116,11 @@ export default function AdminStudentDetail() {
     typeof p.gpa === "number" ? p.gpa : null
   );
 
-  const chartData = {
-    labels,
+  const periodChartData = {
+    labels: periodLabels,
     datasets: [
       {
-        label: "GPA",
+        label: "GPA by Semester / Term",
         data: gpaValues,
         borderColor: "#009639",
         backgroundColor: "rgba(0,150,57,0.25)",
@@ -130,9 +133,13 @@ export default function AdminStudentDetail() {
     ],
   };
 
-  const options = {
+  const periodChartOptions = {
     scales: {
-      y: { suggestedMin: 0, suggestedMax: 5, title: { display: true, text: "GPA (0–5)" } },
+      y: {
+        suggestedMin: 0,
+        suggestedMax: 5,
+        title: { display: true, text: "GPA (0–5)" },
+      },
     },
     plugins: {
       legend: { display: false },
@@ -141,10 +148,77 @@ export default function AdminStudentDetail() {
           label: (ctx) => {
             const row = performance[ctx.dataIndex];
             if (row.status === "pending") return "Pending transcript";
-            if (row.rawAverage) return `Avg: ${row.rawAverage}% → GPA ${ctx.parsed.y}`;
-            if (row.meanGrade) return `Grade: ${row.meanGrade} → GPA ${ctx.parsed.y}`;
+            if (row.rawAverage)
+              return `Avg: ${row.rawAverage}% → GPA ${ctx.parsed.y}`;
+            if (row.meanGrade)
+              return `Grade: ${row.meanGrade} → GPA ${ctx.parsed.y}`;
             return `GPA: ${ctx.parsed.y}`;
           },
+        },
+      },
+    },
+  };
+
+  /* -----------------------
+     CHART 2: GPA BY YEAR
+     (aggregate all periods
+      in each yearOfStudy)
+  ------------------------ */
+  const yearStats = {};
+
+  performance.forEach((p) => {
+    if (typeof p.gpa === "number") {
+      const yearKey = p.yearOfStudy || "Unknown";
+      if (!yearStats[yearKey]) {
+        yearStats[yearKey] = { sum: 0, count: 0 };
+      }
+      yearStats[yearKey].sum += p.gpa;
+      yearStats[yearKey].count += 1;
+    }
+  });
+
+  const sortedYears = Object.keys(yearStats).sort((a, b) => {
+    const na = Number(a);
+    const nb = Number(b);
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return String(a).localeCompare(String(b));
+  });
+
+  const yearLabels = sortedYears.map((y) => `Year ${y}`);
+  const yearGpas = sortedYears.map((y) =>
+    +(yearStats[y].sum / yearStats[y].count).toFixed(2)
+  );
+
+  const yearChartData = {
+    labels: yearLabels,
+    datasets: [
+      {
+        label: "Average GPA per Year",
+        data: yearGpas,
+        borderColor: "#004b23",
+        backgroundColor: "rgba(0,75,35,0.2)",
+        pointBackgroundColor: "#004b23",
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const yearChartOptions = {
+    scales: {
+      y: {
+        suggestedMin: 0,
+        suggestedMax: 5,
+        title: { display: true, text: "Average GPA (0–5)" },
+      },
+      x: {
+        title: { display: true, text: "Year of Study" },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `Year GPA: ${ctx.parsed.y}`,
         },
       },
     },
@@ -169,21 +243,43 @@ export default function AdminStudentDetail() {
 
           <div className="right">
             <div className="grid">
-              <div><strong>Name:</strong> {user?.fullName}</div>
-              <div><strong>Email:</strong> {user?.email}</div>
-              <div><strong>Admission No:</strong> {profile?.admissionNo}</div>
-              <div><strong>Course:</strong> {profile?.course}</div>
-              <div><strong>Year of Study:</strong> {profile?.year}</div>
-              <div><strong>Institution:</strong> {profile?.institution}</div>
+              <div>
+                <strong>Name:</strong> {user?.fullName}
+              </div>
+              <div>
+                <strong>Email:</strong> {user?.email}
+              </div>
+              <div>
+                <strong>Admission No:</strong> {profile?.admissionNo}
+              </div>
+              <div>
+                <strong>Course:</strong> {profile?.course}
+              </div>
+              <div>
+                <strong>Year of Study:</strong> {profile?.year}
+              </div>
+              <div>
+                <strong>Institution:</strong> {profile?.institution}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* PERFORMANCE GRAPH */}
-        <h3 className="section-title">📊 Performance</h3>
+        {/* PERFORMANCE GRAPH: BY SEMESTER / TERM */}
+        <h3 className="section-title">📊 Performance by Semester / Term</h3>
         <div className="admin-chart-wrap">
-          <Line data={chartData} options={options} />
+          <Line data={periodChartData} options={periodChartOptions} />
         </div>
+
+        {/* PERFORMANCE GRAPH: YEARLY TREND */}
+        {yearLabels.length > 0 && (
+          <>
+            <h3 className="section-title">📈 Yearly GPA Trend</h3>
+            <div className="admin-chart-wrap">
+              <Line data={yearChartData} options={yearChartOptions} />
+            </div>
+          </>
+        )}
 
         {/* DOCUMENTS TABLE */}
         <h3 className="section-title">📄 Documents</h3>
@@ -231,7 +327,7 @@ export default function AdminStudentDetail() {
           </table>
         </div>
 
-        {/* === ADDED — APPROVAL BUTTONS === */}
+        {/* APPROVAL BUTTONS */}
         <div className="approval-actions">
           <button className="approve-btn" onClick={handleApprove}>
             Approve Profile
@@ -241,7 +337,7 @@ export default function AdminStudentDetail() {
           </button>
         </div>
 
-        {/* === ADDED — REJECTION MODAL === */}
+        {/* REJECTION MODAL */}
         {rejectModal && (
           <div className="modal-overlay">
             <div className="modal reject-modal">
