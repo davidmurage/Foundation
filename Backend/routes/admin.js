@@ -11,22 +11,43 @@ const router = express.Router();
 /** helper: expected periods (same as student side) */
 function expectedPeriods(institutionType, currentYear) {
   const list = [];
-  const isTVET = ["tvet", "college"].some(s =>
+
+  const isTVET = ["tvet", "college"].some((s) =>
     (institutionType || "").toLowerCase().includes(s)
   );
-  const maxYear = Math.min(Math.max(parseInt(currentYear || "1", 10), 1), 5);
+
+  const maxYear = Math.min(
+    Math.max(parseInt(currentYear || "1", 10), 1),
+    5
+  );
+
   for (let y = 1; y <= maxYear; y++) {
+    const yearStr = String(y);
+
     if (!isTVET) {
-      list.push({ yearOfStudy: String(y), academicPeriod: "Semester 1" });
-      list.push({ yearOfStudy: String(y), academicPeriod: "Semester 2" });
+      // UNIVERSITY / DEGREE PROGRAMMES
+      // keep single semesters
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Semester 1" });
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Semester 2" });
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Semester 3" });
+
+      // NEW: combined year transcripts
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Semester 1&2" });
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Semester 1&2&3" });
+
+      // NEW: attachment transcript slot
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Attachment" });
     } else {
-      list.push({ yearOfStudy: String(y), academicPeriod: "Term 1" });
-      list.push({ yearOfStudy: String(y), academicPeriod: "Term 2" });
-      list.push({ yearOfStudy: String(y), academicPeriod: "Term 3" });
+      // TVET / COLLEGE – UNCHANGED
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Term 1" });
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Term 2" });
+      list.push({ yearOfStudy: yearStr, academicPeriod: "Term 3" });
     }
   }
+
   return list;
 }
+
 
 // Helper: build filter object from query
 function buildFilter(query) {

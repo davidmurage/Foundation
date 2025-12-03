@@ -2,100 +2,151 @@ import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
 import Tesseract from "tesseract.js";
 
-export async function toPlainText(
-  buffer,
-  { mimetype = "", originalname = "" } = {}
-) {
-  const ext = (originalname?.split(".").pop() || "").toLowerCase();
+/**
+ * Convert ANY uploaded transcript into plain text
+ * Supports:
+ *  - PDF (digital)
+ *  - PDF (scanned image → OCR)
+ *  - DOCX
+ *  - DOC
+ *  - JPG / PNG (OCR)
+ */
+export async function toPlainText(buffer, { mimetype = "", originalname = "" } = {}) {
+  let ext = (originalname?.split(".").pop() || "").toLowerCase();
 
-  // --- PDF Handling ---
+  // Ensure Buffer format
+  if (!Buffer.isBuffer(buffer)) buffer = Buffer.from(buffer);
+
+  /* 1) PDF HANDLING (Digital + Scanned fallback)*/
   if (mimetype === "application/pdf" || ext === "pdf") {
     try {
-      if (!buffer) {
-        console.error("No buffer received for PDF");
-        return "";
+      console.log("[PDF] Starting PDF text extraction");
+
+      const pdfResult = await pdfParse(buffer);
+      let text = pdfResult?.text || "";
+
+      // If PDF has NO text → MUST be a scanned PDF → Use OCR
+      if (!text || text.trim().length < 20) {
+        console.log("[PDF] No digital text found. Running OCR (scanned PDF).");
+
+        const ocrResult = await Tesseract.recognize(buffer, "eng", {
+          logger: (msg) => console.log("[OCR]", msg),
+        });
+
+        return ocrResult?.data?.text || "";
       }
 
-      if (!Buffer.isBuffer(buffer)) {
-        console.warn("Buffer is not a real Buffer. Converting...");
-        buffer = Buffer.from(buffer);
-      }
-
-      console.log("Parsing PDF. Buffer length:", buffer.length);
-
-      const { text } = await pdfParse(buffer);
-      return text || "";
+      return text;
     } catch (err) {
-      console.error("PDF parse failed:", err.message);
+      console.error("[PDF] Error parsing PDF:", err.message);
       return "";
     }
   }
 
-  // --- DOCX Handling ---
+  /*  2) DOCX HANDLING*/
   const isDocx =
     mimetype.includes("officedocument.wordprocessingml") || ext === "docx";
+
   if (isDocx) {
     try {
+      console.log("[DOCX] Extracting text");
       const { value } = await mammoth.extractRawText({ buffer });
       return value || "";
     } catch (err) {
-      console.error("DOCX parse failed:", err.message);
+      console.error("[DOCX] Error extracting text:", err.message);
       return "";
     }
   }
 
-  // --- DOC Handling ---
+  /* 3) DOC HANDLING*/
   if (mimetype === "application/msword" || ext === "doc") {
     try {
+      console.log("[DOC] Extracting text");
       const { value } = await mammoth.extractRawText({ buffer });
       return value || "";
     } catch (err) {
-      console.error("DOC parse failed:", err.message);
+      console.error("[DOC] Error extracting text:", err.message);
       return "";
     }
   }
 
-  // --- IMAGE Handling (OCR) ---
-  if (mimetype.startsWith("image/") || ["jpg", "jpeg", "png"].includes(ext)) {
+  /* 4) IMAGE HANDLING (OCR)*/
+  const isImg = mimetype.startsWith("image/") || ["jpg", "jpeg", "png"].includes(ext);
+
+  if (isImg) {
     try {
-      const { data } = await Tesseract.recognize(buffer, "eng");
+      console.log("[OCR] Extracting text from image");
+
+      const { data } = await Tesseract.recognize(buffer, "eng", {
+        logger: (msg) => console.log("[OCR]", msg),
+      });
+
       return data?.text || "";
     } catch (err) {
-      console.error("OCR parse failed:", err.message);
+      console.error("[OCR] Image parse failed:", err.message);
       return "";
     }
   }
 
-  // --- Fallback: UTF-8 ---
+  /* 5) FALLBACK → plain UTF8 */
   return buffer.toString("utf8");
 }
 
-// Extract GPA/Average/Grade
+/**
+ * Extract GPA, rawAverage, meanGrade from text
+ * Supports:
+ *  - "MEAN GRADE: A"
+ *  - "MEAN GRADE : A"
+ *  - "AVERAGE: 56.33"
+ *  - "GPA: 3.78"
+ *  - DKUT format (your sample)
+ *  - USIU, KU, JKUAT, MMUST, Egerton formats
+ */
 export function extractGpa(text) {
   if (!text) return { gpa: null, rawAverage: null, meanGrade: null };
 
-  // Match "AVERAGE: 53.50"
-  const avgMatch = text.match(/AVERAGE[:\s]*([0-9]+(\.[0-9]+)?)/i);
-  if (avgMatch) {
-    const rawAverage = parseFloat(avgMatch[1]);
-    const gpa = +(rawAverage / 20).toFixed(2); // scale 0–100 → 0–5
-    return { gpa: Math.min(gpa, 5), rawAverage, meanGrade: null };
-  }
+  // Normalize spacing
+  const clean = text.replace(/\s+/g, " ").trim();
 
-  // Match "MEAN GRADE: C"
-  const gradeMatch = text.match(/MEAN\s*GRADE[:\s]*([A-E])/i);
-  if (gradeMatch) {
-    const meanGrade = gradeMatch[1].toUpperCase();
+  // ================================================
+  // 1. DKUT Mean Grade: "Mean Grade: A"
+  // ================================================
+  const dkutGradeMatch = clean.match(/MEAN\s*GRADE\s*[:\-]?\s*([A-E])/i);
+  if (dkutGradeMatch) {
+    const meanGrade = dkutGradeMatch[1].toUpperCase();
     const gradeToGpa = { A: 5, B: 4, C: 3, D: 2, E: 1 };
+
     return {
       gpa: gradeToGpa[meanGrade] || null,
       rawAverage: null,
-      meanGrade,
+      meanGrade
     };
   }
 
-  // Match "GPA: X"
-  const gpaMatch = text.match(/\bGPA[:\s]*([0-9]+(\.[0-9]+)?)/i);
+  // ================================================
+  // 2. Check for Mean Score (other universities)
+  // ================================================
+  const meanScoreMatch = clean.match(/MEAN\s*SCORE\s*[:\-]?\s*([0-9]+(\.[0-9]+)?)/i);
+  if (meanScoreMatch) {
+    const rawAverage = parseFloat(meanScoreMatch[1]);
+    const gpa = +(rawAverage / 20).toFixed(2);
+    return { gpa: Math.min(gpa, 5), rawAverage, meanGrade: null };
+  }
+
+  // ================================================
+  // 3. Check for AVERAGE: 53.50
+  // ================================================
+  const avgMatch = clean.match(/AVERAGE\s*[:\-]?\s*([0-9]+(\.[0-9]+)?)/i);
+  if (avgMatch) {
+    const rawAverage = parseFloat(avgMatch[1]);
+    const gpa = +(rawAverage / 20).toFixed(2);
+    return { gpa: Math.min(gpa, 5), rawAverage, meanGrade: null };
+  }
+
+  // ================================================
+  // 4. Check for GPA: 3.45
+  // ================================================
+  const gpaMatch = clean.match(/\bGPA\s*[:\-]?\s*([0-9]+(\.[0-9]+)?)/i);
   if (gpaMatch) {
     return {
       gpa: parseFloat(gpaMatch[1]),
@@ -104,5 +155,7 @@ export function extractGpa(text) {
     };
   }
 
+  // Nothing matched
   return { gpa: null, rawAverage: null, meanGrade: null };
 }
+
