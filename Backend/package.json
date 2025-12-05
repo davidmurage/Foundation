@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon server.js",
-    "server": "nodemon server.js",
-    "postinstall": "rm -rf ./node_modules/pdf-parse/test"
+    "server": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
