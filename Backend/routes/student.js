@@ -10,6 +10,7 @@ import Notification from "../models/Notification.js";
 import Performance from "../models/Performance.js";
 import StudentDocument from "../models/StudentDocument.js";
 import User from "../models/User.js";
+import { pushNotification } from "../utils/notify.js";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "kcb_profiles",
-    allowed_formats: ["jpg", "jpeg", "png"],
+    allowed_formats: ["jpg", "jpeg", "png", "webp", "heic", "heif"],
   },
 });
 

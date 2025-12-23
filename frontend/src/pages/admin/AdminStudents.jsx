@@ -15,6 +15,7 @@ export default function AdminStudents() {
   const [q, setQ] = useState("");
   const [filters, setFilters] = useState({ institutionType: "", year: "" });
   const [loading, setLoading] = useState(false);
+  
 
   const fetchRows = async () => {
     setLoading(true);
@@ -35,6 +36,26 @@ export default function AdminStudents() {
       setLoading(false);
     }
   };
+
+  const handleDelete = async (userId) => {
+  const yes = window.confirm("Are you sure you want to delete this student?");
+  if (!yes) return;
+
+  try {
+    await axios.delete(`${API_URL}/api/admin/students/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    // Remove deleted student from UI
+    setRows((prev) => prev.filter((s) => s.userId !== userId));
+
+    alert("Student deleted successfully.");
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+    alert("Failed to delete student.");
+  }
+};
+
 
   useEffect(() => {
     fetchRows();
@@ -119,10 +140,16 @@ export default function AdminStudents() {
                   <td>{r.course}</td>
                   <td>{r.year}</td>
 
-                  <td>
+                  <td className="action-buttons">
                     <Link className="btn-link" to={`/admin-dashboard/students/${r.userId}`}>
                       View
                     </Link>
+                    <button
+                       className="btn-delete"
+                       onClick={() => handleDelete(r.userId)}
+                    >
+                     Delete
+                    </button>
                   </td>
                 </tr>
               ))}
