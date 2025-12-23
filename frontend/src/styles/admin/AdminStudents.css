@@ -167,6 +167,25 @@
   background: #003f99;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-delete {
+  background: #d9534f;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #c9302c;
+}
+
+
 /* ===========================================
    CELL FORMATTING
 =========================================== */

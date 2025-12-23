@@ -256,6 +256,35 @@ router.get("/student/:userId", auth, requireRole("admin"), async (req, res) => {
   }
 });
 
+router.delete(
+  "/students/:userId",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      // DELETE USER
+      await User.findByIdAndDelete(userId);
+
+      // DELETE student profile
+      await StudentProfile.findOneAndDelete({ userId });
+
+      // DELETE documents
+      await StudentDocument.deleteMany({ userId });
+
+      // DELETE performance records
+      await Performance.deleteMany({ userId });
+
+      res.json({ message: "Student deleted successfully" });
+    } catch (err) {
+      console.error("DELETE STUDENT ERROR:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+);
+
+
 /* ============================
    GET ALL ADMIN USERS
 ============================= */
