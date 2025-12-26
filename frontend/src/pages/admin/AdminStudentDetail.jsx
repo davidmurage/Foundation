@@ -258,8 +258,13 @@ export default function AdminStudentDetail() {
               <div>
                 <strong>Year of Study:</strong> {profile?.year}
               </div>
+
               <div>
-                <strong>Institution:</strong> {profile?.institution}
+                <strong>Academic Period:</strong>{profile?.academicPeriod}
+              </div>
+
+              <div>
+                <strong>Institution:</strong> {profile?.institutionName}
               </div>
             </div>
           </div>

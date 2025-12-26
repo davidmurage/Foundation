@@ -39,7 +39,7 @@ export default function AdminInstitutionDetail() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${API_URL}/api/admin/${id}`,
+        `${API_URL}/api/Institutions/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setInstData(res.data);

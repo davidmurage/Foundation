@@ -24,17 +24,16 @@ export default function AdminInstitutions() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selected, setSelected] = useState(null);
+
   const [form, setForm] = useState({
     name: "",
     type: "University",
     county: "",
     location: "",
-    code: "",
-    logoUrl: "",
-    description: "",
     isActive: true,
   });
 
+  // Correct endpoint
   const loadInstitutions = async () => {
     setLoading(true);
     try {
@@ -45,14 +44,14 @@ export default function AdminInstitutions() {
       if (filters.active !== "") params.append("active", filters.active);
 
       const res = await axios.get(
-        `${API_URL}/api/admin?${params.toString()}`,
+        `${API_URL}/api/institutions?${params.toString()}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setInstitutions(res.data || []);
     } catch (err) {
       console.error("LOAD INSTITUTIONS ERROR:", err);
-      alert("Failed to load institutions");
+      alert(err.response?.data?.message || "Failed to load institutions");
     } finally {
       setLoading(false);
     }
@@ -69,9 +68,6 @@ export default function AdminInstitutions() {
       type: "University",
       county: "",
       location: "",
-      code: "",
-      logoUrl: "",
-      description: "",
       isActive: true,
     });
     setSelected(null);
@@ -85,9 +81,6 @@ export default function AdminInstitutions() {
       type: inst.type || "University",
       county: inst.county || "",
       location: inst.location || "",
-      code: inst.code || "",
-      logoUrl: inst.logoUrl || "",
-      description: inst.description || "",
       isActive: inst.isActive !== false,
     });
     setSelected(inst);
@@ -97,20 +90,27 @@ export default function AdminInstitutions() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
+    if (!form.name.trim()) {
+      alert("Institution name is required");
+      return;
+    }
+
     try {
-      if (editMode && selected) {
+      if (editMode && selected?._id) {
         await axios.put(
-          `${API_URL}/api/admin/${selected._id}`,
+          `${API_URL}/api/institutions/${selected._id}`,
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        await axios.post(`${API_URL}/api/admin`, form, {
+        await axios.post(`${API_URL}/api/institutions`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
+
       setModalOpen(false);
-      loadInstitutions();
+      await loadInstitutions();
     } catch (err) {
       console.error("SAVE INSTITUTION ERROR:", err);
       alert(err.response?.data?.message || "Error saving institution");
@@ -121,23 +121,20 @@ export default function AdminInstitutions() {
     if (!window.confirm(`Delete institution "${inst.name}"?`)) return;
 
     try {
-      await axios.delete(
-        `${API_URL}/api/admin/${inst._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      loadInstitutions();
+      await axios.delete(`${API_URL}/api/institutions/${inst._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await loadInstitutions();
     } catch (err) {
       console.error("DELETE INSTITUTION ERROR:", err);
-      alert("Error deleting institution");
+      alert(err.response?.data?.message || "Error deleting institution");
     }
   };
 
   return (
     <div className="admin-layout-wrapper">
-      {/* Sidebar */}
       <AdminSidebar />
 
-      {/* Main content */}
       <main className="admin-main-content">
         <div className="institutions-header">
           <h2>🏫 Institutions</h2>
@@ -156,9 +153,7 @@ export default function AdminInstitutions() {
 
           <select
             value={filters.type}
-            onChange={(e) =>
-              setFilters({ ...filters, type: e.target.value })
-            }
+            onChange={(e) => setFilters({ ...filters, type: e.target.value })}
           >
             <option value="">All Types</option>
             <option value="University">University</option>
@@ -186,7 +181,6 @@ export default function AdminInstitutions() {
           <table className="institutions-table">
             <thead>
               <tr>
-                <th>Logo</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>County</th>
@@ -217,7 +211,9 @@ export default function AdminInstitutions() {
                   <td>
                     <span
                       className={
-                        inst.isActive ? "badge badge-active" : "badge badge-inactive"
+                        inst.isActive
+                          ? "badge badge-active"
+                          : "badge badge-inactive"
                       }
                     >
                       {inst.isActive ? "Active" : "Inactive"}
@@ -230,12 +226,14 @@ export default function AdminInstitutions() {
                     >
                       View
                     </Link>
+
                     <button
                       className="edit-btn"
                       onClick={() => openEditModal(inst)}
                     >
                       Edit
                     </button>
+
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(inst)}
@@ -268,18 +266,14 @@ export default function AdminInstitutions() {
                 <input
                   type="text"
                   value={form.name}
-                  onChange={(e) =>
-                    setForm({ ...form, name: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
                 />
 
                 <label>Type *</label>
                 <select
                   value={form.type}
-                  onChange={(e) =>
-                    setForm({ ...form, type: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, type: e.target.value })}
                   required
                 >
                   <option value="University">University</option>
@@ -304,13 +298,11 @@ export default function AdminInstitutions() {
                   }
                 />
 
-                <label>Institution Code</label>
+                {/*<label>Institution Code</label>
                 <input
                   type="text"
                   value={form.code}
-                  onChange={(e) =>
-                    setForm({ ...form, code: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, code: e.target.value })}
                 />
 
                 <label>Logo URL</label>
@@ -330,7 +322,7 @@ export default function AdminInstitutions() {
                   onChange={(e) =>
                     setForm({ ...form, description: e.target.value })
                   }
-                />
+                />*/}
 
                 <label className="checkbox-label">
                   <input
