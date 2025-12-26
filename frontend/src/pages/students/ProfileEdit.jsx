@@ -107,7 +107,7 @@ export default function ProfileEdit({ setActiveTab }) {
           type="text"
           name="institution"
           placeholder="University / College / TVET"
-          value={profile.institution}
+          value={profile.institutionName}
           onChange={handleChange}
           required
         />

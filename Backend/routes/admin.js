@@ -89,15 +89,16 @@ router.get("/students", auth, requireRole("admin"), async (req, res) => {
 
     const userMap = new Map(users.map(u => [String(u._id), u]));
     let rows = profiles.map(p => ({
-      userId: String(p.userId),
-      fullName: userMap.get(String(p.userId))?.fullName || "",
-      email: userMap.get(String(p.userId))?.email || "",
-      admissionNo: p.admissionNo,
-      institution: p.institution,
-      course: p.course,
-      year: p.year,
-      photo: p.photo || null,
-    }));
+  userId: String(p.userId),
+  fullName: userMap.get(String(p.userId))?.fullName || "",
+  email: userMap.get(String(p.userId))?.email || "",
+  admissionNo: p.admissionNo,
+  institution: p.institutionName,   // ✅ FIX
+  institutionType: p.institutionType,
+  course: p.course,
+  year: p.year,
+  photo: p.photo || null,
+}));
 
     if (search) {
       const q = search.toLowerCase();
@@ -224,7 +225,7 @@ router.get("/student/:userId", auth, requireRole("admin"), async (req, res) => {
     const documents = await StudentDocument.find({ userId }).sort({ createdAt: -1 }).lean();
     const perf = await Performance.find({ userId }).lean();
 
-    const expected = expectedPeriods(profile?.institution, profile?.year);
+    const expected = expectedPeriods(profile?.institutionType, profile?.year);
     const perfMap = new Map(
       (perf || []).map(p => [`${p.yearOfStudy}-${p.academicPeriod}`, p])
     );
@@ -394,7 +395,7 @@ router.get(
 /**
  * POST /api/admin/institutions
  * Create institution
- */
+ 
 router.post(
   "/",
   auth,
@@ -432,7 +433,7 @@ router.post(
       res.status(500).json({ message: "Server error" });
     }
   }
-);
+);*/
 
 /**
  * PUT /api/admin/institutions/:id

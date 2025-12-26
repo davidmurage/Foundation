@@ -5,15 +5,27 @@ const studentProfileSchema = new mongoose.Schema({
   admissionNo: String,
   course: String,
   year: String,
-  institution: String,
+
+  institutionType: {
+    type: String,
+    enum: ["University", "TVET"],
+    required: true
+  },
+
+  institution: { type: mongoose.Schema.Types.ObjectId, ref: "Institution" },   // actual university / tvet name
+  institutionName:{type: String, required: true},
+  academicPeriod: String, // Semester 1 / Term 2
+
   contact: String,
-  photo: String, // Cloudinary URL
+  photo: String,
+
   status: {
-  type: String,
-  enum: ["pending", "approved", "rejected"],
-  default: "pending"
-},
-adminFeedback: { type: String, default: "" }
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending"
+  },
+
+  adminFeedback: { type: String, default: "" }
 }, { timestamps: true });
 
 export default mongoose.model("StudentProfile", studentProfileSchema);

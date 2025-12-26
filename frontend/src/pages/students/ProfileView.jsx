@@ -29,7 +29,8 @@ export default function ProfileView({ setActiveTab }) {
           <p><strong>Admission No:</strong> {profile.admissionNo}</p>
           <p><strong>Course:</strong> {profile.course}</p>
           <p><strong>Year:</strong> {profile.year}</p>
-          <p><strong>Institution:</strong> {profile.institution}</p>
+          <p><strong>academicPeriod:</strong>{profile.academicPeriod}</p>
+          <p><strong>Institution:</strong> {profile.institutionName}</p>
           <p><strong>Contact:</strong> {profile.contact}</p>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { approveStudentProfile, rejectStudentProfile } from "../controllers/appr
 import Notification from "../models/Notification.js";
 import Performance from "../models/Performance.js";
 import StudentDocument from "../models/StudentDocument.js";
+import Institution from "../models/Institution.js"
 import User from "../models/User.js";
 import { pushNotification } from "../utils/notify.js";
 
@@ -35,7 +36,7 @@ router.post(
       console.log("REQ.BODY:", req.body);
       console.log("REQ.FILE:", req.file);
 
-      const { admissionNo, course, year, institution, contact } = req.body;
+      const { admissionNo, course, year,institutionType, institution,academicPeriod, contact } = req.body;
 
       // CHECK IF PROFILE ALREADY EXISTS
       const existingProfile = await StudentProfile.findOne({
@@ -44,13 +45,21 @@ router.post(
 
       const isFirstTime = !existingProfile;
 
+      const inst = await Institution.findById(institution);
+      if(!inst){
+        return res.status(400).json({message:"Institution not found"});
+      }
+
       // PREPARE DATA
       const profileData = {
         userId: req.user.id,
         admissionNo,
         course,
         year,
+        institutionType,
         institution,
+        institutionName: inst.name,
+        academicPeriod,
         contact,
         photo: req.file ? req.file.path : existingProfile?.photo || null,
       };
