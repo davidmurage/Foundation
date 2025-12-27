@@ -1,0 +1,227 @@
+/* ==============================
+   FEES APPLICATION PAGE
+================================ */
+
+.dashboard-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+.dashboard-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #0a3d62;
+}
+
+/* ==============================
+   CARD
+================================ */
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  color: #1e272e;
+}
+
+.card h4 {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  color: #2f3640;
+}
+
+/* ==============================
+   FORM ELEMENTS
+================================ */
+
+.card input,
+.card select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #dcdde1;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card input:focus,
+.card select:focus {
+  border-color: #009639;
+  box-shadow: 0 0 0 2px rgba(0, 150, 57, 0.15);
+}
+
+.card label {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+/* spacing between fields */
+.card > input,
+.card > select,
+.card > label {
+  margin-bottom: 12px;
+}
+
+/* ==============================
+   DOCUMENT INPUT BLOCK
+================================ */
+
+.card p {
+  font-size: 0.85rem;
+  color: #636e72;
+  margin-bottom: 12px;
+}
+
+.card div input {
+  margin-bottom: 8px;
+}
+
+/* ==============================
+   BUTTONS
+================================ */
+
+.card button {
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #009639;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.card button:hover {
+  background: #007d30;
+  transform: translateY(-1px);
+}
+
+.card button:active {
+  transform: translateY(0);
+}
+
+/* secondary button (Add doc) */
+.card button:first-of-type {
+  background: #dfe6e9;
+  color: #2d3436;
+  margin-right: 10px;
+}
+
+.card button:first-of-type:hover {
+  background: #ced6e0;
+}
+
+/* ==============================
+   APPLICATION LIST
+================================ */
+
+.dashboard-container h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #2f3640;
+}
+
+.card strong {
+  font-size: 1.05rem;
+  color: #0a3d62;
+}
+
+.card p {
+  margin: 6px 0;
+}
+
+/* Status text */
+.card p b {
+  text-transform: capitalize;
+}
+
+/* Admin feedback */
+.card p[style*="crimson"] {
+  background: #ffecec;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+/* ==============================
+   REJECTED ACTION
+================================ */
+
+.card button:last-child {
+  margin-top: 12px;
+  background: #e84118;
+}
+
+.card button:last-child:hover {
+  background: #c23616;
+}
+
+/* ==============================
+   LOADING / EMPTY
+================================ */
+
+.dashboard-container > p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* ==============================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px 12px 80px;
+  }
+
+  .dashboard-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+  }
+
+  .card button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .card button:first-of-type {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container h2 {
+    font-size: 1.35rem;
+  }
+
+  .card {
+    border-radius: 12px;
+  }
+
+  .card input,
+  .card select {
+    font-size: 0.9rem;
+  }
+}

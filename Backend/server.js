@@ -9,6 +9,7 @@ import performanceRoutes from "./routes/performance.js";
 import adminRoutes from "./routes/admin.js";
 import adminSettingsRoutes from "./routes/adminSettings.js";
 import institutionPublicRoutes from "./routes/institutionPublic.js";
+import feesApplicationRoutes from "./routes/feesApplication.js";
 
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use("/api/performance", performanceRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
 app.use("/api/institutions", institutionPublicRoutes);
+app.use("/api/fees", feesApplicationRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
