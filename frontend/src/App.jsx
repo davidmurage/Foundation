@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/students/StudentDashboard";
+import FeesApplication from "./pages/students/FeesApplication";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import StudentProfileSetup from "./pages/students/StudentProfileSetup";
 import Documents from "./pages/students/Documents";
@@ -68,6 +69,15 @@ function App() {
             <ProtectedRoute role="student">
               <Performance />
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/fees"
+          element={
+            <ProtectedRoute role="student">
+              <FeesApplication/>
+            </ProtectedRoute>  
           }
         />
 

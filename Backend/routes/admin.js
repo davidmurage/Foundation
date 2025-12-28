@@ -392,48 +392,27 @@ router.get(
   }
 );
 
-/**
- * POST /api/admin/institutions
- * Create institution
- 
-router.post(
-  "/",
-  auth,
-  requireRole("admin"),
-  async (req, res) => {
-    try {
-      const { name, type, county, location, code, logoUrl, description, isActive } = req.body;
+/** List all fee applications */
+router.get("/", auth, requireRole("admin"), async (req, res) => {
+  const apps = await FeeApplication.find()
+    .populate("userId", "fullName email")
+    .sort({ createdAt: -1 });
 
-      if (!name || !type) {
-        return res.status(400).json({ message: "Name and type are required" });
-      }
+  res.json(apps);
+});
 
-      const exists = await Institution.findOne({ name: name.trim() });
-      if (exists) {
-        return res
-          .status(400)
-          .json({ message: "Institution with this name already exists" });
-      }
+/** List fee applications for a specific student */
+router.get("/student/:userId", auth, requireRole("admin"), async (req, res) => {
+  const apps = await FeeApplication.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+  res.json(apps);
+});
 
-      const inst = await Institution.create({
-        name: name.trim(),
-        type,
-        county,
-        location,
-        code,
-        logoUrl,
-        description,
-        isActive: isActive !== undefined ? isActive : true,
-        createdBy: req.user.id,
-      });
+/** Update statuses / feedback */
+router.put("/:id", auth, requireRole("admin"), async (req, res) => {
+  const app = await FeeApplication.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(app);
+});
 
-      res.status(201).json(inst);
-    } catch (err) {
-      console.error("INSTITUTION CREATE ERROR:", err);
-      res.status(500).json({ message: "Server error" });
-    }
-  }
-);*/
 
 /**
  * PUT /api/admin/institutions/:id

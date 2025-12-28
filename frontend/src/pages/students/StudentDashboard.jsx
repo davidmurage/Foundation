@@ -6,6 +6,7 @@ import ProfileView from "./ProfileView";
 import ProfileEdit from "./ProfileEdit";
 import Documents from "./Documents";
 import Performance from "./Performance";
+import FeesApplication from "./FeesApplication"
 
 import { API_URL } from "../../utils/config";
 import "../../styles/student/StudentDashboard.css";
@@ -134,6 +135,14 @@ export default function StudentDashboard() {
             onClick={() => handleMenuClick("profile")}
           >
             👤 My Profile
+          </li>
+          <li
+            className={activeTab === "fees" ? "active" : ""}
+            onClick={() => handleMenuClick("fees")}
+
+          
+          >
+           💰 Fees Application
           </li>
           <li
             className={activeTab === "documents" ? "active" : ""}
@@ -378,6 +387,7 @@ export default function StudentDashboard() {
         )}
         {activeTab === "documents" && <Documents />}
         {activeTab === "performance" && <Performance />}
+        {activeTab === "fees" && <FeesApplication/>}
       </main>
     </div>
   );
