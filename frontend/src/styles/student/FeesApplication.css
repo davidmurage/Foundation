@@ -225,3 +225,134 @@
     font-size: 0.9rem;
   }
 }
+
+/* ==============================
+   FEES TABLE (DESKTOP)
+================================ */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.fees-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.fees-table th,
+.fees-table td {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.fees-table th {
+  background: #f4f6f8;
+  color: #2f3640;
+  font-weight: 600;
+}
+
+.fees-table tr:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.doc-link {
+  display: block;
+  color: #009639;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  text-decoration: none;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   STATUS BADGES
+================================ */
+
+.status,
+.process {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  background: #fff4cc;
+  color: #8a6d00;
+}
+
+.status.approved {
+  background: #e6f7ee;
+  color: #0a7a3f;
+}
+
+.status.rejected {
+  background: #ffecec;
+  color: #b71c1c;
+}
+
+.process.processing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.process.disbursed,
+.process.completed,
+.process.paid {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* ==============================
+   MOBILE CARDS
+================================ */
+
+.fees-cards {
+  display: none;
+}
+
+.fees-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+}
+
+.fees-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.fees-docs a {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  color: #009639;
+}
+
+/* ==============================
+   RESPONSIVE SWITCH
+================================ */
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    display: none;
+  }
+
+  .fees-cards {
+    display: block;
+  }
+}
+

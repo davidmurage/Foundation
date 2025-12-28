@@ -154,21 +154,102 @@ export default function FeesApplication() {
       </div>
 
       <h3>My Applications</h3>
-      {loading && <p>Loading...</p>}
+{loading && <p>Loading...</p>}
 
+{!loading && apps.length === 0 && <p>No applications yet.</p>}
+
+{/* DESKTOP TABLE */}
+<div className="table-wrapper">
+  <table className="fees-table">
+    <thead>
+      <tr>
+        <th>Academic Year</th>
+        <th>Period</th>
+        <th>Amount (KES)</th>
+        <th>Review Status</th>
+        <th>Processing</th>
+        <th>Documents</th>
+      </tr>
+    </thead>
+    <tbody>
       {apps.map((a) => (
-        <div key={a._id} className="card">
-          <strong>{a.academicYear} • {a.academicPeriod}</strong>
-          <p>Amount: KES {a.amountRequested}</p>
-          <p>Status: <b>{a.reviewStatus}</b> | <b>{a.processingStatus}</b></p>
-
-          {a.documents.map((d, i) => (
-            <p key={i}>
-              📄 <a href={d.fileUrl} target="_blank" rel="noreferrer">{d.label}</a>
-            </p>
-          ))}
-        </div>
+        <tr key={a._id}>
+          <td>{a.academicYear}</td>
+          <td>{a.academicPeriod}</td>
+          <td>{Number(a.amountRequested).toLocaleString()}</td>
+          <td>
+            <span className={`status ${a.reviewStatus}`}>
+              {a.reviewStatus}
+            </span>
+          </td>
+          <td>
+            <span className={`process ${a.processingStatus}`}>
+              {a.processingStatus}
+            </span>
+          </td>
+          <td>
+            {a.documents.map((d, i) => (
+              <a
+                key={i}
+                href={d.fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="doc-link"
+              >
+                {d.label}
+              </a>
+            ))}
+          </td>
+        </tr>
       ))}
+    </tbody>
+  </table>
+</div>
+
+{/* MOBILE CARDS */}
+<div className="fees-cards">
+  {apps.map((a) => (
+    <div key={a._id} className="fees-card">
+      <div className="fees-row">
+        <strong>{a.academicYear}</strong>
+        <span>{a.academicPeriod}</span>
+      </div>
+
+      <div className="fees-row">
+        <span>Amount</span>
+        <strong>KES {Number(a.amountRequested).toLocaleString()}</strong>
+      </div>
+
+      <div className="fees-row">
+        <span>Review</span>
+        <span className={`status ${a.reviewStatus}`}>
+          {a.reviewStatus}
+        </span>
+      </div>
+
+      <div className="fees-row">
+        <span>Processing</span>
+        <span className={`process ${a.processingStatus}`}>
+          {a.processingStatus}
+        </span>
+      </div>
+
+      <div className="fees-docs">
+        {a.documents.map((d, i) => (
+          <a
+            key={i}
+            href={d.fileUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            📄 {d.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  ))}
+    </div>
+
     </div>
   );
 }
