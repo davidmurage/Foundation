@@ -2,7 +2,10 @@
    PAGE WRAPPER
 ================================*/
 .admin-content{
-  margin-left: 4px;
+  margin-right: 4rem;
+}
+.admin-layout{
+  margin-left: 0px;
 }
 .admin-page-content {
   width: 100%;
@@ -193,4 +196,110 @@
   font-size: 14px;
   width: 100%;
   resize: vertical;
+}
+
+/* ===============================
+   FEES TABLE
+================================ */
+.fees-table {
+  min-width: 900px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Processing pill */
+.pill {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: #eef;
+}
+
+.pill.processing {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.pill.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.pill.disbursed {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.pill.paid {
+  background: #c3e6cb;
+  color: #155724;
+}
+
+/* Docs */
+.link-btn {
+  display: block;
+  background: none;
+  border: none;
+  padding: 2px 0;
+  color: #006400;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.muted {
+  font-size: 13px;
+  color: #777;
+}
+
+/* Actions */
+.table-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.small {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+/* ===============================
+   MOBILE RESPONSIVENESS
+================================ */
+@media (max-width: 768px) {
+  .fees-table {
+    min-width: 720px;
+  }
+
+  .table-actions {
+    flex-direction: column;
+  }
 }

@@ -5,6 +5,7 @@ import StudentProfile from "../models/StudentProfile.js";
 import StudentDocument from "../models/StudentDocument.js";
 import Performance from "../models/Performance.js";
 import Institution from "../models/Institution.js";
+import FeeApplication from "../models/FeesApplication.js"
 
 const router = express.Router();
 
@@ -402,13 +403,13 @@ router.get("/", auth, requireRole("admin"), async (req, res) => {
 });
 
 /** List fee applications for a specific student */
-router.get("/student/:userId", auth, requireRole("admin"), async (req, res) => {
+router.get("/fees/student/:userId", auth, requireRole("admin"), async (req, res) => {
   const apps = await FeeApplication.find({ userId: req.params.userId }).sort({ createdAt: -1 });
   res.json(apps);
 });
 
 /** Update statuses / feedback */
-router.put("/:id", auth, requireRole("admin"), async (req, res) => {
+router.put("/fees/:id", auth, requireRole("admin"), async (req, res) => {
   const app = await FeeApplication.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(app);
 });

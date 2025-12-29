@@ -47,6 +47,11 @@ export default function AdminStudentDetail() {
   const [rejectModal, setRejectModal] = useState(false);
   const [rejectionMessage, setRejectionMessage] = useState("");
 
+  // Fees
+  const [fees, setFees] = useState([]);
+  const [previewDoc, setPreviewDoc] = useState(null);
+
+
   // Approve profile
   const handleApprove = async () => {
     try {
@@ -85,21 +90,59 @@ export default function AdminStudentDetail() {
     }
   };
 
-  // Load student data
+  /* =========================
+     FETCH DATA (SAFE)
+  ========================== */
   useEffect(() => {
-    (async function () {
+    const fetchAll = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/admin/student/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setData(res.data);
+        const studentRes = await axios.get(
+          `${API_URL}/api/admin/student/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setData(studentRes.data);
       } catch (err) {
-        console.error("STUDENT DETAIL ERROR:", err);
+        console.error("STUDENT FETCH ERROR:", err);
+      }
+
+      try {
+        const feesRes = await axios.get(
+          `${API_URL}/api/admin/fees/student/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setFees(Array.isArray(feesRes.data) ? feesRes.data : []);
+      } catch (err) {
+        console.warn("FEES FETCH ERROR:", err);
+        setFees([]);
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    fetchAll();
   }, [token, userId]);
+
+  /* =========================
+     UPDATE FEE
+  ========================== */
+  const updateFee = async (feeId, payload) => {
+    try {
+      await axios.put(
+        `${API_URL}/api/admin/fees/${feeId}`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setFees((prev) =>
+        prev.map((f) =>
+          f._id === feeId ? { ...f, ...payload } : f
+        )
+      );
+    } catch (err) {
+      console.error("UPDATE FEE ERROR:", err);
+      alert("Failed to update fee application");
+    }
+  };
 
   if (loading) return <div className="admin-content">Loading...</div>;
 
@@ -224,6 +267,10 @@ export default function AdminStudentDetail() {
     },
   };
 
+  
+
+
+
   return (
     <div className="admin-layout">
       <AdminSidebar />
@@ -269,6 +316,108 @@ export default function AdminStudentDetail() {
             </div>
           </div>
         </div>
+{/* ================= FEES ================= */}
+<h3 className="section-title">💰 Fees Applications</h3>
+
+{!Array.isArray(fees) || fees.length === 0 ? (
+  <p>No fees applications found.</p>
+) : (
+  <div className="admin-table-wrap">
+    <table className="admin-table fees-table">
+      <thead>
+        <tr>
+          <th>Academic Year</th>
+          <th>Period</th>
+          <th>Year</th>
+          <th>Amount (KES)</th>
+          <th>Review</th>
+          <th>Processing</th>
+          <th>Documents</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {fees.map((f) => (
+          <tr key={f._id}>
+            <td>{f.academicYear}</td>
+            <td>{f.academicPeriod}</td>
+            <td>{f.yearOfStudy}</td>
+            <td>{Number(f.amountRequested).toLocaleString()}</td>
+
+            <td>
+              <span className={`badge ${f.reviewStatus}`}>
+                {f.reviewStatus}
+              </span>
+            </td>
+
+            <td>
+              <span className={`pill ${f.processingStatus}`}>
+                {f.processingStatus}
+              </span>
+            </td>
+
+            <td>
+              {Array.isArray(f.documents) && f.documents.length > 0 ? (
+                f.documents.map((d, i) => (
+                  <button
+                    key={i}
+                    className="link-btn"
+                    onClick={() => setPreviewDoc(d.fileUrl)}
+                  >
+                    📄 {d.label}
+                  </button>
+                ))
+              ) : (
+                <span className="muted">No docs</span>
+              )}
+            </td>
+
+            <td>
+              {f.reviewStatus === "pending" && (
+                <div className="table-actions">
+                  <button
+                    className="approve-btn small"
+                    onClick={() =>
+                      updateFee(f._id, {
+                        reviewStatus: "approved",
+                        processingStatus: "approved",
+                      })
+                    }
+                  >
+                    Approve
+                  </button>
+
+                  <button
+                    className="reject-btn small"
+                    onClick={() =>
+                      updateFee(f._id, { reviewStatus: "rejected" })
+                    }
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
+
+              {f.reviewStatus === "approved" &&
+                f.processingStatus === "approved" && (
+                  <button
+                    className="approve-btn small"
+                    onClick={() =>
+                      updateFee(f._id, { processingStatus: "disbursed" })
+                    }
+                  >
+                    Mark Disbursed
+                  </button>
+                )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
 
         {/* PERFORMANCE GRAPH: BY SEMESTER / TERM */}
         <h3 className="section-title">📊 Performance by Semester / Term</h3>
@@ -331,6 +480,15 @@ export default function AdminStudentDetail() {
             </tbody>
           </table>
         </div>
+
+        {/* PDF PREVIEW */}
+        {previewDoc && (
+          <div className="modal-overlay" onClick={() => setPreviewDoc(null)}>
+            <div className="modal pdf-modal" onClick={(e) => e.stopPropagation()}>
+              <iframe src={previewDoc} title="Document Preview" />
+            </div>
+          </div>
+        )}
 
         {/* APPROVAL BUTTONS */}
         <div className="approval-actions">
