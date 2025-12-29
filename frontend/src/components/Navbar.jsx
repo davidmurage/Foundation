@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
+import foundation from "../assets/foundation.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <img src="/src/assets/foundation.png" alt="KCB Foundation" />
+        <img src={foundation} alt="KCB Foundation" />
       </div>
 
       {/* Hamburger Button */}
