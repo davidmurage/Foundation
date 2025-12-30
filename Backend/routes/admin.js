@@ -414,6 +414,75 @@ router.put("/fees/:id", auth, requireRole("admin"), async (req, res) => {
   res.json(app);
 });
 
+//reject fees
+router.put(
+  "/fees/:id/reject",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    const { reason } = req.body;
+
+    if (!reason?.trim()) {
+      return res.status(400).json({ message: "Rejection reason required" });
+    }
+
+    const fee = await FeeApplication.findById(req.params.id);
+    if (!fee) return res.status(404).json({ message: "Not found" });
+
+    fee.reviewStatus = "rejected";
+    fee.processingStatus = "processing";
+    fee.adminFeedback = reason;
+
+    await fee.save();
+    res.json(fee);
+  }
+);
+
+
+//approve fees
+router.put(
+  "/fees/:id/approve",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    const fee = await FeeApplication.findById(req.params.id);
+    if (!fee) return res.status(404).json({ message: "Not found" });
+
+    fee.reviewStatus = "approved";
+    fee.processingStatus = "approved";
+    fee.adminFeedback = "";
+
+    await fee.save();
+    res.json(fee);
+  }
+);
+
+
+//Mark as paid
+router.put(
+  "/fees/:id/mark-paid",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    const { disbursementRef } = req.body;
+
+    if (!disbursementRef) {
+      return res.status(400).json({ message: "Disbursement reference required" });
+    }
+
+    const fee = await FeeApplication.findById(req.params.id);
+    if (!fee) return res.status(404).json({ message: "Not found" });
+
+    fee.processingStatus = "paid";
+    fee.disbursementRef = disbursementRef;
+    fee.paidDate = new Date();
+
+    await fee.save();
+    res.json(fee);
+  }
+);
+
+
 
 /**
  * PUT /api/admin/institutions/:id

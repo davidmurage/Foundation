@@ -51,6 +51,13 @@ export default function AdminStudentDetail() {
   const [fees, setFees] = useState([]);
   const [previewDoc, setPreviewDoc] = useState(null);
 
+  const [feeRejectModal, setFeeRejectModal] = useState(false);
+  const [feeRejectReason, setFeeRejectReason] = useState("");
+  const [feeToActOn, setFeeToActOn] = useState(null);
+
+  const [paidModal, setPaidModal] = useState(false);
+  const [disbursementRef, setDisbursementRef] = useState("");
+
 
   // Approve profile
   const handleApprove = async () => {
@@ -89,6 +96,50 @@ export default function AdminStudentDetail() {
       alert("Error rejecting profile");
     }
   };
+
+  const submitFeeRejection = async () => {
+  await axios.put(
+    `${API_URL}/api/admin/fees/${feeToActOn}/reject`,
+    { reason: feeRejectReason },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+  setFees((prev) =>
+    prev.map((f) =>
+      f._id === feeToActOn
+        ? { ...f, reviewStatus: "rejected", adminFeedback: feeRejectReason }
+        : f
+    )
+  );
+
+  setFeeRejectModal(false);
+  setFeeRejectReason("");
+};
+
+const submitPaid = async () => {
+  await axios.put(
+    `${API_URL}/api/admin/fees/${feeToActOn}/mark-paid`,
+    { disbursementRef },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+  setFees((prev) =>
+    prev.map((f) =>
+      f._id === feeToActOn
+        ? {
+            ...f,
+            processingStatus: "paid",
+            disbursementRef,
+            paidDate: new Date(),
+          }
+        : f
+    )
+  );
+
+  setPaidModal(false);
+  setDisbursementRef("");
+};
+
 
   /* =========================
      FETCH DATA (SAFE)
@@ -351,11 +402,40 @@ export default function AdminStudentDetail() {
               </span>
             </td>
 
-            <td>
-              <span className={`pill ${f.processingStatus}`}>
-                {f.processingStatus}
-              </span>
-            </td>
+   <td>
+  <select
+    className={`status-select ${f.processingStatus}`}
+    value={f.processingStatus}
+    onChange={(e) =>
+      updateFee(f._id, {
+        processingStatus: e.target.value,
+      })
+    }
+  >
+    <option value="processing">Processing</option>
+    <option value="approved">Approved</option>
+    <option value="disbursed">Disbursed</option>
+    <option value="paid">Paid</option>
+  </select>
+
+  {/* Admin rejection feedback */}
+  {f.adminFeedback && (
+    <div className="admin-feedback">
+      <b>Admin:</b> {f.adminFeedback}
+    </div>
+  )}
+
+  {/* Paid info */}
+  {f.processingStatus === "paid" && (
+    <div className="paid-info">
+      💸 Ref: {f.disbursementRef || "—"} <br />
+      📅 {f.paidDate
+        ? new Date(f.paidDate).toLocaleDateString()
+        : "—"}
+    </div>
+  )}
+</td>
+
 
             <td>
               {Array.isArray(f.documents) && f.documents.length > 0 ? (
@@ -374,43 +454,36 @@ export default function AdminStudentDetail() {
             </td>
 
             <td>
-              {f.reviewStatus === "pending" && (
-                <div className="table-actions">
-                  <button
-                    className="approve-btn small"
-                    onClick={() =>
-                      updateFee(f._id, {
-                        reviewStatus: "approved",
-                        processingStatus: "approved",
-                      })
-                    }
-                  >
-                    Approve
-                  </button>
+  {f.reviewStatus === "pending" && (
+    <div className="table-actions">
+      <button
+        className="approve-btn small"
+        onClick={() =>
+          updateFee(f._id, {
+            reviewStatus: "approved",
+            processingStatus: "approved",
+          })
+        }
+      >
+        Approve
+      </button>
 
-                  <button
-                    className="reject-btn small"
-                    onClick={() =>
-                      updateFee(f._id, { reviewStatus: "rejected" })
-                    }
-                  >
-                    Reject
-                  </button>
-                </div>
-              )}
+      <button
+        className="reject-btn small"
+        onClick={() => {
+          setFeeToActOn(f._id);
+          setFeeRejectModal(true);
+        }}
+      >
+        Reject
+      </button>
+    </div>
+  )}
 
-              {f.reviewStatus === "approved" &&
-                f.processingStatus === "approved" && (
-                  <button
-                    className="approve-btn small"
-                    onClick={() =>
-                      updateFee(f._id, { processingStatus: "disbursed" })
-                    }
-                  >
-                    Mark Disbursed
-                  </button>
-                )}
-            </td>
+  {f.reviewStatus !== "pending" && (
+    <span className="muted">—</span>
+  )}
+</td>
           </tr>
         ))}
       </tbody>
@@ -528,6 +601,81 @@ export default function AdminStudentDetail() {
             </div>
           </div>
         )}
+
+        {/* ================= FEE REJECT MODAL ================= */}
+{feeRejectModal && (
+  <div className="modal-overlay">
+    <div className="modal reject-modal">
+      <h3>Reject Fee Application</h3>
+      <p>Please provide a reason for rejecting this fee application.</p>
+
+      <textarea
+        rows="4"
+        value={feeRejectReason}
+        onChange={(e) => setFeeRejectReason(e.target.value)}
+        placeholder="Enter rejection reason…"
+      />
+
+      <div className="modal-actions">
+        <button
+          className="save-btn"
+          onClick={submitFeeRejection}
+          disabled={!feeRejectReason.trim()}
+        >
+          Submit Rejection
+        </button>
+
+        <button
+          className="cancel-btn"
+          onClick={() => {
+            setFeeRejectModal(false);
+            setFeeRejectReason("");
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* ================= MARK PAID MODAL ================= 
+{paidModal && (
+  <div className="modal-overlay">
+    <div className="modal reject-modal">
+      <h3>Mark Fee as Paid</h3>
+      <p>Enter disbursement reference (MPESA / EFT / Cheque)</p>
+
+      <input
+        type="text"
+        placeholder="Disbursement Reference"
+        value={disbursementRef}
+        onChange={(e) => setDisbursementRef(e.target.value)}
+      />
+
+      <div className="modal-actions">
+        <button
+          className="save-btn"
+          onClick={submitPaid}
+          disabled={!disbursementRef.trim()}
+        >
+          Confirm Paid
+        </button>
+
+        <button
+          className="cancel-btn"
+          onClick={() => {
+            setPaidModal(false);
+            setDisbursementRef("");
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}*/}
+
       </main>
     </div>
   );

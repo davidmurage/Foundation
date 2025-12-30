@@ -303,3 +303,43 @@
     flex-direction: column;
   }
 }
+
+.status-select {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  background: #fff;
+}
+
+.status-select.processing {
+  border-color: #999;
+}
+
+.status-select.approved {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.status-select.disbursed {
+  border-color: #0277bd;
+  background: #e3f2fd;
+}
+
+.status-select.paid {
+  border-color: #6a1b9a;
+  background: #f3e5f5;
+}
+
+.admin-feedback {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #c62828;
+}
+
+.paid-info {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #2e7d32;
+}

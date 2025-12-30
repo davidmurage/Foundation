@@ -1,235 +1,65 @@
-/* ==============================
-   FEES APPLICATION PAGE
-================================ */
-
+/* =========================
+   BASE LAYOUT
+========================= */
 .dashboard-container {
+  padding: 20px;
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 16px 80px;
+  margin: auto;
 }
 
-.dashboard-container h2 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: #0a3d62;
+h2 {
+  margin-bottom: 15px;
 }
 
-/* ==============================
-   CARD
-================================ */
+h3 {
+  margin: 25px 0 10px;
+}
 
+/* =========================
+   CARD / FORM
+========================= */
 .card {
   background: #ffffff;
-  border-radius: 14px;
-  padding: 22px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
 }
-
-.card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 16px;
-  color: #1e272e;
-}
-
-.card h4 {
-  margin-top: 18px;
-  margin-bottom: 6px;
-  font-size: 1rem;
-  color: #2f3640;
-}
-
-/* ==============================
-   FORM ELEMENTS
-================================ */
 
 .card input,
 .card select {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #dcdde1;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card input:focus,
-.card select:focus {
-  border-color: #009639;
-  box-shadow: 0 0 0 2px rgba(0, 150, 57, 0.15);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
 .card label {
-  display: block;
-  font-size: 0.85rem;
-  margin-top: 12px;
-  margin-bottom: 4px;
+  font-size: 13px;
   color: #555;
+  margin-top: 5px;
+  display: block;
 }
-
-/* spacing between fields */
-.card > input,
-.card > select,
-.card > label {
-  margin-bottom: 12px;
-}
-
-/* ==============================
-   DOCUMENT INPUT BLOCK
-================================ */
-
-.card p {
-  font-size: 0.85rem;
-  color: #636e72;
-  margin-bottom: 12px;
-}
-
-.card div input {
-  margin-bottom: 8px;
-}
-
-/* ==============================
-   BUTTONS
-================================ */
 
 .card button {
-  padding: 11px 18px;
-  border-radius: 10px;
-  border: none;
-  background: #009639;
+  background: #0a7c3a;
   color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  font-weight: 600;
 }
 
 .card button:hover {
-  background: #007d30;
-  transform: translateY(-1px);
+  background: #065c2b;
 }
 
-.card button:active {
-  transform: translateY(0);
-}
-
-/* secondary button (Add doc) */
-.card button:first-of-type {
-  background: #dfe6e9;
-  color: #2d3436;
-  margin-right: 10px;
-}
-
-.card button:first-of-type:hover {
-  background: #ced6e0;
-}
-
-/* ==============================
-   APPLICATION LIST
-================================ */
-
-.dashboard-container h3 {
-  font-size: 1.3rem;
-  margin-bottom: 12px;
-  color: #2f3640;
-}
-
-.card strong {
-  font-size: 1.05rem;
-  color: #0a3d62;
-}
-
-.card p {
-  margin: 6px 0;
-}
-
-/* Status text */
-.card p b {
-  text-transform: capitalize;
-}
-
-/* Admin feedback */
-.card p[style*="crimson"] {
-  background: #ffecec;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-/* ==============================
-   REJECTED ACTION
-================================ */
-
-.card button:last-child {
-  margin-top: 12px;
-  background: #e84118;
-}
-
-.card button:last-child:hover {
-  background: #c23616;
-}
-
-/* ==============================
-   LOADING / EMPTY
-================================ */
-
-.dashboard-container > p {
-  font-size: 0.95rem;
-  color: #555;
-  margin-top: 10px;
-}
-
-/* ==============================
-   RESPONSIVE DESIGN
-================================ */
-
-@media (max-width: 768px) {
-  .dashboard-container {
-    padding: 16px 12px 80px;
-  }
-
-  .dashboard-container h2 {
-    font-size: 1.5rem;
-  }
-
-  .card {
-    padding: 18px;
-  }
-
-  .card h3 {
-    font-size: 1.1rem;
-  }
-
-  .card button {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .card button:first-of-type {
-    margin-right: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-container h2 {
-    font-size: 1.35rem;
-  }
-
-  .card {
-    border-radius: 12px;
-  }
-
-  .card input,
-  .card select {
-    font-size: 0.9rem;
-  }
-}
-
-/* ==============================
-   FEES TABLE (DESKTOP)
-================================ */
-
+/* =========================
+   TABLE (DESKTOP)
+========================= */
 .table-wrapper {
   overflow-x: auto;
 }
@@ -237,50 +67,42 @@
 .fees-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  margin-top: 10px;
 }
 
 .fees-table th,
 .fees-table td {
-  padding: 14px 16px;
+  padding: 12px;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
 }
 
 .fees-table th {
   background: #f4f6f8;
-  color: #2f3640;
   font-weight: 600;
 }
 
-.fees-table tr:not(:last-child) {
-  border-bottom: 1px solid #eee;
-}
-
-.doc-link {
+.fees-table a {
   display: block;
-  color: #009639;
-  font-size: 0.85rem;
-  margin-bottom: 4px;
+  font-size: 13px;
+  color: #0a7c3a;
   text-decoration: none;
 }
 
-.doc-link:hover {
+.fees-table a:hover {
   text-decoration: underline;
 }
 
-/* ==============================
+/* =========================
    STATUS BADGES
-================================ */
-
+========================= */
 .status,
 .process {
+  display: inline-block;
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
 }
@@ -292,60 +114,109 @@
 
 .status.approved {
   background: #e6f7ee;
-  color: #0a7a3f;
+  color: #0a7c3a;
 }
 
 .status.rejected {
-  background: #ffecec;
+  background: #fdecea;
   color: #b71c1c;
 }
 
 .process.processing {
-  background: #e3f2fd;
+  background: #eef3ff;
+  color: #3554d1;
+}
+
+.process.approved {
+  background: #e6f7ee;
+  color: #0a7c3a;
+}
+
+.process.disbursed {
+  background: #e8f4fd;
   color: #1565c0;
 }
 
-.process.disbursed,
-.process.completed,
 .process.paid {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: #e1f5e8;
+  color: #1b5e20;
 }
 
-/* ==============================
-   MOBILE CARDS
-================================ */
+/* =========================
+   ADMIN FEEDBACK
+========================= */
+.admin-feedback {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: #fdecea;
+  border-left: 4px solid #c62828;
+  font-size: 13px;
+  border-radius: 4px;
+  color: #7a1c1c;
+}
 
+/* =========================
+   ACTION BUTTONS
+========================= */
+.resubmit-btn {
+  background: #f57c00;
+  color: #fff;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.resubmit-btn:hover {
+  background: #e65100;
+}
+
+/* =========================
+   MUTED TEXT
+========================= */
+.muted {
+  color: #999;
+  font-size: 13px;
+}
+
+/* =========================
+   MOBILE CARDS
+========================= */
 .fees-cards {
   display: none;
 }
 
 .fees-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  margin-bottom: 14px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.fees-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+.fees-card strong {
+  font-size: 15px;
 }
 
-.fees-docs a {
-  display: block;
-  font-size: 0.85rem;
-  margin-top: 6px;
-  color: #009639;
+.fees-card p {
+  margin: 6px 0;
+  font-size: 14px;
 }
 
-/* ==============================
-   RESPONSIVE SWITCH
-================================ */
+.fees-card .admin-feedback {
+  margin-top: 10px;
+}
 
+.fees-card button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
   .table-wrapper {
     display: none;
@@ -354,5 +225,179 @@
   .fees-cards {
     display: block;
   }
+
+  .card {
+    padding: 15px;
+  }
 }
 
+/* =====================================================
+   FEE EDIT MODAL — HARD OVERRIDE (NO CONFLICTS)
+===================================================== */
+
+.fee-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+}
+
+.fee-modal {
+  width: 50%;
+  max-width: 460px;
+  max-height: 85vh;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  animation: feeModalIn 0.2s ease-out;
+  overflow: hidden;
+}
+
+/* Header */
+.fee-modal h3 {
+  margin: 0;
+  padding: 18px 22px;
+  font-size: 16px;
+  font-weight: 800;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 124, 58, 0.15),
+    rgba(10, 124, 58, 0.05)
+  );
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Admin feedback */
+.fee-modal .admin-feedback {
+  margin: 16px 22px;
+  padding: 14px;
+  background: #fdecea;
+  border-left: 5px solid #b42318;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+/* Inputs */
+.fee-modal input,
+.fee-modal select {
+  width: calc(100% - 44px);
+  margin: 10px 22px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+/* File inputs */
+.fee-modal input[type="file"] {
+  background: #f8fafc;
+  border-style: dashed;
+}
+
+/* Focus */
+.fee-modal input:focus,
+.fee-modal select:focus {
+  outline: none;
+  border-color: #0a7c3a;
+  box-shadow: 0 0 0 4px rgba(10, 124, 58, 0.2);
+}
+
+/* Actions */
+.fee-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 22px;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Buttons */
+.fee-modal-actions .save-btn {
+  background: #0a7c3a;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.fee-modal-actions .save-btn:hover {
+  background: #065c2b;
+}
+
+.fee-modal-actions .cancel-btn {
+  background: #e5e7eb;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+/* Animation */
+@keyframes feeModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .fee-modal {
+    border-radius: 14px;
+  }
+}
+
+/* =====================================================
+   MODAL SCROLLABLE CONTENT
+===================================================== */
+
+.fee-modal {
+  max-height: 85vh; /* IMPORTANT */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollable middle section */
+.fee-modal-content {
+  overflow-y: auto;
+  padding-bottom: 12px;
+}
+
+/* Prevent header & footer from shrinking */
+.fee-modal h3,
+.fee-modal-actions {
+  flex-shrink: 0;
+}
+
+/* Smooth scrollbar (optional but nice) */
+.fee-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fee-modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.fee-modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Mobile adjustment */
+@media (max-height: 700px) {
+  .fee-modal {
+    max-height: 90vh;
+  }
+}
