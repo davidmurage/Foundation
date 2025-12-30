@@ -15,6 +15,8 @@ import feesApplicationRoutes from "./routes/feesApplication.js";
 dotenv.config();
 const app = express();
 
+console.log("MONGO URI =", process.env.MONGO_URI);
+
 app.use(cors());
 app.use(express.json());
 

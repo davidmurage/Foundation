@@ -40,7 +40,23 @@ const feeApplicationSchema = new mongoose.Schema(
       default: "processing",
     },
 
-    adminFeedback: { type: String, default: "" },
+    // Admin review
+adminFeedback: {
+  type: String,
+  default: "",
+},
+
+// Disbursement tracking
+disbursementRef: {
+  type: String,
+  default: "",
+},
+
+paidDate: {
+  type: Date,
+  default: null,
+},
+
 
     version: { type: Number, default: 1 }, // increments on resubmit
   },
