@@ -80,6 +80,22 @@
   color: white;
 }
 
+.sidebar-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 14px 0;
+}
+
+.sidebar-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 10px 12px 6px;
+}
+
+
 /* ============================
    LOGOUT BUTTON
 ============================ */

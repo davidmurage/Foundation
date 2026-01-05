@@ -6,11 +6,10 @@ import NotificationBell from "./NotificationBell";
 export default function AdminSidebar() {
   const [open, setOpen] = useState(window.innerWidth > 992);
 
-  // Auto-collapse when screen becomes small
+  /* ================= AUTO COLLAPSE ================= */
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 992) setOpen(true);
-      else setOpen(false);
+      setOpen(window.innerWidth > 992);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -28,11 +27,8 @@ export default function AdminSidebar() {
 
   return (
     <>
-      {/* HAMBURGER BUTTON — MOBILE ONLY */}
-      <button
-        className="admin-hamburger"
-        onClick={() => setOpen(!open)}
-      >
+      {/* HAMBURGER — MOBILE */}
+      <button className="admin-hamburger" onClick={() => setOpen(!open)}>
         ☰
       </button>
 
@@ -43,6 +39,9 @@ export default function AdminSidebar() {
         <NotificationBell />
 
         <nav>
+          {/* ================= CAMPUS / TVET ================= */}
+          <div className="sidebar-section-title">🎓 Campus & TVET</div>
+
           <NavLink to="/admin-dashboard/overview" onClick={handleLinkClick} end>
             🏠 Overview
           </NavLink>
@@ -51,21 +50,50 @@ export default function AdminSidebar() {
             👥 Students
           </NavLink>
 
-          <NavLink to="/admin-dashboard/admin-users" onClick={handleLinkClick}>
-            🛡 Admin Users
-          </NavLink>
-
           <NavLink to="/admin-dashboard/institutions" onClick={handleLinkClick}>
             🏫 Institutions
           </NavLink>
 
-          {/*<NavLink to="/admin/documents" onClick={handleLinkClick}>
-            📄 Documents
+          <NavLink to="/admin-dashboard/admin-users" onClick={handleLinkClick}>
+            🛡 Admin Users
           </NavLink>
 
-          <NavLink to="/admin/performance" onClick={handleLinkClick}>
-            📊 Performance
-          </NavLink>*/}
+          {/* ================= DIVIDER ================= */}
+          <div className="sidebar-divider" />
+
+          {/* ================= HIGH SCHOOL ================= */}
+          <div className="sidebar-section-title">🏫 High Schools</div>
+
+          <NavLink
+            to="/admin-dashboard/highschools"
+            onClick={handleLinkClick}
+          >
+            🏫 High Schools
+          </NavLink>
+
+          <NavLink
+            to="/admin-dashboard/highschool-admins"
+            onClick={handleLinkClick}
+          >
+            👔 School Admins
+          </NavLink>
+
+          <NavLink
+            to="/admin-dashboard/highschool-students"
+            onClick={handleLinkClick}
+          >
+            👧🧑 Sponsored Students
+          </NavLink>
+
+          <NavLink
+            to="/admin-dashboard/highschool-fees"
+            onClick={handleLinkClick}
+          >
+            💰 Term Fees
+          </NavLink>
+
+          {/* ================= SETTINGS ================= */}
+          <div className="sidebar-divider" />
 
           <NavLink to="/admin-dashboard/settings" onClick={handleLinkClick}>
             ⚙️ Settings
