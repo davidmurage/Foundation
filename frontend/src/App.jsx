@@ -23,6 +23,9 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AboutUs from "./pages/AboutUs";
 import ForgotPassword from "./pages/ForgotPassword";
 
+//highschool
+import AdminHighSchools from "./pages/admin/AdminHighSchools";
+
 
 
 function App() {
@@ -89,6 +92,7 @@ function App() {
     </ProtectedRoute>
   }
 >
+  
   {/* Default page when admin hits /admin-dashboard 
   <Route index element={<AdminStudents />} />*/}
 
@@ -109,6 +113,9 @@ function App() {
 
   {/* Institutions details*/}
   <Route path="institutions/:id" element={<AdminInstitutionDetail/>}/>
+
+  {/*HighSchools*/}
+  <Route path="highschools" element={<AdminHighSchools/>}/>
 
   {/* Settings*/}
   <Route path="settings" element={<AdminSettings/>}/>

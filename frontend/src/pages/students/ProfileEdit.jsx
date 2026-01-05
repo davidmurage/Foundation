@@ -6,15 +6,17 @@ import "../../styles/student/ProfileEdit.css"
 export default function ProfileEdit({ setActiveTab }) {
   const token = localStorage.getItem("token");
   const [profile, setProfile] = useState({
-    admissionNo: "",
-    course: "",
-    year: "",
-    institution: "",
-    contact: "",
-    photo: null,
-  });
+  admissionNo: "",
+  course: "",
+  year: "",
+  academicPeriod: "",
+  institution: "",
+  contact: "",
+  photo: null,
+});
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
+  const [institutions, setInstitutions] = useState([]);
 
   useEffect(() => {
     axios
@@ -23,11 +25,26 @@ export default function ProfileEdit({ setActiveTab }) {
       })
       .then((res) => {
         if (res.data) {
-          setProfile({ ...res.data, photo: null });
+          setProfile({
+  admissionNo: res.data.admissionNo,
+  course: res.data.course,
+  year: res.data.year,
+  academicPeriod: res.data.academicPeriod,
+  institution: res.data.institution?._id || "",
+  contact: res.data.contact,
+  photo: null,
+});
           setPreview(res.data.photo);
         }
       });
   }, [token]);
+
+  useEffect(() => {
+  axios.get(`${API_URL}/api/institutions`).then((res) => {
+    setInstitutions(res.data || []);
+  });
+}, []);
+
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -40,26 +57,36 @@ export default function ProfileEdit({ setActiveTab }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      for (const key in profile) {
-        formData.append(key, profile[key]);
-      }
+  e.preventDefault();
+  try {
+    const formData = new FormData();
 
-      await axios.post(`${API_URL}/api/student/profile`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    // append ONLY what backend expects
+    formData.append("admissionNo", profile.admissionNo);
+    formData.append("course", profile.course);
+    formData.append("year", profile.year);
+    formData.append("academicPeriod", profile.academicPeriod);
+    formData.append("institution", profile.institution); // ObjectId ONLY
+    formData.append("contact", profile.contact);
 
-      setMessage("Profile updated successfully!");
-      setTimeout(() => setActiveTab("profile"), 1000);
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Error updating profile");
+    if (profile.photo) {
+      formData.append("photo", profile.photo);
     }
-  };
+
+    await axios.post(`${API_URL}/api/student/profile`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    setMessage("Profile updated successfully!");
+    setTimeout(() => setActiveTab("profile"), 1000);
+  } catch (err) {
+    setMessage(err.response?.data?.message || "Error updating profile");
+  }
+};
+
 
   return (
     <div className="profile-edit">
@@ -103,14 +130,28 @@ export default function ProfileEdit({ setActiveTab }) {
           <option value="5">Year 5</option>
         </select>
 
-        <input
-          type="text"
+        
+
+        <select
           name="institution"
-          placeholder="University / College / TVET"
-          value={profile.institutionName}
-          onChange={handleChange}
+          value={profile.institution}
+          onChange={(e) =>
+          setProfile({
+          ...profile,
+          institution: e.target.value,
+          institutionName:
+          institutions.find((i) => i._id === e.target.value)?.name || "",
+          })
+          }
           required
-        />
+        >
+          <option value="">Select Institution</option>
+          {institutions.map((inst) => (
+          <option key={inst._id} value={inst._id}>
+          {inst.name}
+          </option>
+          ))}
+        </select>
 
         <input
           type="text"

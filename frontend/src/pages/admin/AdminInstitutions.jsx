@@ -33,6 +33,61 @@ export default function AdminInstitutions() {
     isActive: true,
   });
 
+  const [bulkFile, setBulkFile] = useState(null);
+  const [bulkUploading, setBulkUploading] = useState(false);
+
+  const handlePickBulkFile = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  // Optional: basic validation
+  if (!file.name.toLowerCase().endsWith(".csv")) {
+    alert("Please upload a CSV file (.csv)");
+    e.target.value = "";
+    return;
+  }
+
+  setBulkFile(file);
+};
+
+const uploadBulkFile = async () => {
+  if (!bulkFile) {
+    alert("Please select a CSV file first.");
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append("file", bulkFile);
+
+  try {
+    setBulkUploading(true);
+
+    const res = await axios.post(
+      `${API_URL}/api/institutions/bulk-upload`,
+      fd,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // DO NOT set Content-Type manually for FormData; browser will set boundary
+        },
+      }
+    );
+
+    alert(
+      `${res.data.message}\nAdded: ${res.data.added}\nSkipped: ${res.data.skipped}`
+    );
+
+    setBulkFile(null);
+    await loadInstitutions();
+  } catch (err) {
+    console.error("BULK UPLOAD ERROR:", err);
+    alert(err.response?.data?.message || "Bulk upload failed");
+  } finally {
+    setBulkUploading(false);
+  }
+};
+
+
   // Correct endpoint
   const loadInstitutions = async () => {
     setLoading(true);
@@ -137,11 +192,50 @@ export default function AdminInstitutions() {
 
       <main className="admin-main-content">
         <div className="institutions-header">
-          <h2>🏫 Institutions</h2>
-          <button className="add-btn" onClick={openAddModal}>
-            + Add Institution
-          </button>
-        </div>
+  <h2>🏫 Institutions</h2>
+
+  <div className="institutions-actions">
+    {/* Hidden file input */}
+    <input
+      id="bulkCsvInput"
+      type="file"
+      accept=".csv"
+      onChange={handlePickBulkFile}
+      style={{ display: "none" }}
+    />
+
+    {/* Pick file */}
+    <button
+      type="button"
+      className="upload-btn"
+      onClick={() => document.getElementById("bulkCsvInput").click()}
+      disabled={bulkUploading}
+    >
+      📥 Choose CSV
+    </button>
+
+    {/* Show selected file name */}
+    <span className="bulk-file-name">
+      {bulkFile ? bulkFile.name : "No file selected"}
+    </span>
+
+    {/* Upload */}
+    <button
+      type="button"
+      className="upload-confirm-btn"
+      onClick={uploadBulkFile}
+      disabled={!bulkFile || bulkUploading}
+    >
+      {bulkUploading ? "Uploading..." : "⬆️ Upload"}
+    </button>
+
+    {/* Existing add button */}
+    <button className="add-btn" onClick={openAddModal} disabled={bulkUploading}>
+      + Add Institution
+    </button>
+  </div>
+</div>
+
 
         {/* Filters */}
         <div className="institutions-filterbar">
@@ -186,6 +280,7 @@ export default function AdminInstitutions() {
                 <th>County</th>
                 <th>Location</th>
                 <th>Status</th>
+                <th>Students</th>
                 <th></th>
               </tr>
             </thead>
@@ -193,55 +288,24 @@ export default function AdminInstitutions() {
             <tbody>
               {institutions.map((inst) => (
                 <tr key={inst._id}>
-                  <td>
-                    {inst.logoUrl ? (
-                      <img
-                        src={inst.logoUrl}
-                        alt={inst.name}
-                        className="inst-logo-mini"
-                      />
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                  <td>{inst.name}</td>
-                  <td>{inst.type}</td>
-                  <td>{inst.county || "—"}</td>
-                  <td>{inst.location || "—"}</td>
-                  <td>
-                    <span
-                      className={
-                        inst.isActive
-                          ? "badge badge-active"
-                          : "badge badge-inactive"
-                      }
-                    >
-                      {inst.isActive ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="actions-cell">
-                    <Link
-                      to={`/admin-dashboard/institutions/${inst._id}`}
-                      className="btn-link"
-                    >
-                      View
-                    </Link>
+  <td>{inst.name}</td>
+  <td>{inst.type}</td>
+  <td>{inst.county || "—"}</td>
+  <td>{inst.location || "—"}</td>
+  <td>
+    <span className={inst.isActive ? "badge badge-active" : "badge badge-inactive"}>
+      {inst.isActive ? "Active" : "Inactive"}
+    </span>
+  </td>
+  <td>
+    <strong>{inst.totalStudents}</strong>
+  </td>
+  <td className="actions-cell">
+    <button className="edit-btn" onClick={() => openEditModal(inst)}>Edit</button>
+    <button className="delete-btn" onClick={() => handleDelete(inst)}>Delete</button>
+  </td>
+</tr>
 
-                    <button
-                      className="edit-btn"
-                      onClick={() => openEditModal(inst)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(inst)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
               ))}
 
               {!institutions.length && !loading && (
