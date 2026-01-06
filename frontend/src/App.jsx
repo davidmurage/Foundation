@@ -26,6 +26,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 //highschool
 import AdminHighSchools from "./pages/admin/AdminHighSchools";
 import AdminHighSchoolAdmins from "./pages/admin/AdminHighSchoolAdmins";
+import HighSchoolDashboard from "./pages/highschool/HighSchoolDashboard";
 
 
 
@@ -127,6 +128,19 @@ function App() {
   {/* Settings*/}
   <Route path="settings" element={<AdminSettings/>}/>
 </Route>
+
+{/*HighSchool*/}
+{/* ================= HIGH SCHOOL ================= */}
+        <Route
+          path="/hs-dashboard/overview"
+          element={
+            <ProtectedRoute role="highschool_admin">
+              <HighSchoolDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+
       </Routes>
     </>
   );

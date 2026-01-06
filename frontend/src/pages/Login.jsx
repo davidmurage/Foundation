@@ -24,6 +24,8 @@ export default function Login() {
 
       if (res.data.role === "admin") {
         window.location.href = "/admin-dashboard/overview";
+      }else if(res.data.role === "highschool_admin"){
+        window.location.href = "/hs-dashboard/overview";
       } else {
         window.location.href = res.data.profileIncomplete
           ? "/profile-setup"

@@ -13,7 +13,8 @@ import feesApplicationRoutes from "./routes/feesApplication.js";
 
 //highschool
 import adminHighSchoolsRoutes from "./routes/adminHighSchools.js";
-import highSchoolStudents from "./routes/highSchoolStudents.js"
+import highSchoolStudents from "./routes/highSchoolStudents.js";
+import highSchoolDashboard from "./routes/highSchoolDashboard.js";
 
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.use("/api/fees", feesApplicationRoutes);
 //highschool
 app.use("/api/highschools", adminHighSchoolsRoutes);
 app.use("/api/highschool/students", highSchoolStudents);
+app.use("/api/dashboard", highSchoolDashboard);
 
 
 // MongoDB connection
