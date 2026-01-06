@@ -90,27 +90,32 @@ const uploadBulkFile = async () => {
 
   // Correct endpoint
   const loadInstitutions = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (search) params.append("search", search);
-      if (filters.type) params.append("type", filters.type);
-      if (filters.county) params.append("county", filters.county);
-      if (filters.active !== "") params.append("active", filters.active);
+  setLoading(true);
+  try {
+    const params = new URLSearchParams();
 
-      const res = await axios.get(
-        `${API_URL}/api/institutions?${params.toString()}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    // THIS IS THE KEY LINE
+    params.append("scope", "campus");
 
-      setInstitutions(res.data || []);
-    } catch (err) {
-      console.error("LOAD INSTITUTIONS ERROR:", err);
-      alert(err.response?.data?.message || "Failed to load institutions");
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (search) params.append("search", search);
+    if (filters.type) params.append("type", filters.type);
+    if (filters.county) params.append("county", filters.county);
+    if (filters.active !== "") params.append("active", filters.active);
+
+    const res = await axios.get(
+      `${API_URL}/api/institutions?${params.toString()}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setInstitutions(res.data || []);
+  } catch (err) {
+    console.error("LOAD INSTITUTIONS ERROR:", err);
+    alert(err.response?.data?.message || "Failed to load institutions");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     loadInstitutions();

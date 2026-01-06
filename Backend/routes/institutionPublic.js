@@ -36,35 +36,40 @@ router.post("/", auth, requireRole("admin"), async (req, res) => {
 /* READ */
 router.get("/", async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type, scope } = req.query;
 
     const match = { isActive: true };
-    if (type) match.type = type;
+
+    if (scope === "campus") {
+      // ONLY Universities + TVETs
+      match.type = { $in: ["University", "TVET"] };
+    }
+
+    if (scope === "highschool") {
+      match.type = "HighSchool";
+    }
+
+    // Explicit override if type is passed
+    if (type) {
+      match.type = type;
+    }
 
     const institutions = await Institution.aggregate([
       { $match: match },
-
       {
         $lookup: {
-          from: "studentprofiles", //Mongo collection name
+          from: "studentprofiles",
           localField: "_id",
           foreignField: "institution",
           as: "students",
         },
       },
-
       {
         $addFields: {
           studentCount: { $size: "$students" },
         },
       },
-
-      {
-        $project: {
-          students: 0, // remove large array
-        },
-      },
-
+      { $project: { students: 0 } },
       { $sort: { name: 1 } },
     ]);
 
@@ -74,6 +79,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Failed to load institutions" });
   }
 });
+
 
 
 

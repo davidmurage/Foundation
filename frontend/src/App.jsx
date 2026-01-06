@@ -25,6 +25,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 
 //highschool
 import AdminHighSchools from "./pages/admin/AdminHighSchools";
+import AdminHighSchoolAdmins from "./pages/admin/AdminHighSchoolAdmins";
 
 
 
@@ -116,6 +117,12 @@ function App() {
 
   {/*HighSchools*/}
   <Route path="highschools" element={<AdminHighSchools/>}/>
+
+  <Route
+  path="highschool-admins"
+  element={<AdminHighSchoolAdmins />}
+/>
+
 
   {/* Settings*/}
   <Route path="settings" element={<AdminSettings/>}/>
