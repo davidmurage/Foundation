@@ -37,3 +37,12 @@ export const requireRole = (...roles) => (req, res, next) => {
   }
   return next();
 };
+
+
+/* Role guard for HighSchoolAdmin */
+export const requireHighSchoolAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== "HighSchoolAdmin") {
+    return res.status(403).json({ message: "Access denied" });
+  }
+  next();
+}

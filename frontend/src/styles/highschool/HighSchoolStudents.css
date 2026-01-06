@@ -1,0 +1,79 @@
+.hs-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.hs-main {
+  flex: 1;
+  padding: 20px;
+}
+
+.hs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hs-header button {
+  padding: 10px 14px;
+  background: #0a7c3a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.hs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.hs-table th,
+.hs-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 10px;
+}
+
+.modal-scroll {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+}

@@ -1,0 +1,74 @@
+.hs-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+  margin-left: 300px;
+}
+
+.hs-main {
+  flex: 1;
+  padding: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.stat-card h4 {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.stat-card strong {
+  font-size: 22px;
+  color: #0a7c3a;
+}
+
+.section-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.grade-list {
+  list-style: none;
+  padding: 0;
+}
+
+.grade-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.quick-actions button {
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #0a7c3a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quick-actions button:hover {
+  background: #065c2b;
+}
