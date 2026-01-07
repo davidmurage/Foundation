@@ -1,3 +1,7 @@
+/* ===============================
+   LAYOUT
+================================ */
+
 .hs-layout {
   display: flex;
   min-height: 100vh;
@@ -5,10 +9,23 @@
   margin-left: 300px;
 }
 
+/* Main content */
 .hs-main {
   flex: 1;
-  padding: 20px;
+  padding: 24px;
+  transition: padding 0.3s ease;
 }
+
+/* Page title */
+.hs-main h2 {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: #1e2e24;
+}
+
+/* ===============================
+   STAT CARDS
+================================ */
 
 .stats-grid {
   display: grid;
@@ -18,57 +35,150 @@
 }
 
 .stat-card {
-  background: white;
+  background: #ffffff;
   padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card h4 {
   margin-bottom: 8px;
   font-weight: 500;
+  font-size: 0.95rem;
+  color: #555;
 }
 
 .stat-card strong {
-  font-size: 22px;
+  font-size: 1.4rem;
   color: #0a7c3a;
 }
 
+/* ===============================
+   SECTION CARD
+================================ */
+
 .section-card {
-  background: white;
+  background: #ffffff;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
+
+.section-card h3 {
+  margin-bottom: 14px;
+  font-size: 1.1rem;
+}
+
+/* ===============================
+   GRADE LIST
+================================ */
 
 .grade-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .grade-list li {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
+  align-items: center;
+  padding: 10px 0;
   border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
 }
+
+.grade-list li:last-child {
+  border-bottom: none;
+}
+
+.grade-list strong {
+  color: #0a7c3a;
+}
+
+/* ===============================
+   QUICK ACTIONS
+================================ */
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
 }
 
 .quick-actions button {
   padding: 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   background: #0a7c3a;
   color: white;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
 }
 
 .quick-actions button:hover {
   background: #065c2b;
+  transform: translateY(-2px);
+}
+
+/* ===============================
+   TABLET
+================================ */
+
+@media (max-width: 992px) {
+  .hs-main {
+    padding: 20px;
+  }
+
+  .stat-card strong {
+    font-size: 1.25rem;
+  }
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+  .hs-layout{
+    margin-left: 0px;
+  }
+  .hs-main {
+    padding: 16px;
+    padding-top: 70px; /* space for hamburger */
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-list li {
+    font-size: 0.9rem;
+  }
+}
+
+/* ===============================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 480px) {
+  .hs-main h2 {
+    font-size: 1.2rem;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .quick-actions button {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
 }

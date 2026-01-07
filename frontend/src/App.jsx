@@ -27,6 +27,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import AdminHighSchools from "./pages/admin/AdminHighSchools";
 import AdminHighSchoolAdmins from "./pages/admin/AdminHighSchoolAdmins";
 import HighSchoolDashboard from "./pages/highschool/HighSchoolDashboard";
+import HighSchoolStudents from "./pages/highschool/HighSchoolStudents";
 
 
 
@@ -136,6 +137,15 @@ function App() {
           element={
             <ProtectedRoute role="highschool_admin">
               <HighSchoolDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/hs-dashboard/students"
+          element={
+            <ProtectedRoute role="highschool_admin">
+              <HighSchoolStudents />
             </ProtectedRoute>
           }
         />
