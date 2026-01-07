@@ -1,5 +1,24 @@
 /* ================================
-   HIGH SCHOOL SIDEBAR
+   HAMBURGER BUTTON
+================================ */
+
+.hs-hamburger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #0f3d2e;
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1100;
+  display: none;
+}
+
+/* ================================
+   SIDEBAR
 ================================ */
 
 .hs-sidebar {
@@ -14,6 +33,17 @@
   top: 0;
   left: 0;
   z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+/* Collapsed state (mobile) */
+.hs-sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* Open state */
+.hs-sidebar.open {
+  transform: translateX(0);
 }
 
 /* ================================
@@ -25,11 +55,10 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 30px;
-  letter-spacing: 0.5px;
 }
 
 /* ================================
-   NAVIGATION
+   NAV
 ================================ */
 
 .hs-sidebar nav {
@@ -48,16 +77,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: background 0.25s ease;
 }
 
-/* Hover */
 .hs-sidebar nav a:hover {
   background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
 }
 
-/* Active link */
 .hs-sidebar nav a.active {
   background: #ffffff;
   color: #0f3d2e;
@@ -65,28 +91,20 @@
 }
 
 /* ================================
-   LOGOUT BUTTON
+   LOGOUT
 ================================ */
 
-.hs-sidebar .logout-btn {
-  margin-top: 20px;
+.logout-btn {
   padding: 12px;
   border: none;
   border-radius: 8px;
   background: #c0392b;
   color: #ffffff;
-  font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.25s ease;
-}
-
-.hs-sidebar .logout-btn:hover {
-  background: #a93226;
 }
 
 /* ================================
    MAIN CONTENT OFFSET
-   (important for layout)
 ================================ */
 
 .hs-main-content {
@@ -95,59 +113,34 @@
 }
 
 /* ================================
-   RESPONSIVE — TABLET
+   TABLET
 ================================ */
 
 @media (max-width: 992px) {
-  .hs-sidebar {
-    width: 220px;
-  }
-
   .hs-main-content {
     margin-left: 220px;
+  }
+
+  .hs-sidebar {
+    width: 220px;
   }
 }
 
 /* ================================
-   RESPONSIVE — MOBILE
+   MOBILE
 ================================ */
 
 @media (max-width: 768px) {
+  .hs-hamburger {
+    display: block;
+  }
+
   .hs-sidebar {
-    position: fixed;
-    width: 100%;
-    height: auto;
-    min-height: auto;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px 12px;
-  }
-
-  .hs-brand {
-    margin: 0;
-    font-size: 1rem;
-    flex: 1;
-    text-align: left;
-  }
-
-  .hs-sidebar nav {
-    flex-direction: row;
-    gap: 6px;
-  }
-
-  .hs-sidebar nav a {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-  }
-
-  .hs-sidebar .logout-btn {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-    margin-top: 0;
+    width: 240px;
   }
 
   .hs-main-content {
     margin-left: 0;
-    margin-top: 70px;
+    padding-top: 70px;
   }
 }
