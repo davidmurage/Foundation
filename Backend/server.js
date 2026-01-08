@@ -15,6 +15,7 @@ import feesApplicationRoutes from "./routes/feesApplication.js";
 import adminHighSchoolsRoutes from "./routes/adminHighSchools.js";
 import highSchoolStudents from "./routes/highSchoolStudents.js";
 import highSchoolDashboard from "./routes/highSchoolDashboard.js";
+import highSchoolStudentProfileRoutes from "./routes/highSchoolStudentProfile.js";
 
 
 dotenv.config();
@@ -39,6 +40,8 @@ app.use("/api/fees", feesApplicationRoutes);
 app.use("/api/highschools", adminHighSchoolsRoutes);
 app.use("/api/highschool/students", highSchoolStudents);
 app.use("/api/dashboard", highSchoolDashboard);
+app.use("/uploads", express.static("uploads"));
+app.use("/api/highschool/student", highSchoolStudentProfileRoutes);
 
 
 // MongoDB connection

@@ -28,6 +28,7 @@ import AdminHighSchools from "./pages/admin/AdminHighSchools";
 import AdminHighSchoolAdmins from "./pages/admin/AdminHighSchoolAdmins";
 import HighSchoolDashboard from "./pages/highschool/HighSchoolDashboard";
 import HighSchoolStudents from "./pages/highschool/HighSchoolStudents";
+import HighSchoolStudentProfile from "./pages/highschool/HighSchoolStudentProfile";
 
 
 
@@ -150,7 +151,8 @@ function App() {
           }
         />
 
-
+         // inside Routes
+        <Route path="/hs-dashboard/students/:id" element={<HighSchoolStudentProfile />} />
       </Routes>
     </>
   );
