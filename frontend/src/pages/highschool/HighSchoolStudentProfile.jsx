@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 
-import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar";
+import HighSchoolSidebar from "../../components/Highschool/HighSchoolSidebar";
 import "../../styles/highschool/HighSchoolStudentProfile.css";
 
 export default function HighSchoolStudentProfile() {
