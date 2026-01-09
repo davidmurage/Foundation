@@ -4,9 +4,35 @@ import Institution from "../models/Institution.js";
 import auth, { requireRole } from "../middleware/auth.js";
 import User from "../models/User.js";
 import HighSchoolAdmin from "../models/HighSchoolAdmin.js";
+import HighSchoolStudent from "../models/HighSchoolStudent.js";
+import HighSchoolStudentDocument from "../models/HighSchoolStudentDocument.js";
+import HighSchoolStudentFeeRecord from "../models/HighSchoolStudentFeeRecord.js";
+import HighSchoolStudentPerformance from "../models/HighSchoolStudentPerformance.js";
+import AdminActionLog from "../models/AdminActionLog.js";
 
 
 const router = express.Router();
+
+function requireSystemAdmin(req, res) {
+  // Adjust based on your auth payload
+  const role = req.user?.role;
+  if (!["admin"].includes(role)) {
+    res.status(403).json({ message: "Access denied" });
+    return false;
+  }
+  return true;
+}
+
+async function logAction({ actor, institution, action, targetType, targetId, meta }) {
+  await AdminActionLog.create({
+    actor,
+    institution,
+    action,
+    targetType,
+    targetId,
+    meta: meta || {},
+  });
+}
 
 /* =========================
    GET ALL HIGH SCHOOLS
@@ -228,6 +254,159 @@ router.delete("/admins/:id", auth, requireRole("admin"), async (req, res) => {
   } catch (err) {
     console.error("DELETE ADMIN ERROR:", err);
     res.status(500).json({ message: "Delete failed" });
+  }
+});
+
+
+/**
+ * GET: School Profile Bundle
+ *  - institution info
+ *  - admins in that school
+ *  - students in that school
+ *  - fees summary
+ *  - latest documents
+ *  - activity logs
+ */
+router.get("/highschools/:schoolId/profile", auth, async (req, res) => {
+  try {
+    if (!requireSystemAdmin(req, res)) return;
+
+    const { schoolId } = req.params;
+
+    const institution = await Institution.findById(schoolId);
+    if (!institution) return res.status(404).json({ message: "School not found" });
+
+    const admins = await HighSchoolAdmin.find({ institution: schoolId })
+      .populate("user", "fullName email");
+
+    const students = await HighSchoolStudent.find({ institution: schoolId }).sort({ createdAt: -1 });
+
+    const stats = {
+      totalStudents: students.length,
+      approvedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Approved").length,
+      pendingStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Pending").length,
+      rejectedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Rejected").length,
+    };
+
+    // Fees summary: flatten latest fee records
+    const feeRecords = await HighSchoolStudentFeeRecord.find({ institution: schoolId })
+      .populate("student", "fullName")
+      .sort({ createdAt: -1 })
+      .limit(200);
+
+    const totalExpected = feeRecords.reduce((sum, r) => sum + Number(r.totalFees || 0), 0);
+    const totalPaid = feeRecords.reduce((sum, r) => sum + Number(r.paidAmount || 0), 0);
+
+    const feesSummary = {
+      totalExpected,
+      totalPaid,
+      totalBalance: totalExpected - totalPaid,
+      records: feeRecords.map((r) => ({
+        _id: r._id,
+        studentName: r.student?.fullName || "—",
+        academicYear: r.academicYear,
+        term: r.term,
+        totalFees: r.totalFees,
+        paidAmount: r.paidAmount,
+      })),
+    };
+
+    // Latest documents across school
+    const docs = await HighSchoolStudentDocument.find({ institution: schoolId })
+      .populate("student", "fullName")
+      .sort({ createdAt: -1 })
+      .limit(100);
+
+    const documents = docs.map((d) => ({
+      _id: d._id,
+      studentName: d.student?.fullName || "—",
+      title: d.title,
+      type: d.type,
+      fileUrl: d.fileUrl,
+      createdAt: d.createdAt,
+    }));
+
+    // Activity logs
+    const logs = await AdminActionLog.find({ institution: schoolId })
+      .populate("actor", "fullName email")
+      .sort({ createdAt: -1 })
+      .limit(200);
+
+    const activity = logs.map((x) => ({
+      _id: x._id,
+      createdAt: x.createdAt,
+      action: x.action,
+      actorName: x.actor?.fullName || "—",
+      targetLabel: `${x.targetType}`,
+      metaText: x.meta?.status ? `status: ${x.meta.status}` : "",
+    }));
+
+    res.json({ institution, admins, students, stats, feesSummary, documents, activity });
+  } catch (err) {
+    console.error("ADMIN HS PROFILE ERROR:", err);
+    res.status(500).json({ message: "Failed to load admin school profile" });
+  }
+});
+
+/**
+ * GET: Student Profile (admin read-only)
+ */
+router.get("/students/:studentId/profile", auth, async (req, res) => {
+  try {
+    if (!requireSystemAdmin(req, res)) return;
+
+    const { studentId } = req.params;
+    const student = await HighSchoolStudent.findById(studentId);
+    if (!student) return res.status(404).json({ message: "Student not found" });
+
+    const [performance, feeRecords, documents] = await Promise.all([
+      HighSchoolStudentPerformance.find({ student: studentId }).sort({ createdAt: -1 }),
+      HighSchoolStudentFeeRecord.find({ student: studentId }).sort({ createdAt: -1 }),
+      HighSchoolStudentDocument.find({ student: studentId }).sort({ createdAt: -1 }),
+    ]);
+
+    res.json({ student, performance, feeRecords, documents });
+  } catch (err) {
+    console.error("ADMIN STUDENT PROFILE ERROR:", err);
+    res.status(500).json({ message: "Failed to load student profile" });
+  }
+});
+
+/**
+ * PATCH: Approve/Reject student
+ */
+router.patch("/students/:studentId/approval", auth, async (req, res) => {
+  try {
+    if (!requireSystemAdmin(req, res)) return;
+
+    const { studentId } = req.params;
+    const { status } = req.body; // "Approved" | "Rejected" | "Pending"
+
+    if (!["Approved", "Rejected", "Pending"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const student = await HighSchoolStudent.findById(studentId);
+    if (!student) return res.status(404).json({ message: "Student not found" });
+
+    student.approvalStatus = status;
+    student.approvedBy = req.user.id;
+    student.approvedAt = new Date();
+    await student.save();
+
+    await logAction({
+      actor: req.user.id,
+      institution: student.institution,
+      action: "STUDENT_APPROVAL_CHANGED",
+      targetType: "Student",
+      targetId: student._id,
+      meta: { status },
+    });
+
+    res.json({ message: "Updated", student });
+  } catch (err) {
+    console.error("ADMIN STUDENT APPROVAL ERROR:", err);
+    res.status(500).json({ message: "Failed to update approval" });
   }
 });
 

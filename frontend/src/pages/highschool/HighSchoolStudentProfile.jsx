@@ -212,6 +212,13 @@ const submitFees = async (e) => {
     load();
   };
 
+  const getFeeStatus = (total, paid) => {
+  if (paid >= total) return "Paid";
+  if (paid > 0) return "Partial";
+  return "Unpaid";
+ };
+
+
   return (
     <div className="hs-layout">
       <HighSchoolSidebar />
@@ -355,6 +362,7 @@ const submitFees = async (e) => {
                     <th>Total Fees</th>
                     <th>Paid</th>
                     <th>Balance</th>
+                    <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -367,6 +375,11 @@ const submitFees = async (e) => {
                       <td>KES {Number(f.paidAmount || 0).toLocaleString()}</td>
                       <td>
                         KES {Number((f.totalFees || 0) - (f.paidAmount || 0)).toLocaleString()}
+                      </td>
+                      <td>
+                         <span className={`fee-status ${getFeeStatus(f.totalFees, f.paidAmount).toLowerCase()}`}>
+                          {getFeeStatus(f.totalFees, f.paidAmount)}
+                         </span>
                       </td>
                       <td className="actions-cell">
                         <button className="btn-edit" onClick={() => openEditFee(f)}>

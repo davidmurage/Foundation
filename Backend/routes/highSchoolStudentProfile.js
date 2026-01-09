@@ -70,25 +70,27 @@ router.post("/:id/performance", auth, async (req, res) => {
     if (!student) return res.status(404).json({ message: "Student not found" });
     if (student === "FORBIDDEN") return res.status(403).json({ message: "Access denied" });
 
-    const performance = await HighSchoolStudentPerformance.create({
-      student: student._id,
-      institution: admin.institution,
-      curriculum: student.curriculum, // IMPORTANT
-      academicYear: req.body.academicYear,
-      term: req.body.term,
-      examName: req.body.examName || "End Term",
+    const payload = {
+  student: student._id,
+  institution: admin.institution,
+  curriculum: student.curriculum,
+  academicYear: req.body.academicYear,
+  term: req.body.term,
+  examName: req.body.examName || "End Term",
+  remarks: req.body.remarks || "",
+  createdBy: req.user.id,
+};
 
-      // 8-4-4
-      meanScore: req.body.meanScore,
-      meanGrade: req.body.meanGrade,
+if (student.curriculum === "CBC") {
+  payload.learningArea = req.body.learningArea;
+  payload.competencyLevel = req.body.competencyLevel;
+} else {
+  payload.meanScore = req.body.meanScore;
+  payload.meanGrade = req.body.meanGrade;
+}
 
-      // CBC
-      competencyLevel: req.body.competencyLevel,
-      learningArea: req.body.learningArea,
+const performance = await HighSchoolStudentPerformance.create(payload);
 
-      remarks: req.body.remarks || "",
-      createdBy: req.user.id,
-    });
 
     res.status(201).json(performance);
   } catch (err) {

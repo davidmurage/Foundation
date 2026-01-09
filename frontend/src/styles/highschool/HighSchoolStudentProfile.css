@@ -249,3 +249,26 @@
   background:#e0f2fe;
   color:#075985;
 }
+
+.fee-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.fee-status.paid {
+  background: #e6f7ee;
+  color: #1e7f4f;
+}
+
+.fee-status.partial {
+  background: #fff6e5;
+  color: #9a6a00;
+}
+
+.fee-status.unpaid {
+  background: #fdecea;
+  color: #b42318;
+}

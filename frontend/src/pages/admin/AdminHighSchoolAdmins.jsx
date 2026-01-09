@@ -5,6 +5,7 @@ import { API_URL } from "../../utils/config";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import "../../styles/admin/AdminLayoutBase.css";
 import "../../styles/admin/AdminHighSchoolAdmins.css";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminHighSchoolAdmins() {
   const token = localStorage.getItem("token");
@@ -31,6 +32,8 @@ const [editForm, setEditForm] = useState({
     password: "",
     role: "Principal",
   });
+
+  const navigate = useNavigate();
 
   /* ================= LOAD DATA ================= */
   const loadHighSchools = async () => {
@@ -177,6 +180,12 @@ const deleteAdmin = async (id) => {
       </td>
 
       <td className="actions-cell">
+        <button
+    className="profile-btn"
+    onClick={() => navigate(`/admin-dashboard/highschools/${a.institution?._id}/profile`)}
+  >
+    Profile
+  </button>
   <button className="edit-btn" onClick={() => openEditModal(a)}>
     Edit
   </button>
