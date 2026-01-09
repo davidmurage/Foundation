@@ -5,6 +5,7 @@ import { API_URL } from "../../utils/config";
 
 import "../../styles/highschool/HighSchoolStudents.css";
 import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar";
+import { useNavigate } from "react-router-dom";
 
 export default function HighSchoolStudents() {
   const token = localStorage.getItem("token");
@@ -32,6 +33,7 @@ const [filters, setFilters] = useState({
 });
 
 const [editingStudent, setEditingStudent] = useState(null);
+const navigate = useNavigate();
 
 
 
@@ -279,6 +281,9 @@ const handleBulkUpload = async (e) => {
   >
     🗑 Delete
   </button>
+  <button className="btn-view" onClick={() => navigate(`/hs-dashboard/students/${s._id}`)}>
+    📄 Profile
+  </button>
 </td>
     </tr>
   ))}
@@ -403,6 +408,7 @@ const handleBulkUpload = async (e) => {
                   <button type="button" onClick={() => setModalOpen(false)}>
                     Cancel
                   </button>
+                  
                 </div>
               </form>
             </div>
