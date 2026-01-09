@@ -4,7 +4,9 @@ import { API_URL } from "../../utils/config";
 
 
 import "../../styles/highschool/HighSchoolDashboard.css";
-import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar";
+import HighSchoolSidebar from "../../components/Highschool/HighSchoolSidebar";
+
+
 
 export default function HighSchoolDashboard() {
   const token = localStorage.getItem("token");
