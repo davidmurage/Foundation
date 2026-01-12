@@ -299,9 +299,9 @@ router.get("/highschools/:schoolId/profile", auth, async (req, res) => {
     const stats = {
       totalStudents: students.length,
       //approvedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Approved").length,
-      approvedStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Approved").length,
-      pendingStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Pending").length,
-      rejectedStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Rejected").length,
+      approvedStudents: students.filter((s) => (s.sponsorshipStatus || "pending") === "approved").length,
+      pendingStudents: students.filter((s) => (s.sponsorshipStatus || "pending") === "pending").length,
+      rejectedStudents: students.filter((s) => (s.sponsorshipStatus || "pending") === "rejected").length,
     };
 
     // Fees summary: flatten latest fee records

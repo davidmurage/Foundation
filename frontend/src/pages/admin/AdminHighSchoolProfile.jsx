@@ -79,8 +79,8 @@ export default function AdminHighSchoolProfile() {
       const yearOk = !filters.academicYear || String(s.academicYear) === String(filters.academicYear);
 
       const approvalOk =
-        !filters.approvalStatus ||
-        (s.approvalStatus || "Pending") === filters.approvalStatus;
+        !filters.sponsorshipStatus ||
+        (s.sponsorshipStatus || "Pending") === filters.sponsorshipStatus;
 
       return nameOk && genderOk && currOk && yearOk && approvalOk;
     });
@@ -123,13 +123,13 @@ export default function AdminHighSchoolProfile() {
           <button className={tab === "students" ? "active" : ""} onClick={() => setTab("students")}>
             Students
           </button>
-          <button className={tab === "fees" ? "active" : ""} onClick={() => setTab("fees")}>
+          {/*<button className={tab === "fees" ? "active" : ""} onClick={() => setTab("fees")}>
             Fees Summary
           </button>
           <button className={tab === "documents" ? "active" : ""} onClick={() => setTab("documents")}>
             Documents
           </button>
-          {/*<button className={tab === "activity" ? "active" : ""} onClick={() => setTab("activity")}>
+          <button className={tab === "activity" ? "active" : ""} onClick={() => setTab("activity")}>
             Activity
           </button>*/}
         </div>
@@ -226,8 +226,8 @@ export default function AdminHighSchoolProfile() {
                 />
 
                 <select
-                  value={filters.approvalStatus}
-                  onChange={(e) => setFilters({ ...filters, approvalStatus: e.target.value })}
+                  value={filters.sponsorshipStatus}
+                  onChange={(e) => setFilters({ ...filters, sponsorshipStatus: e.target.value })}
                 >
                   <option value="">Approval</option>
                   <option value="Pending">Pending</option>
