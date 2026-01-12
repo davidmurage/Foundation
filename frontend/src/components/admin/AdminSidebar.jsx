@@ -78,20 +78,6 @@ export default function AdminSidebar() {
             👔 School Admins
           </NavLink>
 
-          <NavLink
-            to="/admin-dashboard/highschool-students"
-            onClick={handleLinkClick}
-          >
-            👧🧑 Sponsored Students
-          </NavLink>
-
-          <NavLink
-            to="/admin-dashboard/highschool-fees"
-            onClick={handleLinkClick}
-          >
-            💰 Term Fees
-          </NavLink>
-
           {/* ================= SETTINGS ================= */}
           <div className="sidebar-divider" />
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 
@@ -32,6 +32,14 @@ const [editForm, setEditForm] = useState({
     password: "",
     role: "Principal",
   });
+
+  const [filters, setFilters] = useState({
+  search: "",
+  role: "",
+  institutionId: "",
+  status: "",
+  });
+
 
   const navigate = useNavigate();
 
@@ -136,6 +144,28 @@ const deleteAdmin = async (id) => {
     }
   };
 
+  const filteredAdmins = useMemo(() => {
+  return admins.filter((a) => {
+    const searchOk =
+      !filters.search ||
+      a.user?.fullName?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      a.user?.email?.toLowerCase().includes(filters.search.toLowerCase());
+
+    const roleOk = !filters.role || a.role === filters.role;
+
+    const schoolOk =
+      !filters.institutionId || a.institution?._id === filters.institutionId;
+
+    const statusOk =
+      !filters.status ||
+      (filters.status === "active" && a.isActive) ||
+      (filters.status === "inactive" && !a.isActive);
+
+    return searchOk && roleOk && schoolOk && statusOk;
+  });
+}, [admins, filters]);
+
+
   return (
     <div className="admin-layout-wrapper">
       <AdminSidebar />
@@ -148,6 +178,67 @@ const deleteAdmin = async (id) => {
             + Create Admin
           </button>
         </div>
+        <div className="filters-bar">
+  <input
+    type="text"
+    placeholder="Search name or email..."
+    value={filters.search}
+    onChange={(e) =>
+      setFilters({ ...filters, search: e.target.value })
+    }
+  />
+
+  <select
+    value={filters.role}
+    onChange={(e) =>
+      setFilters({ ...filters, role: e.target.value })
+    }
+  >
+    <option value="">All Roles</option>
+    <option value="Principal">Principal</option>
+    <option value="AcademicMaster">Academic Master</option>
+  </select>
+
+  <select
+    value={filters.institutionId}
+    onChange={(e) =>
+      setFilters({ ...filters, institutionId: e.target.value })
+    }
+  >
+    <option value="">All Schools</option>
+    {schools.map((s) => (
+      <option key={s._id} value={s._id}>
+        {s.name}
+      </option>
+    ))}
+  </select>
+
+  <select
+    value={filters.status}
+    onChange={(e) =>
+      setFilters({ ...filters, status: e.target.value })
+    }
+  >
+    <option value="">All Status</option>
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
+
+  <button
+    className="clear-btn"
+    onClick={() =>
+      setFilters({
+        search: "",
+        role: "",
+        institutionId: "",
+        status: "",
+      })
+    }
+  >
+    Clear
+  </button>
+</div>
+
 
         {/* TABLE */}
         <div className="table-wrapper">
@@ -164,7 +255,7 @@ const deleteAdmin = async (id) => {
             </thead>
 
             <tbody>
-  {admins.map((a) => (
+  {filteredAdmins.map((a) => (
     <tr key={a._id}>
       <td>{a.user?.fullName}</td>
       <td>{a.user?.email}</td>
