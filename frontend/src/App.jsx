@@ -30,6 +30,7 @@ import HighSchoolDashboard from "./pages/highschool/HighSchoolDashboard";
 import HighSchoolStudents from "./pages/highschool/HighSchoolStudents";
 import HighSchoolStudentProfile from "./pages/highschool/HighSchoolStudentProfile";
 import AdminHighSchoolProfile from "./pages/admin/AdminHighSchoolProfile";
+import AdminStudentProfile from "./pages/admin/AdminStudentProfile";
 
 
 
@@ -131,6 +132,7 @@ function App() {
 />
 
 <Route path="highschools/:schoolId/profile" element={<AdminHighSchoolProfile />}/>
+<Route path="highschools/:schoolId/students/:studentId" element={<AdminStudentProfile />} />
 
 
   {/* Settings*/}

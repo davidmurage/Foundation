@@ -31,6 +31,7 @@ export default function AdminHighSchoolProfile() {
       const res = await axios.get(`${API_URL}/api/highschools/highschools/${schoolId}/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("RELOADED STUDENTS:", res.data.students);
       setBundle(res.data);
     } catch (e) {
       alert(e.response?.data?.message || "Failed to load school profile");
@@ -45,19 +46,25 @@ export default function AdminHighSchoolProfile() {
   }, [schoolId]);
 
   const approveReject = async (studentId, status) => {
-    if (!window.confirm(`${status} this student?`)) return;
+  if (!window.confirm(`${status} this student?`)) return;
 
-    try {
-      await axios.patch(
-        `${API_URL}/api/highschools/students/${studentId}/approval`,
-        { status }, // "Approved" | "Rejected" | "Pending"
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      load();
-    } catch (e) {
-      alert(e.response?.data?.message || "Approval action failed");
-    }
-  };
+  try {
+    const res = await axios.patch(
+      `${API_URL}/api/highschools/students/${studentId}/approval`,
+      { status },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    console.log("APPROVE RESPONSE:", res.data);
+
+    // reload updated students
+    await load();
+  } catch (e) {
+    console.error("APPROVE ERROR:", e);
+    alert(e.response?.data?.message || "Approval action failed");
+  }
+};
+
 
   const filteredStudents = useMemo(() => {
     if (!bundle?.students) return [];
@@ -90,6 +97,12 @@ export default function AdminHighSchoolProfile() {
 
       <main className="admin-main-content">
         <div className="school-profile-top">
+            <button
+              className="back-btn"
+              onClick={() => navigate(-1)}
+            >
+               ← Back
+            </button>
           <div>
             <h2>🏫 {institution?.name}</h2>
             <p className="sub">
@@ -97,9 +110,9 @@ export default function AdminHighSchoolProfile() {
             </p>
           </div>
 
-          <button className="refresh-btn" onClick={load}>
+          {/*<button className="refresh-btn" onClick={load}>
             ↻ Refresh
-          </button>
+          </button>*/}
         </div>
 
         {/* Tabs */}
@@ -116,9 +129,9 @@ export default function AdminHighSchoolProfile() {
           <button className={tab === "documents" ? "active" : ""} onClick={() => setTab("documents")}>
             Documents
           </button>
-          <button className={tab === "activity" ? "active" : ""} onClick={() => setTab("activity")}>
+          {/*<button className={tab === "activity" ? "active" : ""} onClick={() => setTab("activity")}>
             Activity
-          </button>
+          </button>*/}
         </div>
 
         {/* Overview */}
@@ -248,24 +261,24 @@ export default function AdminHighSchoolProfile() {
                       <td>{s.level}</td>
                       <td>{s.academicYear}</td>
                       <td>
-                        <span className={`status-pill ${s.approvalStatus || "Pending"}`}>
-                          {s.approvalStatus || "Pending"}
+                        <span className={`status-pill ${s.sponsorshipStatus || "Pending"}`}>
+                          {s.sponsorshipStatus || "Pending"}
                         </span>
                       </td>
 
                       <td className="actions-cell">
                         <button
                           className="profile-btn"
-                          onClick={() => navigate(`/admin/students/${s._id}/profile`)}
+                          onClick={() => navigate(`/admin-dashboard/highschools/${schoolId}/students/${s._id}`)}
                         >
                           View
                         </button>
 
-                        <button className="approve-btn" onClick={() => approveReject(s._id, "Approved")}>
+                        <button className="approve-btn" disabled={s.sponsorshipStatus === "approved"} onClick={() => approveReject(s._id, "approved")}>
                           Approve
                         </button>
 
-                        <button className="reject-btn" onClick={() => approveReject(s._id, "Rejected")}>
+                        <button className="reject-btn" disabled={s.sponsorshipStatus === "rejected"} onClick={() => approveReject(s._id, "rejected")}>
                           Reject
                         </button>
                       </td>
