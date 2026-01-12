@@ -279,13 +279,29 @@ router.get("/highschools/:schoolId/profile", auth, async (req, res) => {
     const admins = await HighSchoolAdmin.find({ institution: schoolId })
       .populate("user", "fullName email");
 
-    const students = await HighSchoolStudent.find({ institution: schoolId }).sort({ createdAt: -1 });
+    //const students = await HighSchoolStudent.find({ institution: schoolId }).sort({ createdAt: -1, approvalStatus: 1, });
+    const students = await HighSchoolStudent.find(
+  { institution: schoolId },
+  {
+    fullName: 1,
+    registrationNo: 1,
+    gender: 1,
+    curriculum: 1,
+    level: 1,
+    academicYear: 1,
+    /*approvalStatus: 1,*/
+    sponsorshipStatus: 1,   // ADD THIS
+    approvedAt: 1        // optional
+  }
+);
+
 
     const stats = {
       totalStudents: students.length,
-      approvedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Approved").length,
-      pendingStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Pending").length,
-      rejectedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Rejected").length,
+      //approvedStudents: students.filter((s) => (s.approvalStatus || "Pending") === "Approved").length,
+      approvedStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Approved").length,
+      pendingStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Pending").length,
+      rejectedStudents: students.filter((s) => (s.sponsorshipStatus || "Pending") === "Rejected").length,
     };
 
     // Fees summary: flatten latest fee records
@@ -382,14 +398,19 @@ router.patch("/students/:studentId/approval", auth, async (req, res) => {
     const { studentId } = req.params;
     const { status } = req.body; // "Approved" | "Rejected" | "Pending"
 
-    if (!["Approved", "Rejected", "Pending"].includes(status)) {
+    const normalizedStatus = status.toLowerCase();
+
+    if (!["approved", "rejected", "pending"].includes(normalizedStatus)) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
     const student = await HighSchoolStudent.findById(studentId);
     if (!student) return res.status(404).json({ message: "Student not found" });
 
-    student.approvalStatus = status;
+    
+
+    //student.approvalStatus = status;
+    student.sponsorshipStatus = normalizedStatus;
     student.approvedBy = req.user.id;
     student.approvedAt = new Date();
     await student.save();

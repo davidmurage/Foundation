@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import "../../styles/admin/AdminLayoutBase.css";
-import "../../styles/admin/AdminStudentProfile.css";
+//import "../../styles/admin/AdminStudentProfile.css";
 
 export default function AdminStudentProfile() {
   const { studentId } = useParams();
@@ -13,6 +13,8 @@ export default function AdminStudentProfile() {
 
   const [bundle, setBundle] = useState(null);
   const [tab, setTab] = useState("overview");
+
+  const navigate = useNavigate();
 
   const load = async () => {
     const res = await axios.get(`${API_URL}/api/highschools/students/${studentId}/profile`, {
@@ -36,6 +38,12 @@ export default function AdminStudentProfile() {
 
       <main className="admin-main-content">
         <div className="student-top">
+          <button
+              className="back-btn"
+              onClick={() => navigate(-1)}
+            >
+               ← Back
+            </button>
           <div>
             <h2>👨‍🎓 {student.fullName}</h2>
             <p className="sub">
@@ -44,9 +52,9 @@ export default function AdminStudentProfile() {
             </p>
           </div>
 
-          <span className={`status-pill ${student.approvalStatus || "Pending"}`}>
-            {student.approvalStatus || "Pending"}
-          </span>
+          {/*<span className={`status-pill ${student.sponsorshipStatus || "Pending"}`}>
+            {student.sponsorshipStatus || "Pending"}
+          </span>*/}
         </div>
 
         <div className="tabs">
