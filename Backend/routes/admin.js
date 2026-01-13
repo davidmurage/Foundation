@@ -74,50 +74,76 @@ function buildFilter(query) {
  */
 router.get("/students", auth, requireRole("admin"), async (req, res) => {
   try {
-    const { institutionType = "", year = "", search = "" } = req.query;
+    const {
+      search = "",
+      year = "",
+      institutionType = "",
+      institutionId = "",
+    } = req.query;
 
     const profileFilter = {};
-    if (year) profileFilter.year = year;
-    if (institutionType) profileFilter.institution = new RegExp(institutionType, "i"); // match "University" or "TVET/College"
 
-    // We fetch profiles, then join to users
+    // Filter by year
+    if (year) profileFilter.year = year;
+
+    // FILTER BY SPECIFIC INSTITUTION (MOST IMPORTANT)
+    if (institutionId) {
+      profileFilter.institution = institutionId; // ObjectId match
+    }
+
+    //FILTER BY INSTITUTION TYPE (University / TVET)
+    else if (institutionType) {
+      const institutions = await Institution.find(
+        { type: institutionType },
+        { _id: 1 }
+      ).lean();
+
+      profileFilter.institution = {
+        $in: institutions.map((i) => i._id),
+      };
+    }
+
+    // Fetch student profiles
     const profiles = await StudentProfile.find(profileFilter).lean();
 
-    // Optional in-memory search across name/email/admission
-    const userIds = profiles.map(p => p.userId);
+    // Join users
+    const userIds = profiles.map((p) => p.userId);
     const users = await User.find({ _id: { $in: userIds } })
-      .select("_id fullName email role")
+      .select("_id fullName email")
       .lean();
 
-    const userMap = new Map(users.map(u => [String(u._id), u]));
-    let rows = profiles.map(p => ({
-  userId: String(p.userId),
-  fullName: userMap.get(String(p.userId))?.fullName || "",
-  email: userMap.get(String(p.userId))?.email || "",
-  admissionNo: p.admissionNo,
-  institution: p.institutionName,   //  FIX
-  institutionType: p.institutionType,
-  course: p.course,
-  year: p.year,
-  photo: p.photo || null,
-}));
+    const userMap = new Map(users.map((u) => [String(u._id), u]));
 
+    let rows = profiles.map((p) => ({
+      userId: String(p.userId),
+      fullName: userMap.get(String(p.userId))?.fullName || "",
+      email: userMap.get(String(p.userId))?.email || "",
+      admissionNo: p.admissionNo,
+      institution: p.institutionName,
+      institutionId: p.institution,
+      course: p.course,
+      year: p.year,
+      photo: p.photo || null,
+    }));
+
+    //SEARCH (client-style but backend-safe)
     if (search) {
       const q = search.toLowerCase();
-      rows = rows.filter(r =>
-        (r.fullName || "").toLowerCase().includes(q) ||
-        (r.email || "").toLowerCase().includes(q) ||
-        (r.admissionNo || "").toLowerCase().includes(q)
+      rows = rows.filter(
+        (r) =>
+          r.fullName.toLowerCase().includes(q) ||
+          r.email.toLowerCase().includes(q) ||
+          r.admissionNo.toLowerCase().includes(q)
       );
     }
 
-    // Grouping/sorting can be handled client-side; return rows
     res.json(rows);
   } catch (err) {
     console.error("ADMIN students error:", err);
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 /*ADMIN OVERVIEW STATS*/
 router.get("/stats", auth, requireRole("admin"), async (req, res) => {
@@ -373,28 +399,7 @@ router.delete("/:id", auth, requireRole("admin"), async (req, res) => {
 
 
 
-/**
- * GET /api/admin/institutions
- * List institutions with filters + search
- */
-router.get(
-  "/",
-  auth,
-  requireRole("admin"),
-  async (req, res) => {
-    try {
-      const filter = buildFilter(req.query);
-      const institutions = await Institution.find(filter)
-        .sort({ createdAt: -1 })
-        .lean();
 
-      res.json(institutions);
-    } catch (err) {
-      console.error("INSTITUTIONS LIST ERROR:", err);
-      res.status(500).json({ message: "Server error" });
-    }
-  }
-);
 
 /** List all fee applications */
 router.get("/", auth, requireRole("admin"), async (req, res) => {
@@ -485,6 +490,35 @@ router.put(
   }
 );
 
+
+/**
+ * GET /api/admin/institutions
+ * List institutions with filters + search
+ */
+// GET /api/admin/institutions?type=University
+router.get(
+  "/institutions",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    try {
+      const { type } = req.query;
+
+      const filter = {};
+      if (type) filter.type = type; // University | TVET
+
+      const institutions = await Institution.find(filter)
+        .select("_id name type")
+        .sort({ name: 1 })
+        .lean();
+
+      res.json(institutions);
+    } catch (err) {
+      console.error("INSTITUTION LIST ERROR:", err);
+      res.status(500).json({ message: "Failed to load institutions" });
+    }
+  }
+);
 
 
 /**

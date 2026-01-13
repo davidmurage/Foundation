@@ -4,107 +4,160 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { API_URL } from "../../utils/config";
 
-// IMPORT SIDEBAR
 import AdminSidebar from "../../components/admin/AdminSidebar";
-
 import "../../styles/admin/AdminStudents.css";
 
 export default function AdminStudents() {
   const token = localStorage.getItem("token");
-  const [rows, setRows] = useState([]);
-  const [q, setQ] = useState("");
-  const [filters, setFilters] = useState({ institutionType: "", year: "" });
-  const [loading, setLoading] = useState(false);
-  
 
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // filters
+  const [search, setSearch] = useState("");
+  const [institutionType, setInstitutionType] = useState("");
+  const [institutionId, setInstitutionId] = useState("");
+  const [year, setYear] = useState("");
+
+  // institutions list
+  const [institutions, setInstitutions] = useState([]);
+
+  /* ================= LOAD INSTITUTIONS ================= */
+  const loadInstitutions = async (type) => {
+    if (!type) {
+      setInstitutions([]);
+      setInstitutionId("");
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `${API_URL}/api/admin/institutions?type=${type}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setInstitutions(res.data || []);
+      setInstitutionId("");
+    } catch (err) {
+      console.error("INSTITUTION LOAD ERROR:", err);
+      setInstitutions([]);
+    }
+  };
+
+  /* ================= FETCH STUDENTS ================= */
   const fetchRows = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (filters.institutionType) params.append("institutionType", filters.institutionType);
-      if (filters.year) params.append("year", filters.year);
-      if (q) params.append("search", q);
 
-      const res = await axios.get(`${API_URL}/api/admin/students?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (search) params.append("search", search);
+      if (institutionType) params.append("institutionType", institutionType);
+      if (institutionId) params.append("institutionId", institutionId);
+      if (year) params.append("year", year);
 
-      setRows(res.data);
-    } catch (e) {
-      console.error(e);
+      const res = await axios.get(
+        `${API_URL}/api/admin/students?${params.toString()}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setRows(res.data || []);
+    } catch (err) {
+      console.error("FETCH STUDENTS ERROR:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= DELETE ================= */
   const handleDelete = async (userId) => {
-  const yes = window.confirm("Are you sure you want to delete this student?");
-  if (!yes) return;
+    const yes = window.confirm("Are you sure you want to delete this student?");
+    if (!yes) return;
 
-  try {
-    await axios.delete(`${API_URL}/api/admin/students/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      await axios.delete(`${API_URL}/api/admin/students/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    // Remove deleted student from UI
-    setRows((prev) => prev.filter((s) => s.userId !== userId));
+      setRows((prev) => prev.filter((s) => s.userId !== userId));
+      alert("Student deleted successfully.");
+    } catch (err) {
+      console.error("DELETE ERROR:", err);
+      alert("Failed to delete student.");
+    }
+  };
 
-    alert("Student deleted successfully.");
-  } catch (err) {
-    console.error("DELETE ERROR:", err);
-    alert("Failed to delete student.");
-  }
-};
-
-
+  /* ================= INITIAL LOAD ================= */
   useEffect(() => {
     fetchRows();
   }, []);
 
   return (
     <div className="admin-page-container">
-      {/* SIDEBAR */}
       <AdminSidebar />
 
-      {/* MAIN CONTENT */}
       <main className="admin-page-content">
         <h2 className="page-title">👥 Students</h2>
 
-        {/* FILTER BAR */}
+        {/* ================= FILTER BAR ================= */}
         <div className="admin-filterbar">
+          {/* SEARCH */}
           <input
             placeholder="Search name, email, admission..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
+          {/* INSTITUTION TYPE */}
           <select
-            value={filters.institutionType}
-            onChange={(e) => setFilters({ ...filters, institutionType: e.target.value })}
+            value={institutionType}
+            onChange={(e) => {
+              setInstitutionType(e.target.value);
+              loadInstitutions(e.target.value);
+            }}
           >
-            <option value="">All Institutions</option>
+            <option value="">All Institution Types</option>
             <option value="University">University</option>
             <option value="TVET">TVET / College</option>
           </select>
 
+          {/* INSTITUTION LIST (DYNAMIC) */}
           <select
-            value={filters.year}
-            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+            value={institutionId}
+            onChange={(e) => setInstitutionId(e.target.value)}
+            disabled={!institutions.length}
           >
-            <option value="">All Years</option>
-            <option value="1">Year 1</option>
-            <option value="2">Year 2</option>
-            <option value="3">Year 3</option>
-            <option value="4">Year 4</option>
-            <option value="5">Year 5</option>
+            <option value="">
+              {institutionType
+                ? "Select Institution"
+                : "Select Institution Type First"}
+            </option>
+
+            {institutions.map((i) => (
+              <option key={i._id} value={i._id}>
+                {i.name}
+              </option>
+            ))}
           </select>
 
+          {/* YEAR */}
+          <select value={year} onChange={(e) => setYear(e.target.value)}>
+            <option value="">All Years</option>
+            {[1, 2, 3, 4, 5].map((y) => (
+              <option key={y} value={y}>
+                Year {y}
+              </option>
+            ))}
+          </select>
+
+          {/* APPLY */}
           <button onClick={fetchRows} disabled={loading}>
-            Filter
+            {loading ? "Filtering..." : "Filter"}
           </button>
         </div>
 
-        {/* TABLE */}
+        {/* ================= TABLE ================= */}
         <div className="admin-table-wrap">
           <table className="admin-table">
             <thead>
@@ -141,30 +194,32 @@ export default function AdminStudents() {
                   <td>{r.year}</td>
 
                   <td className="action-buttons">
-                    <Link className="btn-link" to={`/admin-dashboard/students/${r.userId}`}>
+                    <Link
+                      className="btn-link"
+                      to={`/admin-dashboard/students/${r.userId}`}
+                    >
                       View
                     </Link>
                     <button
-                       className="btn-delete"
-                       onClick={() => handleDelete(r.userId)}
+                      className="btn-delete"
+                      onClick={() => handleDelete(r.userId)}
                     >
-                     Delete
+                      Delete
                     </button>
                   </td>
                 </tr>
               ))}
 
-              {!rows.length && (
+              {!rows.length && !loading && (
                 <tr>
                   <td colSpan={7} style={{ textAlign: "center" }}>
-                    No results found
+                    No students found
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        
       </main>
     </div>
   );
