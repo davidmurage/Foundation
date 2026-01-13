@@ -169,7 +169,7 @@ export default function AdminOverview() {
                     <td>{doc.academicPeriod}</td>
                     <td>{new Date(doc.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <a href={doc.fileUrl} target="_blank" rel="noreferrer">
+                      <a href={`${API_URL}${doc.fileUrl}`} target="_blank" rel="noreferrer">
                         View
                       </a>
                     </td>

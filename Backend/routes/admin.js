@@ -6,6 +6,7 @@ import StudentDocument from "../models/StudentDocument.js";
 import Performance from "../models/Performance.js";
 import Institution from "../models/Institution.js";
 import FeeApplication from "../models/FeesApplication.js"
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
@@ -94,7 +95,7 @@ router.get("/students", auth, requireRole("admin"), async (req, res) => {
   fullName: userMap.get(String(p.userId))?.fullName || "",
   email: userMap.get(String(p.userId))?.email || "",
   admissionNo: p.admissionNo,
-  institution: p.institutionName,   // ✅ FIX
+  institution: p.institutionName,   //  FIX
   institutionType: p.institutionType,
   course: p.course,
   year: p.year,
@@ -314,10 +315,12 @@ router.post("/", auth, requireRole("admin"), async (req, res) => {
     if (exists)
       return res.status(400).json({ message: "Email already exists" });
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newAdmin = await User.create({
       fullName,
       email,
-      password,
+      password: hashedPassword,
       role: "admin",
     });
 

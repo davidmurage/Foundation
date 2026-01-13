@@ -118,9 +118,12 @@ const uploadBulkFile = async () => {
 
 
   useEffect(() => {
+  const delay = setTimeout(() => {
     loadInstitutions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, 400); // debounce search
+
+  return () => clearTimeout(delay);
+}, [search, filters.type, filters.county, filters.active]);
 
   const openAddModal = () => {
     setForm({
@@ -244,36 +247,47 @@ const uploadBulkFile = async () => {
 
         {/* Filters */}
         <div className="institutions-filterbar">
-          <input
-            placeholder="Search by name, county, location..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+  <input
+    placeholder="Search by name or location..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
 
-          <select
-            value={filters.type}
-            onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-          >
-            <option value="">All Types</option>
-            <option value="University">University</option>
-            <option value="TVET">TVET</option>
-          </select>
+  <select
+    value={filters.type}
+    onChange={(e) =>
+      setFilters({ ...filters, type: e.target.value })
+    }
+  >
+    <option value="">All Types</option>
+    <option value="University">University</option>
+    <option value="TVET">TVET</option>
+  </select>
 
-          <select
-            value={filters.active}
-            onChange={(e) =>
-              setFilters({ ...filters, active: e.target.value })
-            }
-          >
-            <option value="">All Status</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
+  <input
+    placeholder="County"
+    value={filters.county}
+    onChange={(e) =>
+      setFilters({ ...filters, county: e.target.value })
+    }
+  />
 
-          <button onClick={loadInstitutions} disabled={loading}>
-            {loading ? "Loading..." : "Apply"}
-          </button>
-        </div>
+  <select
+    value={filters.active}
+    onChange={(e) =>
+      setFilters({ ...filters, active: e.target.value })
+    }
+  >
+    <option value="">All Status</option>
+    <option value="true">Active</option>
+    <option value="false">Inactive</option>
+  </select>
+
+  <button onClick={loadInstitutions} disabled={loading}>
+    {loading ? "Loading..." : "Apply"}
+  </button>
+</div>
+
 
         {/* Table */}
         <div className="institutions-table-wrapper">

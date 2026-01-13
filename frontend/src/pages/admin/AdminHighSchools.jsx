@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -13,6 +13,12 @@ export default function AdminHighSchools() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editSchool, setEditSchool] = useState(null);
 
+  const [filters, setFilters] = useState({
+    search: "",
+    county: "",
+    status: "",
+  });
+
   const [form, setForm] = useState({
     name: "",
     county: "",
@@ -20,12 +26,12 @@ export default function AdminHighSchools() {
     isActive: true,
   });
 
+  /* ================= LOAD ================= */
   const loadSchools = async () => {
     setLoading(true);
-    const res = await axios.get(
-      `${API_URL}/api/highschools`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await axios.get(`${API_URL}/api/highschools`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     setSchools(res.data || []);
     setLoading(false);
   };
@@ -35,6 +41,7 @@ export default function AdminHighSchools() {
     // eslint-disable-next-line
   }, []);
 
+  /* ================= SAVE ================= */
   const saveSchool = async (e) => {
     e.preventDefault();
 
@@ -45,11 +52,9 @@ export default function AdminHighSchools() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
     } else {
-      await axios.post(
-        `${API_URL}/api/highschools`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.post(`${API_URL}/api/highschools`, form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     }
 
     setModalOpen(false);
@@ -57,11 +62,44 @@ export default function AdminHighSchools() {
     loadSchools();
   };
 
+  /* ================= DELETE ================= */
+  const deleteSchool = async (id) => {
+    if (!window.confirm("Delete this high school permanently?")) return;
+
+    try {
+      await axios.delete(`${API_URL}/api/highschools/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      loadSchools();
+    } catch (err) {
+      alert(err.response?.data?.message || "Delete failed");
+    }
+  };
+
+  /* ================= FILTER ================= */
+  const filteredSchools = useMemo(() => {
+    return schools.filter((s) => {
+      const nameOk =
+        !filters.search ||
+        s.name.toLowerCase().includes(filters.search.toLowerCase());
+
+      const countyOk = !filters.county || s.county === filters.county;
+
+      const statusOk =
+        !filters.status ||
+        (filters.status === "active" && s.isActive) ||
+        (filters.status === "inactive" && !s.isActive);
+
+      return nameOk && countyOk && statusOk;
+    });
+  }, [schools, filters]);
+
   return (
     <div className="admin-layout-wrapper">
       <AdminSidebar />
 
       <main className="admin-main-content">
+        {/* HEADER */}
         <div className="page-header">
           <h2>🏫 High Schools</h2>
           <button className="add-btn" onClick={() => setModalOpen(true)}>
@@ -69,6 +107,37 @@ export default function AdminHighSchools() {
           </button>
         </div>
 
+        {/* FILTER BAR */}
+        <div className="filters-bar">
+          <input
+            placeholder="Search school..."
+            value={filters.search}
+            onChange={(e) =>
+              setFilters({ ...filters, search: e.target.value })
+            }
+          />
+
+          <input
+            placeholder="County"
+            value={filters.county}
+            onChange={(e) =>
+              setFilters({ ...filters, county: e.target.value })
+            }
+          />
+
+          <select
+            value={filters.status}
+            onChange={(e) =>
+              setFilters({ ...filters, status: e.target.value })
+            }
+          >
+            <option value="">Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        {/* TABLE */}
         <div className="table-scroll">
           <table className="admin-table">
             <thead>
@@ -77,12 +146,12 @@ export default function AdminHighSchools() {
                 <th>County</th>
                 <th>Location</th>
                 <th>Status</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
 
             <tbody>
-              {schools.map((s) => (
+              {filteredSchools.map((s) => (
                 <tr key={s._id}>
                   <td>{s.name}</td>
                   <td>{s.county || "—"}</td>
@@ -92,7 +161,7 @@ export default function AdminHighSchools() {
                       {s.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td>
+                  <td className="actions-cell">
                     <button
                       className="edit-btn"
                       onClick={() => {
@@ -103,11 +172,18 @@ export default function AdminHighSchools() {
                     >
                       Edit
                     </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteSchool(s._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
 
-              {!schools.length && !loading && (
+              {!filteredSchools.length && !loading && (
                 <tr>
                   <td colSpan={5} style={{ textAlign: "center" }}>
                     No high schools found

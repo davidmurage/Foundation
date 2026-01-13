@@ -1,30 +1,43 @@
 import express from "express";
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+import path from "path";
+import fs from "fs";
+
 import auth, { requireRole } from "../middleware/auth.js";
 import FeeApplication from "../models/FeesApplication.js";
 import Institution from "../models/Institution.js";
-import cloudinary from "../utils/cloudinary.js";
 
 const router = express.Router();
 
-/* ===============================
-   MULTER STORAGE (PDF / DOC)
-================================ */
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "kcb_fees_documents",
-    resource_type: "auto", // IMPORTANT for pdf/docx
-    //allowed_formats: ["pdf", "doc", "docx"],
+/* ======================================================
+   MULTER STORAGE — LOCAL DISK (FEES DOCUMENTS)
+====================================================== */
+
+const FEES_UPLOAD_DIR = "uploads/fees";
+
+if (!fs.existsSync(FEES_UPLOAD_DIR)) {
+  fs.mkdirSync(FEES_UPLOAD_DIR, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, FEES_UPLOAD_DIR);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const safe = file.fieldname.replace(/\s+/g, "-");
+    cb(null, `${safe}-${Date.now()}${ext}`);
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+});
 
-/* ===============================
-   CREATE FEES APPLICATION
-================================ */
+/* ======================================================
+   CREATE FEES APPLICATION (STUDENT)
+====================================================== */
 router.post(
   "/",
   auth,
@@ -57,49 +70,45 @@ router.post(
         return res.status(400).json({ message: "Invalid institution selected" });
       }
 
-      /* ===============================
-         DUPLICATE APPLICATION GUARD
-      ================================ */
+      /* ========== DUPLICATE GUARD ========== */
       const existing = await FeeApplication.findOne({
         userId: req.user.id,
         institutionId: inst._id,
         academicYear,
         academicPeriod,
-        reviewStatus: { $ne: "rejected" }, // allow reapply ONLY if rejected
+        reviewStatus: { $ne: "rejected" },
       });
 
       if (existing) {
         return res.status(409).json({
-          message: `You already have a fees application for ${academicPeriod} (${academicYear})`,
+          message: `You already applied for ${academicPeriod} (${academicYear})`,
         });
       }
 
-      /* ===============================
-         BUILD DOCUMENT LIST
-      ================================ */
+      /* ========== BUILD DOCUMENTS ========== */
       const documents = [];
 
       if (req.files?.feeStructure?.[0]) {
         documents.push({
           label: "Fee Structure",
-          fileUrl: req.files.feeStructure[0].path,
+          fileUrl: `/uploads/fees/${req.files.feeStructure[0].filename}`,
         });
       }
 
       if (req.files?.feeStatement?.[0]) {
         documents.push({
           label: "Fee Statement",
-          fileUrl: req.files.feeStatement[0].path,
+          fileUrl: `/uploads/fees/${req.files.feeStatement[0].filename}`,
         });
       }
 
       if (req.files?.otherDocs) {
-        req.files.otherDocs.forEach((f) => {
+        req.files.otherDocs.forEach((f) =>
           documents.push({
             label: "Other Document",
-            fileUrl: f.path,
-          });
-        });
+            fileUrl: `/uploads/fees/${f.filename}`,
+          })
+        );
       }
 
       const app = await FeeApplication.create({
@@ -116,6 +125,7 @@ router.post(
         documents,
         reviewStatus: "pending",
         processingStatus: "processing",
+        version: 1,
       });
 
       res.status(201).json(app);
@@ -126,20 +136,19 @@ router.post(
   }
 );
 
-
-/* ===============================
-   LIST MY APPLICATIONS
-================================ */
+/* ======================================================
+   LIST MY APPLICATIONS (STUDENT)
+====================================================== */
 router.get("/", auth, requireRole("student"), async (req, res) => {
-  const apps = await FeeApplication.find({ userId: req.user.id })
-    .sort({ createdAt: -1 });
+  const apps = await FeeApplication.find({ userId: req.user.id }).sort({
+    createdAt: -1,
+  });
   res.json(apps);
 });
 
-/* ===============================
-   UPDATE REJECTED APPLICATION
-   (STUDENT)
-================================ */
+/* ======================================================
+   UPDATE REJECTED APPLICATION (STUDENT)
+====================================================== */
 router.put(
   "/:id/update",
   auth,
@@ -154,12 +163,10 @@ router.put(
       const app = await FeeApplication.findById(req.params.id);
       if (!app) return res.status(404).json({ message: "Not found" });
 
-      // Ownership check
       if (String(app.userId) !== req.user.id) {
         return res.status(403).json({ message: "Forbidden" });
       }
 
-      // Only rejected apps can be edited
       if (app.reviewStatus !== "rejected") {
         return res.status(400).json({
           message: "Only rejected applications can be edited",
@@ -178,32 +185,34 @@ router.put(
       app.academicPeriod = academicPeriod;
       app.amountRequested = amountRequested;
 
-      /* Replace documents if uploaded */
+      /* Replace documents if provided */
       const docs = [];
 
       if (req.files?.feeStructure?.[0]) {
         docs.push({
           label: "Fee Structure",
-          fileUrl: req.files.feeStructure[0].path,
+          fileUrl: `/uploads/fees/${req.files.feeStructure[0].filename}`,
         });
       }
 
       if (req.files?.feeStatement?.[0]) {
         docs.push({
           label: "Fee Statement",
-          fileUrl: req.files.feeStatement[0].path,
+          fileUrl: `/uploads/fees/${req.files.feeStatement[0].filename}`,
         });
       }
 
       if (req.files?.otherDocs) {
         req.files.otherDocs.forEach((f) =>
-          docs.push({ label: "Other Document", fileUrl: f.path })
+          docs.push({
+            label: "Other Document",
+            fileUrl: `/uploads/fees/${f.filename}`,
+          })
         );
       }
 
       if (docs.length) app.documents = docs;
 
-      // Reset statuses
       app.reviewStatus = "pending";
       app.processingStatus = "processing";
       app.adminFeedback = "";
@@ -212,16 +221,53 @@ router.put(
       await app.save();
       res.json(app);
     } catch (err) {
-      console.error(err);
+      console.error("FEE UPDATE ERROR:", err);
       res.status(500).json({ message: err.message });
     }
   }
 );
 
+/* ======================================================
+   DELETE APPLICATION (ONLY IF REJECTED)
+====================================================== */
+router.delete("/:id", auth, requireRole("student"), async (req, res) => {
+  try {
+    const app = await FeeApplication.findById(req.params.id);
+    if (!app) return res.status(404).json({ message: "Not found" });
 
-/* ===============================
-   RESUBMIT (ONLY IF REJECTED)
-================================ */
+    // Ownership check
+    if (String(app.userId) !== req.user.id) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // Safety guard
+    if (app.reviewStatus !== "rejected") {
+      return res.status(400).json({
+        message: "Only rejected applications can be deleted",
+      });
+    }
+
+    // Delete files from disk
+    if (app.documents?.length) {
+      app.documents.forEach((doc) => {
+        const filePath = `.${doc.fileUrl}`;
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      });
+    }
+
+    await app.deleteOne();
+
+    res.json({ message: "Application deleted successfully" });
+  } catch (err) {
+    console.error("DELETE FEE ERROR:", err);
+    res.status(500).json({ message: "Delete failed" });
+  }
+});
+
+
+/* ======================================================
+   RESUBMIT (NO FILE CHANGE)
+====================================================== */
 router.put("/:id/resubmit", auth, requireRole("student"), async (req, res) => {
   try {
     const app = await FeeApplication.findById(req.params.id);

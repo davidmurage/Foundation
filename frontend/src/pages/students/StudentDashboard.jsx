@@ -148,7 +148,7 @@ export default function StudentDashboard() {
             className={activeTab === "documents" ? "active" : ""}
             onClick={() => handleMenuClick("documents")}
           >
-            📄 Documents
+            📄 Academic Documents
           </li>
           <li
             className={activeTab === "performance" ? "active" : ""}

@@ -6,11 +6,12 @@ import { API_URL } from "../../utils/config";
 export default function Documents() {
   const token = localStorage.getItem("token");
 
+  const [institutionType, setInstitutionType] = useState("");
+
   const [form, setForm] = useState({
-    name: "",
+    //name: "",
     admissionNo: "",
     yearOfStudy: "",
-    institutionType: "",
     academicPeriod: "",
     documentType: "",
     document: null,
@@ -18,14 +19,32 @@ export default function Documents() {
 
   const [docs, setDocs] = useState([]);
   const [message, setMessage] = useState("");
+  const [showForm, setShowForm] = useState(false);
+
   const [filters, setFilters] = useState({
     yearOfStudy: "",
     academicPeriod: "",
     documentType: "",
   });
-  const [showForm, setShowForm] = useState(false);
 
-  // Fetch uploaded documents
+  /* ================= LOAD STUDENT PROFILE ================= */
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/student/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setInstitutionType(res.data.institutionType); // University or TVET
+        setForm((f) => ({
+          ...f,
+          //name: res.data.fullName || "",
+          admissionNo: res.data.admissionNo || res.data.registrationNo || "",
+        }));
+      })
+      .catch((err) => console.error("PROFILE LOAD ERROR:", err));
+  }, [token]);
+
+  /* ================= LOAD DOCUMENTS ================= */
   useEffect(() => {
     axios
       .get(`${API_URL}/api/documents`, {
@@ -43,75 +62,93 @@ export default function Documents() {
     setForm({ ...form, document: e.target.files[0] });
   };
 
+  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      Object.keys(form).forEach((key) => {
-        formData.append(key, form[key]);
-      });
+  e.preventDefault();
 
-      const res = await axios.post(`${API_URL}/api/documents/upload`, formData, {
+  try {
+    if (!form.document) {
+      setMessage("Please select a file");
+      return;
+    }
+
+    const formData = new FormData();
+
+    //append fields EXPLICITLY
+    formData.append("admissionNo", form.admissionNo);
+    formData.append("yearOfStudy", form.yearOfStudy);
+    formData.append("academicPeriod", form.academicPeriod);
+    formData.append("documentType", form.documentType);
+    formData.append("institutionType", institutionType);
+    formData.append("document", form.document);
+
+    const res = await axios.post(
+      `${API_URL}/api/documents/upload`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setMessage(res.data.message);
+    setDocs([res.data.document, ...docs]);
+    setShowForm(false);
+
+  } catch (err) {
+    setMessage(err.response?.data?.message || "Upload failed");
+  }
+};
+
+
+  /* ================= DELETE ================= */
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this document?")) return;
+
+    try {
+      await axios.delete(`${API_URL}/api/documents/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      setMessage(res.data.message);
-      setDocs([res.data.document, ...docs]);
-      setShowForm(false);
+      setDocs(docs.filter((d) => d._id !== id));
+      setMessage("Document deleted");
     } catch (err) {
-      setMessage(err.response?.data?.message || "Upload failed");
+      setMessage("Delete failed");
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this document?")) {
-      try {
-        await axios.delete(`${API_URL}/api/documents/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setDocs(docs.filter((doc) => doc._id !== id));
-        setMessage("Document deleted successfully");
-      } catch (err) {
-        setMessage(err.response?.data?.message || "Delete failed");
-      }
-    }
-  };
-
-  // Apply filters
+  /* ================= FILTER ================= */
   const filteredDocs = docs.filter((doc) => {
     return (
       (!filters.yearOfStudy || doc.yearOfStudy === filters.yearOfStudy) &&
-      (!filters.academicPeriod || doc.academicPeriod === filters.academicPeriod) &&
+      (!filters.academicPeriod ||
+        doc.academicPeriod === filters.academicPeriod) &&
       (!filters.documentType || doc.documentType === filters.documentType)
     );
   });
 
   return (
     <div className="docs-container">
-      <h2>📄 Documents</h2>
+      <h2>📄 Academic Documents</h2>
       {message && <p className="message">{message}</p>}
 
-      {/* Filter Bar */}
+      {/* ================= FILTER BAR ================= */}
       <div className="filter-bar">
-        {/* Year filter */}
         <select
-          name="yearOfStudy"
           value={filters.yearOfStudy}
           onChange={(e) =>
             setFilters({ ...filters, yearOfStudy: e.target.value })
           }
         >
           <option value="">All Years</option>
-          <option value="1">Year 1</option>
-          <option value="2">Year 2</option>
-          <option value="3">Year 3</option>
-          <option value="4">Year 4</option>
-          <option value="5">Year 5</option>
+          {[1, 2, 3, 4, 5].map((y) => (
+            <option key={y} value={String(y)}>
+              Year {y}
+            </option>
+          ))}
         </select>
 
-        {/* Academic period filter */}
         <select
-          name="academicPeriod"
           value={filters.academicPeriod}
           onChange={(e) =>
             setFilters({ ...filters, academicPeriod: e.target.value })
@@ -119,26 +156,31 @@ export default function Documents() {
         >
           <option value="">All Periods</option>
 
-          {/* UNIVERSITY FILTER OPTIONS */}
-          <option value="Sem 1 & Sem 2 (Combined)">
-            Year Transcript (2 Semesters)
-          </option>
+          {institutionType === "University" && (
+            <>
+              <option value="Sem 1">Semester 1</option>
+              <option value="Sem 2">Semester 2</option>
+              <option value="Sem 3">Semester 3</option>
+              <option value="Semester 1&2">
+                Semester 1 & 2 (Combined)
+              </option>
+              <option value="Semester 1&2&3">
+                Semester 1, 2 & 3 (Combined)
+              </option>
+              <option value="Attachment">Attachment</option>
+            </>
+          )}
 
-          <option value="Sem 1 & Sem 2 & Sem 3 (Combined)">
-            Year Transcript (3 Semesters)
-          </option>
-
-          <option value="Attachment">Attachment</option>
-
-          {/* TVET remains unchanged */}
-          <option value="Term 1">Term 1</option>
-          <option value="Term 2">Term 2</option>
-          <option value="Term 3">Term 3</option>
+          {institutionType === "TVET" && (
+            <>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </>
+          )}
         </select>
 
-        {/* Document type filter */}
         <select
-          name="documentType"
           value={filters.documentType}
           onChange={(e) =>
             setFilters({ ...filters, documentType: e.target.value })
@@ -152,111 +194,66 @@ export default function Documents() {
         </select>
       </div>
 
-      {/* Upload new document */}
       <button className="upload-btn" onClick={() => setShowForm(true)}>
         + Upload New Document
       </button>
 
-      {/* Upload Form Modal */}
+      {/* ================= MODAL ================= */}
       {showForm && (
         <div className="modal">
           <div className="modal-content">
             <h3>Upload Document</h3>
+
             <form onSubmit={handleSubmit} className="docs-form">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
+              {/*<input value={form.name} placeholder="FullName" />*/}
+              <input value={form.admissionNo} name="admissionNo" readonly />
 
-              <input
-                type="text"
-                name="admissionNo"
-                placeholder="Admission Number"
-                value={form.admissionNo}
-                onChange={handleChange}
-                required
-              />
-
-              {/* Year of Study */}
               <select
                 name="yearOfStudy"
                 value={form.yearOfStudy}
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Year of Study</option>
-                <option value="1">Year 1</option>
-                <option value="2">Year 2</option>
-                <option value="3">Year 3</option>
-                <option value="4">Year 4</option>
-                <option value="5">Year 5</option>
+                <option value="">Select Year</option>
+                {[1, 2, 3, 4, 5].map((y) => (
+                  <option key={y} value={String(y)}>
+                    Year {y}
+                  </option>
+                ))}
               </select>
 
-              {/* Institution Type */}
               <select
-                name="institutionType"
-                value={form.institutionType}
+                name="academicPeriod"
+                value={form.academicPeriod}
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Institution Type</option>
-                <option value="University">University</option>
-                <option value="TVET">TVET / College</option>
+                <option value="">Select Period</option>
+
+                {institutionType === "University" && (
+                  <>
+                    <option value="Sem 1">Semester 1</option>
+                    <option value="Sem 2">Semester 2</option>
+                    <option value="Sem 3">Semester 3</option>
+                    <option value="Semester 1&2">
+                      Semester 1 & 2 (Combined)
+                    </option>
+                    <option value="Semester 1&2&3">
+                      Semester 1, 2 & 3 (Combined)
+                    </option>
+                    <option value="Attachment">Attachment</option>
+                  </>
+                )}
+
+                {institutionType === "TVET" && (
+                  <>
+                    <option value="Term 1">Term 1</option>
+                    <option value="Term 2">Term 2</option>
+                    <option value="Term 3">Term 3</option>
+                  </>
+                )}
               </select>
 
-              {/* Academic Period — Dynamic */}
-              {form.institutionType === "University" && (
-                <select
-                  name="academicPeriod"
-                  value={form.academicPeriod}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select  Period</option>
-
-                  <option value="Sem 1">
-                    Semester 1
-                  </option>
-
-                  <option value="Sem 2">
-                    Semester 2
-                  </option>
-
-                  <option value="Sem 3">
-                    Semester 3
-                  </option>
-
-                  {/* NEW: Combined year transcripts */}
-                  <option value="Semester 1&2">
-                    Semester 1 &amp; 2 - Combined Year 
-                  </option>
-                  <option value="Semester 1&2&3">
-                    Semester 1, 2 &amp; 3 - Combined Year 
-                  </option>
-
-                  <option value="Attachment">Attachment</option>
-                </select>
-              )}
-
-              {form.institutionType === "TVET" && (
-                <select
-                  name="academicPeriod"
-                  value={form.academicPeriod}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select Term</option>
-                  <option value="Term 1">Term 1</option>
-                  <option value="Term 2">Term 2</option>
-                  <option value="Term 3">Term 3</option>
-                </select>
-              )}
-
-              {/* Document Type */}
               <select
                 name="documentType"
                 value={form.documentType}
@@ -270,12 +267,7 @@ export default function Documents() {
                 <option value="Department Letter">Department Letter</option>
               </select>
 
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                onChange={handleFileChange}
-                required
-              />
+              <input type="file" onChange={handleFileChange} required />
 
               <div className="modal-actions">
                 <button type="submit">Upload</button>
@@ -288,10 +280,11 @@ export default function Documents() {
         </div>
       )}
 
-      {/* Documents Table */}
+      {/* ================= TABLE ================= */}
       <table className="docs-table">
         <thead>
           <tr>
+            {/*<th>AdmissionNo</th>*/}
             <th>Year</th>
             <th>Period</th>
             <th>Type</th>
@@ -303,15 +296,16 @@ export default function Documents() {
         <tbody>
           {filteredDocs.map((doc) => (
             <tr key={doc._id}>
+              {/*<td>{doc.admissionNo}</td>*/}
               <td>{doc.yearOfStudy}</td>
               <td>{doc.academicPeriod}</td>
               <td>{doc.documentType}</td>
               <td>{new Date(doc.createdAt).toLocaleDateString()}</td>
               <td>
-                <a href={doc.fileUrl} target="_blank" rel="noreferrer">
+                <a href={`${API_URL}${doc.fileUrl}`} target="_blank" rel="noreferrer">
                   View
-                </a>
-                {" | "}
+                </a>{" "}
+                |{" "}
                 <button
                   className="delete-btn"
                   onClick={() => handleDelete(doc._id)}
