@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import path from "path";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import studentRoutes from "./routes/student.js";
@@ -21,6 +22,8 @@ import highSchoolStudentProfileRoutes from "./routes/highSchoolStudentProfile.js
 dotenv.config();
 const app = express();
 
+const __dirname = path.resolve();
+
 console.log("MONGO URI =", process.env.MONGO_URI);
 
 app.use(cors());
@@ -40,7 +43,7 @@ app.use("/api/fees", feesApplicationRoutes);
 app.use("/api/highschools", adminHighSchoolsRoutes);
 app.use("/api/highschool/students", highSchoolStudents);
 app.use("/api/dashboard", highSchoolDashboard);
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads",express.static(path.join(__dirname, "uploads")))
 app.use("/api/highschool/student", highSchoolStudentProfileRoutes);
 
 

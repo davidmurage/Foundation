@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const studentDocumentSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    name: { type: String, required: true },
+    name: { type: String, },
     yearOfStudy: { type: String, required: true }, // new field
-    admissionNo: { type: String, required: true },
+    admissionNo: { type: String,  },
     institutionType: { type: String, enum: ["University", "TVET"], required: true }, // classification
     academicPeriod: { type: String, required: true }, // e.g. "Semester 1" or "Term 2"
     documentType: { 

@@ -1,345 +1,225 @@
 /* ===============================
-   PAGE WRAPPER
-================================*/
-.admin-content{
-  margin-right: 4rem;
-}
-.admin-layout{
-  margin-left: 0px;
-}
-.admin-page-content {
-  width: 100%;
-  padding: 20px;
+   ADMIN STUDENT DETAIL – TABS
+================================ */
+
+
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0 24px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
-.admin-page-content h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #003300;
+.admin-tabs button {
+  background: none;
+  border: none;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-tabs button:hover {
+  color: #009639;
+}
+
+.admin-tabs button.active {
+  color: #009639;
+  border-bottom-color: #009639;
 }
 
 /* ===============================
    PROFILE CARD
-================================*/
+================================ */
+
 .admin-student-card {
   display: flex;
-  gap: 20px;
+  gap: 24px;
+  background: #fff;
   padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
 }
 
-/* Avatar */
 .profile-avatar {
   width: 120px;
   height: 120px;
-  border-radius: 12px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .profile-avatar.placeholder {
-  background: #e0e0e0;
-}
-
-.admin-student-card .right {
-  flex: 1;
+  background: #e5e7eb;
 }
 
 .admin-student-card .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 10px;
-  column-gap: 20px;
-  font-size: 15px;
-}
-
-@media (max-width: 650px) {
-  .admin-student-card {
-    flex-direction: column;
-    text-align: left;
-  }
-  .admin-student-card .grid {
-    grid-template-columns: 1fr;
-  }
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 30px;
 }
 
 /* ===============================
    SECTION TITLES
-================================*/
+================================ */
+
 .section-title {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-size: 20px;
+  margin: 20px 0 12px;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #004d00;
 }
 
 /* ===============================
-   CHART WRAPPER
-================================*/
-.admin-chart-wrap {
-  background: #ffffff;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  margin-bottom: 30px;
-}
+   TABLE
+================================ */
 
-.admin-chart-wrap canvas {
-  width: 100% !important;
-  height: 300px !important;
-}
-
-@media (max-width: 600px) {
-  .admin-chart-wrap canvas {
-    height: 220px !important;
-  }
-}
-
-/* ===============================
-   DOCUMENT TABLE
-================================*/
 .admin-table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  background: white;
+  background: #fff;
+  padding: 16px;
   border-radius: 10px;
-  padding-bottom: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
 }
 
 .admin-table {
   width: 100%;
-  min-width: 620px;
   border-collapse: collapse;
 }
 
-.admin-table th,
-.admin-table td {
-  padding: 14px 10px;
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .admin-table th {
-  background: #f5fff5;
-  font-weight: 700;
-  color: #003f00;
   text-align: left;
-}
-
-.btn-link {
-  color: #006400;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.btn-link:hover {
-  text-decoration: underline;
-}
-
-/* Mobile Table Fix */
-@media (max-width: 600px) {
-  .admin-table th,
-  .admin-table td {
-    padding: 10px 6px;
-    font-size: 14px;
-  }
-}
-
-/* Approval Buttons */
-.approval-actions {
-  margin-top: 25px;
-  display: flex;
-  gap: 12px;
-}
-
-.approve-btn {
-  background: #009639;
-  color: #fff;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.reject-btn {
-  background: #c62828;
-  color: #fff;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.approve-btn:hover {
-  background: #007c30;
-}
-
-.reject-btn:hover {
-  background: #9b1c1c;
-}
-
-/* Reject Modal */
-.reject-modal textarea {
+  background: #f3f4f6;
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  width: 100%;
-  resize: vertical;
+  font-size: 0.85rem;
+}
+
+.admin-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 /* ===============================
-   FEES TABLE
+   BADGES & STATUS
 ================================ */
-.fees-table {
-  min-width: 900px;
-}
 
 .badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: capitalize;
 }
 
 .badge.pending {
-  background: #fff3cd;
-  color: #856404;
+  background: #fde68a;
+  color: #92400e;
 }
 
 .badge.approved {
-  background: #d4edda;
-  color: #155724;
+  background: #bbf7d0;
+  color: #166534;
 }
 
 .badge.rejected {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-/* Processing pill */
-.pill {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: capitalize;
-  background: #eef;
-}
-
-.pill.processing {
-  background: #e3f2fd;
-  color: #0d47a1;
-}
-
-.pill.approved {
-  background: #d4edda;
-  color: #155724;
-}
-
-.pill.disbursed {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.pill.paid {
-  background: #c3e6cb;
-  color: #155724;
-}
-
-/* Docs */
-.link-btn {
-  display: block;
-  background: none;
-  border: none;
-  padding: 2px 0;
-  color: #006400;
-  font-size: 13px;
-  cursor: pointer;
-  text-align: left;
-}
-
-.link-btn:hover {
-  text-decoration: underline;
-}
-
-.muted {
-  font-size: 13px;
-  color: #777;
-}
-
-/* Actions */
-.table-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.small {
-  padding: 6px 10px;
-  font-size: 13px;
+  background: #fecaca;
+  color: #7f1d1d;
 }
 
 /* ===============================
-   MOBILE RESPONSIVENESS
+   ACTION BUTTONS
 ================================ */
+
+.approval-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.approve-btn {
+  background: #009639;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reject-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===============================
+   CHARTS
+================================ */
+
+.admin-chart-wrap {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
 @media (max-width: 768px) {
-  .fees-table {
-    min-width: 720px;
+  .admin-student-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
-  .table-actions {
-    flex-direction: column;
+  .admin-student-card .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-tabs {
+    flex-wrap: wrap;
   }
 }
 
 .status-select {
   width: 100%;
-  padding: 6px 8px;
+  padding: 6px 10px;
+  font-size: 13px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 13px;
+  outline: none;
   background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-right: 0px;
 }
 
-.status-select.processing {
-  border-color: #999;
+.doc-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.status-select.approved {
-  border-color: #2e7d32;
-  background: #e8f5e9;
+.doc-link {
+  font-size: 0.85rem;
+  color: #006837;
+  text-decoration: none;
 }
 
-.status-select.disbursed {
-  border-color: #0277bd;
-  background: #e3f2fd;
+.doc-link:hover {
+  text-decoration: underline;
 }
 
-.status-select.paid {
-  border-color: #6a1b9a;
-  background: #f3e5f5;
+.muted {
+  color: #999;
+  font-size: 0.85rem;
 }
 
-.admin-feedback {
-  margin-top: 6px;
-  font-size: 12px;
-  color: #c62828;
-}
-
-.paid-info {
-  margin-top: 6px;
-  font-size: 12px;
-  color: #2e7d32;
-}

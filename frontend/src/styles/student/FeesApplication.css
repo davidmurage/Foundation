@@ -1,403 +1,210 @@
-/* =========================
-   BASE LAYOUT
-========================= */
+/* ================= ROOT ================= */
 .dashboard-container {
   padding: 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
 }
 
-h2 {
-  margin-bottom: 15px;
+/* ================= HEADER ================= */
+.fees-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-h3 {
-  margin: 25px 0 10px;
-}
-
-/* =========================
-   CARD / FORM
-========================= */
-.card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
-}
-
-.card input,
-.card select {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-.card label {
-  font-size: 13px;
-  color: #555;
-  margin-top: 5px;
-  display: block;
-}
-
-.card button {
-  background: #0a7c3a;
+.apply-btn {
+  background: #0057b8;
   color: #fff;
   border: none;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
 }
 
-.card button:hover {
-  background: #065c2b;
-}
-
-/* =========================
-   TABLE (DESKTOP)
-========================= */
+/* ================= TABLE WRAPPER (SCROLL) ================= */
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
+  border: 1px solid #ddd;
+  background: #fff;
 }
 
+/* Force horizontal scrolling on small screens */
 .fees-table {
   width: 100%;
+  min-width: 100px; /* IMPORTANT: enables slider */
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
+/* ================= TABLE ================= */
 .fees-table th,
 .fees-table td {
-  padding: 12px;
-  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
   font-size: 14px;
-  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: top;
 }
 
 .fees-table th {
   background: #f4f6f8;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-.fees-table a {
-  display: block;
-  font-size: 13px;
-  color: #0a7c3a;
-  text-decoration: none;
-}
-
-.fees-table a:hover {
-  text-decoration: underline;
-}
-
-/* =========================
-   STATUS BADGES
-========================= */
+/* ================= STATUS BADGES ================= */
 .status,
 .process {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 4px 8px;
   font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.status.pending {
-  background: #fff4cc;
-  color: #8a6d00;
-}
-
-.status.approved {
-  background: #e6f7ee;
-  color: #0a7c3a;
-}
-
-.status.rejected {
-  background: #fdecea;
-  color: #b71c1c;
-}
-
-.process.processing {
-  background: #eef3ff;
-  color: #3554d1;
-}
-
-.process.approved {
-  background: #e6f7ee;
-  color: #0a7c3a;
-}
-
-.process.disbursed {
-  background: #e8f4fd;
-  color: #1565c0;
-}
-
-.process.paid {
-  background: #e1f5e8;
-  color: #1b5e20;
-}
-
-/* =========================
-   ADMIN FEEDBACK
-========================= */
-.admin-feedback {
-  margin-top: 6px;
-  padding: 8px 10px;
-  background: #fdecea;
-  border-left: 4px solid #c62828;
-  font-size: 13px;
   border-radius: 4px;
-  color: #7a1c1c;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
-/* =========================
-   ACTION BUTTONS
-========================= */
+.status.pending { background: #fff3cd; }
+.status.approved { background: #d4edda; }
+.status.rejected { background: #f8d7da; }
+
+.process.processing { background: #e2e6ea; }
+.process.approved { background: #d4edda; }
+.process.disbursed { background: #cce5ff; }
+.process.paid { background: #28a745; color: #fff; }
+
+/* ================= DOCUMENT LINKS ================= */
+.fees-table a {
+  display: block;
+  color: #0057b8;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+/* ================= ADMIN FEEDBACK ================= */
+.admin-feedback {
+  background: #fff3cd;
+  padding: 8px;
+  font-size: 13px;
+  border-left: 4px solid #ffc107;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.fees-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .resubmit-btn {
-  background: #f57c00;
+  background: #0057b8;
   color: #fff;
   border: none;
-  padding: 7px 12px;
-  border-radius: 5px;
+  padding: 6px;
+  font-size: 13px;
+  border-radius: 4px;
   cursor: pointer;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px;
   font-size: 13px;
-  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.resubmit-btn:hover {
-  background: #e65100;
-}
-
-/* =========================
-   MUTED TEXT
-========================= */
 .muted {
-  color: #999;
+  color: #777;
   font-size: 13px;
 }
 
-/* =========================
-   MOBILE CARDS
-========================= */
-.fees-cards {
-  display: none;
-}
-
-.fees-card {
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.fees-card strong {
-  font-size: 15px;
-}
-
-.fees-card p {
-  margin: 6px 0;
-  font-size: 14px;
-}
-
-.fees-card .admin-feedback {
-  margin-top: 10px;
-}
-
-.fees-card button {
-  margin-top: 10px;
-  width: 100%;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .table-wrapper {
-    display: none;
-  }
-
-  .fees-cards {
-    display: block;
-  }
-
-  .card {
-    padding: 15px;
-  }
-}
-
-/* =====================================================
-   FEE EDIT MODAL — HARD OVERRIDE (NO CONFLICTS)
-===================================================== */
-
+/* ================= MODAL OVERLAY ================= */
 .fee-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 999999;
+  align-items: center;
+  z-index: 1000;
 }
 
+/* ================= MODAL ================= */
 .fee-modal {
-  width: 50%;
-  max-width: 460px;
-  max-height: 85vh;
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
-  animation: feeModalIn 0.2s ease-out;
-  overflow: hidden;
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  padding: 16px;
+  border-radius: 6px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-/* Header */
 .fee-modal h3 {
-  margin: 0;
-  padding: 18px 22px;
-  font-size: 16px;
-  font-weight: 800;
-  background: linear-gradient(
-    90deg,
-    rgba(10, 124, 58, 0.15),
-    rgba(10, 124, 58, 0.05)
-  );
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  font-size: 18px;
 }
 
-/* Admin feedback */
-.fee-modal .admin-feedback {
-  margin: 16px 22px;
-  padding: 14px;
-  background: #fdecea;
-  border-left: 5px solid #b42318;
-  border-radius: 12px;
-  font-size: 13px;
-}
-
-/* Inputs */
+/* ================= FORM INPUTS ================= */
 .fee-modal input,
 .fee-modal select {
-  width: calc(100% - 44px);
-  margin: 10px 22px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
   font-size: 14px;
 }
 
-/* File inputs */
-.fee-modal input[type="file"] {
-  background: #f8fafc;
-  border-style: dashed;
+.fee-modal label {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 6px;
 }
 
-/* Focus */
-.fee-modal input:focus,
-.fee-modal select:focus {
-  outline: none;
-  border-color: #0a7c3a;
-  box-shadow: 0 0 0 4px rgba(10, 124, 58, 0.2);
-}
-
-/* Actions */
+/* ================= MODAL ACTIONS ================= */
 .fee-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 22px;
-  background: #f8fafc;
-  border-top: 1px solid #e5e7eb;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-/* Buttons */
-.fee-modal-actions .save-btn {
-  background: #0a7c3a;
+.save-btn {
+  background: #28a745;
   color: #fff;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 700;
   border: none;
-  cursor: pointer;
-}
-
-.fee-modal-actions .save-btn:hover {
-  background: #065c2b;
-}
-
-.fee-modal-actions .cancel-btn {
-  background: #e5e7eb;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-/* Animation */
-@keyframes feeModalIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .fee-modal {
-    border-radius: 14px;
-  }
-}
-
-/* =====================================================
-   MODAL SCROLLABLE CONTENT
-===================================================== */
-
-.fee-modal {
-  max-height: 85vh; /* IMPORTANT */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Scrollable middle section */
-.fee-modal-content {
-  overflow-y: auto;
-  padding-bottom: 12px;
-}
-
-/* Prevent header & footer from shrinking */
-.fee-modal h3,
-.fee-modal-actions {
-  flex-shrink: 0;
-}
-
-/* Smooth scrollbar (optional but nice) */
-.fee-modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.fee-modal-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  padding: 8px 14px;
   border-radius: 4px;
+  cursor: pointer;
 }
 
-.fee-modal-content::-webkit-scrollbar-track {
-  background: transparent;
+.cancel-btn {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* Mobile adjustment */
-@media (max-height: 700px) {
-  .fee-modal {
-    max-height: 90vh;
+/* ================= MOBILE TWEAKS ================= */
+@media (max-width: 768px) {
+  .fees-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .fees-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }

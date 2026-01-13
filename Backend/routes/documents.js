@@ -1,7 +1,7 @@
 import express from "express";
+import path from "path"
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../utils/cloudinary.js";
+import fs from "fs";
 
 import StudentDocument from "../models/StudentDocument.js";
 import Performance from "../models/Performance.js";
@@ -18,65 +18,46 @@ import { pushNotification } from "../utils/notify.js";
 const router = express.Router();
 
 /* ---------------------------------------------
-   CLOUDINARY STORAGE
+   LOCAL STORAGE CONFIG (SAME STYLE AS FEES)
 ----------------------------------------------*/
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: (req, file) => {
-    const mimetype = file.mimetype;
-
-    // PDF MUST use resource_type=raw
-    const isPdf = mimetype === "application/pdf";
-
-    return {
-      folder: "kcb_documents",
-      resource_type: isPdf ? "raw" : "auto",
-      public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`
-    };
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = "uploads/documents";
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`;
+    cb(null, uniqueName);
   },
 });
-
 
 const upload = multer({ storage });
 
 /* ---------------------------------------------
-   Helper: Determine expected academicPeriod
+   Helper: Normalize Academic Period
 ----------------------------------------------*/
 function normalizePeriod(period) {
   if (!period) return null;
-
-  const p = period.toLowerCase();
-
-  if (p.includes("1") && p.includes("2")) return "Semester 1&2";
-  if (p.includes("1") && p.includes("3")) return "Semester 1&2&3";
-
-  if (p.includes("sem 1") || p.includes("semester 1")) return "Semester 1";
-  if (p.includes("sem 2") || p.includes("semester 2")) return "Semester 2";
-  if (p.includes("sem 3") || p.includes("semester 3")) return "Semester 3";
-
-  if (p.includes("term 1")) return "Term 1";
-  if (p.includes("term 2")) return "Term 2";
-  if (p.includes("term 3")) return "Term 3";
-
-  if (p.includes("attachment")) return "Attachment";
-
-  return period; // fallback
+  return period.trim();
 }
 
+
+
 /* ---------------------------------------------
-   UPLOAD DOCUMENT ROUTE
+   UPLOAD DOCUMENT
 ----------------------------------------------*/
 router.post(
   "/upload",
   auth,
   requireRole("student"),
   upload.single("document"),
+  
   async (req, res) => {
     try {
       const {
-        name,
-        yearOfStudy,
         admissionNo,
+        yearOfStudy,
         institutionType,
         academicPeriod,
         documentType,
@@ -86,79 +67,38 @@ router.post(
         return res.status(400).json({ message: "File upload failed" });
       }
 
+      if (!admissionNo || !yearOfStudy || !academicPeriod || !documentType) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
       const normalizedPeriod = normalizePeriod(academicPeriod);
 
       /* ---------------------------------------------
-         SAVE DOCUMENT METADATA
+         SAVE DOCUMENT
       ----------------------------------------------*/
       const newDoc = await StudentDocument.create({
         userId: req.user.id,
-        name,
-        yearOfStudy,
         admissionNo,
+        yearOfStudy,
         institutionType,
         academicPeriod: normalizedPeriod,
         documentType,
-        fileUrl: req.file.path,
+        fileUrl: `/uploads/documents/${req.file.filename}`,
       });
 
       /* ---------------------------------------------
-         Notifications
+         NOTIFICATIONS (OPTIONAL)
       ----------------------------------------------*/
       const settings = await Settings.findOne();
       const student = await User.findById(req.user.id);
-      const adminId = settings?.system?.adminUserId;
 
       if (settings?.notifications?.notifyAdminOnNewDocument) {
         await pushNotification({
-          userId: adminId,
+          userId: settings.system.adminUserId,
           title: "New Document Uploaded",
-          message: `${student.fullName} uploaded a ${documentType} document.`,
+          message: `${student.fullName} uploaded a ${documentType}`,
           email: settings.system.notificationEmail,
         });
-      }
-
-      /* ---------------------------------------------
-         TRANSCRIPT PARSING
-      ----------------------------------------------*/
-      if (documentType === "Transcript") {
-        try {
-          // 1. Download Cloudinary file
-          const fileRes = await axios.get(req.file.path, {
-            responseType: "arraybuffer",
-          });
-
-          const buffer = Buffer.from(fileRes.data);
-
-          // 2. Convert file → plain text
-          const text = await toPlainText(buffer, {
-            mimetype: req.file.mimetype,
-            originalname: req.file.originalname,
-          });
-
-          // DEBUG LOG
-          console.log("Extracted Text Preview:", text.substring(0, 300));
-
-          // 3. Extract GPA / Mean Grade / Average(%)
-          const { gpa, rawAverage, meanGrade } = extractGpa(text);
-
-          const status = gpa !== null ? "complete" : "pending";
-
-          // 4. Save GPA into Performance Model
-          await Performance.findOneAndUpdate(
-            { userId: req.user.id, yearOfStudy, academicPeriod: normalizedPeriod },
-            {
-              gpa,
-              rawAverage,
-              meanGrade,
-              status,
-              sourceDocumentId: newDoc._id,
-            },
-            { upsert: true, new: true }
-          );
-        } catch (err) {
-          console.error("TRANSCRIPT PARSE ERROR:", err.message);
-        }
       }
 
       return res.json({
@@ -167,13 +107,14 @@ router.post(
       });
     } catch (err) {
       console.error("UPLOAD ERROR:", err);
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
 
+
 /* ---------------------------------------------
-   GET ALL DOCUMENTS FOR STUDENT
+   GET STUDENT DOCUMENTS
 ----------------------------------------------*/
 router.get("/", auth, requireRole("student"), async (req, res) => {
   try {
@@ -182,7 +123,7 @@ router.get("/", auth, requireRole("student"), async (req, res) => {
     });
     res.json(docs);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Failed to load documents" });
   }
 });
 
@@ -195,11 +136,16 @@ router.delete("/:id", auth, requireRole("student"), async (req, res) => {
       _id: req.params.id,
       userId: req.user.id,
     });
+
     if (!doc) return res.status(404).json({ message: "Not found" });
+
+    // delete file from disk
+    const filePath = path.join(process.cwd(), doc.fileUrl);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
     res.json({ message: "Deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Delete failed" });
   }
 });
 

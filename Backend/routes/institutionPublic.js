@@ -34,14 +34,17 @@ router.post("/", auth, requireRole("admin"), async (req, res) => {
 });
 
 /* READ */
+/* READ (with filters) */
 router.get("/", async (req, res) => {
   try {
-    const { type, scope } = req.query;
+    const { type, scope, search, county, active } = req.query;
 
-    const match = { isActive: true };
+    const match = {};
 
+    /* ========================
+       SCOPE FILTER
+    ======================== */
     if (scope === "campus") {
-      // ONLY Universities + TVETs
       match.type = { $in: ["University", "TVET"] };
     }
 
@@ -49,13 +52,42 @@ router.get("/", async (req, res) => {
       match.type = "HighSchool";
     }
 
-    // Explicit override if type is passed
+    /* ========================
+       TYPE FILTER (override)
+    ======================== */
     if (type) {
       match.type = type;
     }
 
+    /* ========================
+       ACTIVE FILTER
+    ======================== */
+    if (active !== undefined) {
+      match.isActive = active === "true";
+    }
+
+    /* ========================
+       COUNTY FILTER
+    ======================== */
+    if (county) {
+      match.county = { $regex: county, $options: "i" };
+    }
+
+    /* ========================
+       SEARCH FILTER
+       (name OR location)
+    ======================== */
+    if (search) {
+      match.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } },
+        { county: { $regex: search, $options: "i" } },
+      ];
+    }
+
     const institutions = await Institution.aggregate([
       { $match: match },
+
       {
         $lookup: {
           from: "studentprofiles",
@@ -64,12 +96,15 @@ router.get("/", async (req, res) => {
           as: "students",
         },
       },
+
       {
         $addFields: {
-          studentCount: { $size: "$students" },
+          totalStudents: { $size: "$students" },
         },
       },
+
       { $project: { students: 0 } },
+
       { $sort: { name: 1 } },
     ]);
 
