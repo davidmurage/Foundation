@@ -11,6 +11,9 @@ import adminRoutes from "./routes/admin.js";
 import adminSettingsRoutes from "./routes/adminSettings.js";
 import institutionPublicRoutes from "./routes/institutionPublic.js";
 import feesApplicationRoutes from "./routes/feesApplication.js";
+import reportsRoutes from "./routes/reports.js";
+import institutionReports from "./routes/institutionReports.js";
+
 
 //highschool
 import adminHighSchoolsRoutes from "./routes/adminHighSchools.js";
@@ -38,6 +41,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
 app.use("/api/institutions", institutionPublicRoutes);
 app.use("/api/fees", feesApplicationRoutes);
+app.use("/api/reports", reportsRoutes);
+app.use("/api/reports/institution", institutionReports);
 
 //highschool
 app.use("/api/highschools", adminHighSchoolsRoutes);

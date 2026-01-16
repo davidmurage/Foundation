@@ -1,0 +1,163 @@
+.report-error {
+  color: crimson;
+  margin: 10px 0;
+}
+
+.card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.card-title {
+  margin: 0 0 12px;
+}
+
+.report-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.6fr 0.8fr 0.8fr 0.8fr;
+  gap: 12px;
+  align-items: end;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.field select, .field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #0a7cff;
+  color: white;
+  border-color: #0a7cff;
+}
+
+.btn.small {
+  padding: 7px 10px;
+  border-radius: 9px;
+}
+
+.preview {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fcfcfc;
+}
+
+.preview-grid,
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.metric {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: white;
+}
+
+.metric-key {
+  font-size: 12px;
+  color: #666;
+}
+
+.metric-val {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sub-card {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8fbff;
+  border: 1px solid #e8f1ff;
+}
+
+.muted {
+  color: #666;
+  font-size: 13px;
+}
+
+.history-group {
+  margin-top: 14px;
+}
+
+.group-title {
+  margin: 12px 0 8px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #eee;
+  padding: 12px;
+}
+
+.rec-list li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 1100px) {
+  .report-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .overview-grid, .preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
