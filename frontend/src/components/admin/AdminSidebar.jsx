@@ -77,6 +77,11 @@ export default function AdminSidebar() {
           >
             👔 School Admins
           </NavLink>
+          
+          {/*========== REPORTS & ANALYSIS ========*/}
+          <div className="sidebar-divider" />
+          <NavLink to="/admin-dashboard/reports/institutions">📊 Reports</NavLink>
+
 
           {/* ================= SETTINGS ================= */}
           <div className="sidebar-divider" />

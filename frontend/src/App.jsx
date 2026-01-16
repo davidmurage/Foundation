@@ -31,6 +31,8 @@ import HighSchoolStudents from "./pages/highschool/HighSchoolStudents";
 import HighSchoolStudentProfile from "./pages/highschool/HighSchoolStudentProfile";
 import AdminHighSchoolProfile from "./pages/admin/AdminHighSchoolProfile";
 import AdminStudentProfile from "./pages/admin/AdminStudentProfile";
+import AdminInstitutionReports from "./pages/admin/AdminInstitutionReports";
+import AdminReportView from "./pages/admin/AdminReportView";
 
 
 
@@ -120,6 +122,8 @@ function App() {
 
   {/* Institutions details*/}
   <Route path="institutions/:id" element={<AdminInstitutionDetail/>}/>
+  <Route path="reports/institutions" element={<AdminInstitutionReports />} />
+  <Route path="reports/:reportId" element={<AdminReportView />} />
 
   {/*HighSchools*/}
   <Route path="highschools" element={<AdminHighSchools/>}/>

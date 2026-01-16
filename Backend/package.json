@@ -21,6 +21,7 @@
     "csv-parser": "^3.2.0",
     "csvtojson": "^2.0.14",
     "dotenv": "^17.2.2",
+    "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "fs": "^0.0.1-security",
     "helmet": "^8.1.0",
@@ -34,6 +35,8 @@
     "nodemon": "^3.1.10",
     "pdf-parse": "^1.1.4",
     "pdf-parser": "^1.0.5",
+    "pdfkit": "^0.17.2",
+    "puppeteer": "^24.35.0",
     "tesseract.js": "^6.0.1"
   }
 }
