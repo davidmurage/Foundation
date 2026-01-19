@@ -41,7 +41,8 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  background: #f7f7f7;
+  background: green;
+  color: #f8fbff;
   cursor: pointer;
 }
 

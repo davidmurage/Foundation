@@ -14,6 +14,7 @@ import Performance from "../models/Performance.js";
 import FeeApplication from "../models/FeesApplication.js";
 import User from "../models/User.js";
 import InstitutionReport from "../models/InstitutionReport.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 

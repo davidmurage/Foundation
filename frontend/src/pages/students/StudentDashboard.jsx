@@ -150,12 +150,12 @@ export default function StudentDashboard() {
           >
             📄 Academic Documents
           </li>
-          <li
+          {/*<li
             className={activeTab === "performance" ? "active" : ""}
             onClick={() => handleMenuClick("performance")}
           >
             📊 Performance
-          </li>
+          </li>*/}
           <li onClick={handleLogout} className="logout">
             🚪 Logout
           </li>
@@ -184,7 +184,7 @@ export default function StudentDashboard() {
 
           <div className="topbar-right">
             <div className="notif-wrapper">
-              <button
+              {/*<button
                 type="button"
                 className="notif-bell"
                 onClick={() => setNotifOpen((prev) => !prev)}
@@ -193,7 +193,7 @@ export default function StudentDashboard() {
                 {unreadCount > 0 && (
                   <span className="notif-count">{unreadCount}</span>
                 )}
-              </button>
+              </button>*/}
 
               {notifOpen && (
                 <div className="notif-dropdown">
@@ -275,7 +275,7 @@ export default function StudentDashboard() {
                       <span className="home-card-label">Total uploaded</span>
                     </div>
 
-                    <div className="home-card-doc-grid">
+                    {/*<div className="home-card-doc-grid">
                       <div>
                         <span className="pill pill-approved">
                           {docSummary.approved} approved
@@ -298,7 +298,7 @@ export default function StudentDashboard() {
                           </span>
                         </div>
                       )}
-                    </div>
+                    </div>*/}
 
                     <button
                       className="home-card-btn"
@@ -308,7 +308,7 @@ export default function StudentDashboard() {
                     </button>
                   </div>
 
-                  {/* Performance snapshot */}
+                  {/* Performance snapshot 
                   <div className="home-card">
                     <div className="home-card-header">
                       <span className="card-icon">📊</span>
@@ -331,7 +331,7 @@ export default function StudentDashboard() {
                     >
                       View Full Performance
                     </button>
-                  </div>
+                  </div>*/}
                 </div>
 
                 {/* Quick actions + info panel */}
@@ -351,12 +351,12 @@ export default function StudentDashboard() {
                       >
                         ⬆️ Upload Documents
                       </button>
-                      <button
+                      {/*<button
                         onClick={() => setActiveTab("performance")}
                         className="qa-btn"
                       >
                         📈 Check Performance
-                      </button>
+                      </button>*/}
                     </div>
                     <p className="qa-note">
                       Keeping your profile and documents up to date helps the

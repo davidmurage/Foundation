@@ -48,26 +48,52 @@ export default function HighSchoolDashboard() {
           </div>
         </div>
 
+        
         {/* STUDENTS BY GRADE */}
-        <div className="section-card">
-          <h3>📚 Students by Grade / Form</h3>
-          <ul className="grade-list">
-            {data.byGrade.map((g) => (
-              <li key={g._id}>
-                <span>{g._id}</span>
-                <strong>{g.count}</strong>
-              </li>
-            ))}
-          </ul>
-        </div>
+<div className="section-card">
+  <h3>📚 Enrollment by Grade / Form</h3>
 
-        {/* QUICK ACTIONS */}
-        <div className="quick-actions">
-          <button>➕ Add Student</button>
-          <button>📤 Submit Fees</button>
-          <button>👥 View Students</button>
-          <button>📄 Fee Records</button>
-        </div>
+  {data.byGrade.length === 0 ? (
+    <p className="muted">No student records found</p>
+  ) : (
+    <ul className="grade-list">
+      {data.byGrade.map((g) => (
+        <li key={g._id}>
+          <span>{g._id}</span>
+          <strong>{g.count}</strong>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+{/* INSIGHTS */}
+<div className="section-card">
+  <h3>📊 School Insights</h3>
+
+  <ul className="insights">
+    <li>
+      👨‍🎓 Average students per class:{" "}
+      <strong>
+        {data.byGrade.length
+          ? Math.round(data.totalStudents / data.byGrade.length)
+          : 0}
+      </strong>
+    </li>
+
+    <li>
+      💰 Pending fee applications:{" "}
+      <strong>{data.pendingFees}</strong>
+    </li>
+
+    <li>
+      📄 Fee processing efficiency:{" "}
+      <strong>
+        {data.pendingFees === 0 ? "Excellent" : "Needs Attention"}
+      </strong>
+    </li>
+  </ul>
+</div>
       </main>
     </div>
   );

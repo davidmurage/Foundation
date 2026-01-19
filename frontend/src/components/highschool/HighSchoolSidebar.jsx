@@ -49,9 +49,9 @@ export default function HighSchoolSidebar() {
             👨‍🎓 Students
           </NavLink>
 
-          <NavLink to="/hs-dashboard/fees" onClick={closeOnMobile}>
+          {/*<NavLink to="/hs-dashboard/fees" onClick={closeOnMobile}>
             💰 Fees & Sponsorship
-          </NavLink>
+          </NavLink>*/}
         </nav>
 
         <button className="logout-btn" onClick={logout}>
