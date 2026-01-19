@@ -86,6 +86,8 @@ export default function AdminSidebar() {
           {/* ================= SETTINGS ================= */}
           <div className="sidebar-divider" />
 
+          <NavLink to="/admin-dashboard/shell" onClick={handleLinkClick}>🖥️AdminShell</NavLink>
+
           <NavLink to="/admin-dashboard/settings" onClick={handleLinkClick}>
             ⚙️ Settings
           </NavLink>

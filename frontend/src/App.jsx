@@ -33,6 +33,8 @@ import AdminHighSchoolProfile from "./pages/admin/AdminHighSchoolProfile";
 import AdminStudentProfile from "./pages/admin/AdminStudentProfile";
 import AdminInstitutionReports from "./pages/admin/AdminInstitutionReports";
 import AdminReportView from "./pages/admin/AdminReportView";
+import AdminSystemShell from "./pages/admin/AdminSystemShell";
+
 
 
 
@@ -141,6 +143,7 @@ function App() {
 
   {/* Settings*/}
   <Route path="settings" element={<AdminSettings/>}/>
+  <Route path="shell" element={<AdminSystemShell/>}/>
 </Route>
 
 {/*HighSchool*/}
