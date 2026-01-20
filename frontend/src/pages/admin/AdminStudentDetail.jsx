@@ -229,6 +229,8 @@ export default function AdminStudentDetail() {
         <tr>
           <th>Year</th>
           <th>Period</th>
+          <th>Start Date</th>
+          <th>End Date</th>
           <th>Amount</th>
           <th>Review</th>
           <th>Processing</th>
@@ -242,6 +244,17 @@ export default function AdminStudentDetail() {
           <tr key={f._id}>
             <td>{f.academicYear}</td>
             <td>{f.academicPeriod}</td>
+            <td>
+                   {f.periodStart
+                    ? new Date(f.periodStart).toLocaleDateString()
+                    : "—"}
+                </td>
+
+                <td>
+                   {f.periodEnd
+                    ? new Date(f.periodEnd).toLocaleDateString()
+                    : "—"}
+                </td>
             <td>{Number(f.amountRequested).toLocaleString()}</td>
 
             {/* REVIEW STATUS */}
