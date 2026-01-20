@@ -18,6 +18,7 @@ import {
 import { Line } from "react-chartjs-2";
 
 import "../../styles/admin/AdminStudentDetail.css";
+import "../../styles/admin/AdminLayoutBase.css";
 
 ChartJS.register(
   LineElement,

@@ -2,7 +2,9 @@
    ADMIN STUDENT DETAIL – TABS
 ================================ */
 
-
+.admin-layout{
+  margin-left: 0rem;
+}
 
 .admin-tabs {
   display: flex;
