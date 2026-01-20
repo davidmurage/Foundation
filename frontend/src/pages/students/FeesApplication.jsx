@@ -200,6 +200,8 @@ export default function FeesApplication() {
             <tr>
               <th>Academic Year</th>
               <th>Period</th>
+              <th>Start Date</th>
+              <th>End Date</th>
               <th>Amount</th>
               <th>Review</th>
               <th>Processing</th>
@@ -214,7 +216,19 @@ export default function FeesApplication() {
               <tr key={a._id}>
                 <td>{a.academicYear}</td>
                 <td>{a.academicPeriod}</td>
+                <td>
+                   {a.periodStart
+                    ? new Date(a.periodStart).toLocaleDateString()
+                    : "—"}
+                </td>
+
+                <td>
+                   {a.periodEnd
+                    ? new Date(a.periodEnd).toLocaleDateString()
+                    : "—"}
+                </td>
                 <td>{Number(a.amountRequested).toLocaleString()}</td>
+                
 
                 <td>
                   <span className={`status ${a.reviewStatus}`}>

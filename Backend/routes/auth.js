@@ -94,6 +94,11 @@ router.post("/reset-password/:token", async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
+    
+
+   if(!password || password.length < 6){
+    return res.status(400).json({ message: "Password must be at least 6 characters." });
+   }
 
     const user = await User.findOne({
       resetToken: token,
@@ -103,7 +108,9 @@ router.post("/reset-password/:token", async (req, res) => {
     if (!user)
       return res.status(400).json({ message: "Invalid or expired token." });
 
-    user.password = password;
+    const hashedPassword =  awaitbcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
     await user.save();
