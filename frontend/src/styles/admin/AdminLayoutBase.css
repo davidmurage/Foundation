@@ -73,3 +73,19 @@
     padding: 16px;
   }
 }
+
+.status-pill.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-pill.partial {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-pill.paid {
+  background: #d4edda;
+  color: #155724;
+}
+
