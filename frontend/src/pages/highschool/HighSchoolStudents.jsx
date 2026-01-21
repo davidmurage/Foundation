@@ -4,7 +4,7 @@ import { API_URL } from "../../utils/config";
 
 
 import "../../styles/highschool/HighSchoolStudents.css";
-import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar";
+import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function HighSchoolStudents() {
