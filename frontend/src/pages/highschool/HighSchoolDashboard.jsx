@@ -4,7 +4,7 @@ import { API_URL } from "../../utils/config";
 
 
 import "../../styles/highschool/HighSchoolDashboard.css";
-import HighSchoolSidebar from "../../components/Highschool/HighSchoolSidebar";
+import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar";
 
 
 
