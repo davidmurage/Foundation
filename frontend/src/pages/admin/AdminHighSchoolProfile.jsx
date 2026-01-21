@@ -15,6 +15,8 @@ export default function AdminHighSchoolProfile() {
   const [tab, setTab] = useState("overview");
   const [bundle, setBundle] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [actingId, setActingId] = useState(null);
+
 
   // filters for students tab
   const [filters, setFilters] = useState({
@@ -49,21 +51,22 @@ export default function AdminHighSchoolProfile() {
   if (!window.confirm(`${status} this student?`)) return;
 
   try {
-    const res = await axios.patch(
+    setActingId(studentId);
+
+    await axios.patch(
       `${API_URL}/api/highschools/students/${studentId}/approval`,
       { status },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    console.log("APPROVE RESPONSE:", res.data);
-
-    // reload updated students
     await load();
   } catch (e) {
-    console.error("APPROVE ERROR:", e);
     alert(e.response?.data?.message || "Approval action failed");
+  } finally {
+    setActingId(null);
   }
 };
+
 
 
   const filteredStudents = useMemo(() => {
@@ -90,6 +93,8 @@ export default function AdminHighSchoolProfile() {
   if (!bundle) return <p style={{ padding: 20 }}>No data</p>;
 
   const { institution, admins, stats, students, feesSummary, documents, activity } = bundle;
+
+ 
 
   return (
     <div className="admin-layout-wrapper">
@@ -252,47 +257,63 @@ export default function AdminHighSchoolProfile() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.map((s) => (
-                    <tr key={s._id}>
-                      <td>{s.fullName}</td>
-                      <td>{s.registrationNo || "—"}</td>
-                      <td>{s.gender}</td>
-                      <td>{s.curriculum}</td>
-                      <td>{s.level}</td>
-                      <td>{s.academicYear}</td>
-                      <td>
-                        <span className={`status-pill ${s.sponsorshipStatus || "Pending"}`}>
-                          {s.sponsorshipStatus || "Pending"}
-                        </span>
-                      </td>
+  {filteredStudents.map((s) => {
+    const status = (s.sponsorshipStatus || "Pending").toLowerCase();
 
-                      <td className="actions-cell">
-                        <button
-                          className="profile-btn"
-                          onClick={() => navigate(`/admin-dashboard/highschools/${schoolId}/students/${s._id}`)}
-                        >
-                          View
-                        </button>
+    return (
+      <tr key={s._id}>
+        <td>{s.fullName}</td>
+        <td>{s.registrationNo || "—"}</td>
+        <td>{s.gender}</td>
+        <td>{s.curriculum}</td>
+        <td>{s.level}</td>
+        <td>{s.academicYear}</td>
 
-                        <button className="approve-btn" disabled={s.sponsorshipStatus === "approved"} onClick={() => approveReject(s._id, "approved")}>
-                          Approve
-                        </button>
+        <td>
+          <span className={`status-pill ${status}`}>
+            {s.sponsorshipStatus || "Pending"}
+          </span>
+        </td>
 
-                        <button className="reject-btn" disabled={s.sponsorshipStatus === "rejected"} onClick={() => approveReject(s._id, "rejected")}>
-                          Reject
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+        <td className="actions-cell">
+          <button
+            className="profile-btn"
+            onClick={() =>
+              navigate(`/admin-dashboard/highschools/${schoolId}/students/${s._id}`)
+            }
+          >
+            View
+          </button>
 
-                  {!filteredStudents.length && (
-                    <tr>
-                      <td colSpan={8} style={{ textAlign: "center" }}>
-                        No students match filters
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+          <button
+            className="approve-btn"
+            disabled={status !== "pending" || actingId === s._id}
+            onClick={() => approveReject(s._id, "approved")}
+          >
+            {actingId === s._id ? "Processing..." : "Approve"}
+          </button>
+
+          <button
+            className="reject-btn"
+            disabled={status !== "pending" || actingId === s._id}
+            onClick={() => approveReject(s._id, "rejected")}
+          >
+            Reject
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+
+  {!filteredStudents.length && (
+    <tr>
+      <td colSpan={8} style={{ textAlign: "center" }}>
+        No students match filters
+      </td>
+    </tr>
+  )}
+</tbody>
+
               </table>
             </div>
           </div>

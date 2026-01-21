@@ -167,7 +167,21 @@ export default function AdminStudentProfile() {
                       <td>KES {Number(f.paidAmount || 0).toLocaleString()}</td>
                       <td>KES {Number((f.totalFees || 0) - (f.paidAmount || 0)).toLocaleString()}</td>
                       <td>
-                        <span className={`status-pill ${f.status || "Pending"}`}>{f.status || "Pending"}</span>
+                       {(() => {
+                         const total = Number(f.totalFees || 0);
+                         const paid = Number(f.paidAmount || 0);
+
+                         let status = "Unpaid";
+
+                         if (paid > 0 && paid < total) status = "Partial";
+                         if (paid >= total && total > 0) status = "Paid";
+
+                         return (
+                         <span className={`status-pill ${status.toLowerCase()}`}>
+                          {status}
+                         </span>
+                          );
+                        })()}
                       </td>
                     </tr>
                   ))}

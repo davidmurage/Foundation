@@ -1,7 +1,7 @@
 import express from "express";
+import mongoose from "mongoose";
 import auth, { requireRole } from "../middleware/auth.js";
-import StudentProfile from "../models/StudentProfile.js";
-import FeesApplication from "../models/FeesApplication.js";
+import HighSchoolStudent from "../models/HighSchoolStudent.js";
 
 const router = express.Router();
 
@@ -13,44 +13,68 @@ router.get(
     try {
       const institutionId = req.user.institution;
 
-      const totalStudents = await StudentProfile.countDocuments({
-        institution: institutionId,
+      if (!institutionId) {
+        return res.status(400).json({
+          message: "Institution not linked to admin",
+        });
+      }
+
+      const institutionObjectId = new mongoose.Types.ObjectId(
+        institutionId.toString()
+      );
+
+      /* ================= STUDENTS ================= */
+      const totalStudents = await HighSchoolStudent.countDocuments({
+        institution: institutionObjectId,
       });
 
-      const pendingFees = await FeesApplication.countDocuments({
-        institutionId,
-        reviewStatus: "pending",
+      const pendingStudents = await HighSchoolStudent.countDocuments({
+        institution: institutionObjectId,
+        sponsorshipStatus: "pending",
       });
 
-      const totalFees = await FeesApplication.aggregate([
-        { $match: { institutionId } },
+      /* ================= TOTAL FEES ================= */
+      const totalFeesAgg = await HighSchoolStudent.aggregate([
+        {
+          $match: {
+            institution: institutionObjectId,
+          },
+        },
         {
           $group: {
             _id: null,
-            total: { $sum: "$amountRequested" },
+            total: { $sum: "$feesAmount" },
           },
         },
       ]);
 
-      const byGrade = await StudentProfile.aggregate([
-        { $match: { institution: institutionId } },
+      /* ================= BY GRADE / FORM ================= */
+      const byGrade = await HighSchoolStudent.aggregate([
+        {
+          $match: {
+            institution: institutionObjectId,
+          },
+        },
         {
           $group: {
-            _id: "$academicLevel", // Grade / Form
+            _id: "$level", // Form 1 / Grade 9 etc
             count: { $sum: 1 },
           },
         },
+        { $sort: { _id: 1 } },
       ]);
 
       res.json({
         totalStudents,
-        pendingFees,
-        totalFees: totalFees[0]?.total || 0,
+        pendingFees: pendingStudents,
+        totalFees: totalFeesAgg[0]?.total || 0,
         byGrade,
       });
     } catch (err) {
       console.error("HS DASHBOARD ERROR:", err);
-      res.status(500).json({ message: "Failed to load dashboard data" });
+      res.status(500).json({
+        message: "Failed to load dashboard data",
+      });
     }
   }
 );

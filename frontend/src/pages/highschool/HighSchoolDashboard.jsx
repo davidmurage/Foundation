@@ -38,7 +38,7 @@ export default function HighSchoolDashboard() {
           </div>
 
           <div className="stat-card">
-            <h4>📄 Pending Fees</h4>
+            <h4>📄 Pending Students</h4>
             <strong>{data.pendingFees}</strong>
           </div>
 
@@ -82,7 +82,7 @@ export default function HighSchoolDashboard() {
     </li>
 
     <li>
-      💰 Pending fee applications:{" "}
+      💰 Pending registered students:{" "}
       <strong>{data.pendingFees}</strong>
     </li>
 
