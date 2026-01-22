@@ -116,64 +116,73 @@ router.post("/verify-otp", async (req, res) => {
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
+
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res.status(404).json({ message: "Email not found" });
+    }
 
-    const token = crypto.randomBytes(32).toString("hex");
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    user.resetToken = token;
-    user.resetTokenExpiry = Date.now() + 1000 * 60 * 10; // valid 10 mins
+    user.resetOtp = otp;
+    user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
     await user.save();
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-
-    await sendEmail(
-      user.email,
-      "Reset Your Password",
-      `
-      <h2>Password Reset Request</h2>
-      <p>Click the link below to reset your password:</p>
-      <a href="${resetLink}">${resetLink}</a>
-      `
-    );
-
-    res.json({ message: "Password reset link sent to your email." });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-router.post("/reset-password/:token", async (req, res) => {
-  try {
-    const { token } = req.params;
-    const { password } = req.body;
-    
-
-   if(!password || password.length < 6){
-    return res.status(400).json({ message: "Password must be at least 6 characters." });
-   }
-
-    const user = await User.findOne({
-      resetToken: token,
-      resetTokenExpiry: { $gt: Date.now() },
+    await sendEmail({
+      to: user.email,
+      subject: "Password Reset Code",
+      html: `
+        <h2>Password Reset</h2>
+        <p>Your password reset code is:</p>
+        <h1>${otp}</h1>
+        <p>This code expires in 10 minutes.</p>
+      `,
     });
 
-    if (!user)
-      return res.status(400).json({ message: "Invalid or expired token." });
-
-    const hashedPassword =  awaitbcrypt.hash(password, 10);
-
-    user.password = hashedPassword;
-    user.resetToken = undefined;
-    user.resetTokenExpiry = undefined;
-    await user.save();
-
-    res.json({ message: "Password reset successful." });
+    res.json({ message: "OTP sent to your email" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("FORGOT PASSWORD ERROR:", err);
+    res.status(500).json({ message: "Failed to send OTP" });
   }
 });
+
+
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetOtp: otp,
+      resetOtpExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired OTP",
+      });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetOtp = undefined;
+    user.resetOtpExpiry = undefined;
+
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error("RESET PASSWORD ERROR:", err);
+    res.status(500).json({ message: "Password reset failed" });
+  }
+});
+
 
 
 export default router;

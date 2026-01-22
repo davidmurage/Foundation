@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
 },
   otpCode: String,
   otpExpiry: Date,
+  resetOtp: String,
+  resetOtpExpiry: Date,
   resetToken: { type: String },
   resetTokenExpiry: { type: Date }
 }, { timestamps: true });
