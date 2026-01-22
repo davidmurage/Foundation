@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   enum: ["admin", "student", "highschool_admin"],
   required: true,
 },
+  otpCode: String,
+  otpExpiry: Date,
   resetToken: { type: String },
   resetTokenExpiry: { type: Date }
 }, { timestamps: true });

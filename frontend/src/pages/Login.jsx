@@ -13,28 +13,21 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post(`${API_URL}/api/auth/login`, form);
+  e.preventDefault();
+  try {
+    const res = await axios.post(`${API_URL}/api/auth/login`, form);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
+    setMessage("OTP sent to your email");
 
-      setMessage("Login successful!");
+    // store temp userId
+    localStorage.setItem("otpUserId", res.data.userId);
 
-      if (res.data.role === "admin") {
-        window.location.href = "/admin-dashboard/overview";
-      }else if(res.data.role === "highschool_admin"){
-        window.location.href = "/hs-dashboard/overview";
-      } else {
-        window.location.href = res.data.profileIncomplete
-          ? "/profile-setup"
-          : "/student-dashboard";
-      }
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Invalid credentials");
-    }
-  };
+    // redirect to OTP page
+    window.location.href = "/verify-otp";
+  } catch (err) {
+    setMessage(err.response?.data?.message || "Invalid credentials");
+  }
+};
 
   return (
     <div className="auth-container">
