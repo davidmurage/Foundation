@@ -36,18 +36,71 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET || "SECRET_KEY",
-      { expiresIn: "1d" }
-    );
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Check if student profile exists
+    user.otpCode = otp;
+    user.otpExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes
+    await user.save();
+
+    // Send OTP email
+    await sendEmail({
+    to: user.email,
+    subject: "Your Login Verification Code",
+    html: `
+    <h2>Login Verification</h2>
+    <p>Your OTP code is:</p>
+    <h1>${otp}</h1>
+    <p>This code expires in 10 minutes.</p>
+  `,
+  });
+
+    res.json({
+      message: "OTP sent to email",
+      userId: user._id, // used for verification step
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+//OTP
+router.post("/verify-otp", async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // Validate OTP
+    if (
+      user.otpCode !== otp ||
+      !user.otpExpiry ||
+      user.otpExpiry < Date.now()
+    ) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Clear OTP
+    user.otpCode = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    //CHECK STUDENT PROFILE HERE (CORRECT PLACE)
     let profileIncomplete = false;
     if (user.role === "student") {
       const profile = await StudentProfile.findOne({ userId: user._id });
       if (!profile) profileIncomplete = true;
     }
+
+    // Issue JWT
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || "SECRET_KEY",
+      { expiresIn: "1d" }
+    );
 
     res.json({
       token,
@@ -58,6 +111,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.post("/forgot-password", async (req, res) => {
   try {

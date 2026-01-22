@@ -34,6 +34,7 @@ import AdminStudentProfile from "./pages/admin/AdminStudentProfile";
 import AdminInstitutionReports from "./pages/admin/AdminInstitutionReports";
 import AdminReportView from "./pages/admin/AdminReportView";
 import AdminSystemShell from "./pages/admin/AdminSystemShell";
+import VerifyOtp from "./pages/VerifyOtp";
 
 
 
@@ -50,6 +51,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<AboutUs/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+
 
         {/* Student Routes */}
         <Route
