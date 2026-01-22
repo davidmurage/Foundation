@@ -35,6 +35,10 @@ const [filters, setFilters] = useState({
 const [editingStudent, setEditingStudent] = useState(null);
 const navigate = useNavigate();
 
+const [currentPage, setCurrentPage] = useState(1);
+
+const STUDENTS_PER_PAGE = 5;
+
 
 
   const loadStudents = async () => {
@@ -58,6 +62,19 @@ const navigate = useNavigate();
     (!filters.academicYear || s.academicYear === filters.academicYear)
   );
 });
+
+ // pagination calculations
+const totalPages = Math.ceil(filteredStudents.length / STUDENTS_PER_PAGE);
+
+const paginatedStudents = filteredStudents.slice(
+  (currentPage - 1) * STUDENTS_PER_PAGE,
+  currentPage * STUDENTS_PER_PAGE
+);
+
+useEffect(() => {
+  setCurrentPage(1);
+}, [filters, students]);
+
 
   const submit = async (e) => {
   e.preventDefault();
@@ -250,7 +267,7 @@ const handleBulkUpload = async (e) => {
               </tr>
             </thead>
             <tbody>
-  {filteredStudents.map((s) => (
+  {paginatedStudents.map((s) => (
     <tr key={s._id}>
       <td>{s.fullName}</td>
       <td>{s.registrationNo || "—"}</td>
@@ -298,6 +315,36 @@ const handleBulkUpload = async (e) => {
 </tbody>
 
           </table>
+
+{/* PAGINATION */}
+{totalPages > 1 && (
+  <div className="pagination">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((p) => p - 1)}
+    >
+      ◀ Prev
+    </button>
+
+    {[...Array(totalPages)].map((_, i) => (
+      <button
+        key={i}
+        className={currentPage === i + 1 ? "active" : ""}
+        onClick={() => setCurrentPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((p) => p + 1)}
+    >
+      Next ▶
+    </button>
+  </div>
+)}
+
         </div>
 
         {/* MODAL */}
