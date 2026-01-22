@@ -46,6 +46,20 @@ export default function HighSchoolStudentProfile() {
   feeStatement: null,
 });
 
+const ITEMS_PER_PAGE = 3;
+
+// performance pagination
+const [perfPage, setPerfPage] = useState(1);
+
+// fees pagination
+const [feesPage, setFeesPage] = useState(1);
+
+// documents pagination
+const [docsPage, setDocsPage] = useState(1);
+
+
+
+
   const openEditPerformance = (p) => {
   setPerfForm({
     academicYear: p.academicYear,
@@ -115,6 +129,29 @@ const deletePerformance = async (perfId) => {
   if (!bundle) return <p style={{ padding: 20 }}>Loading student profile...</p>;
 
   const { student, performance, feeRecords, documents } = bundle;
+
+  // ===== PERFORMANCE =====
+const perfTotalPages = Math.ceil(performance.length / ITEMS_PER_PAGE);
+const paginatedPerformance = performance.slice(
+  (perfPage - 1) * ITEMS_PER_PAGE,
+  perfPage * ITEMS_PER_PAGE
+);
+
+// ===== FEES =====
+const feesTotalPages = Math.ceil(feeRecords.length / ITEMS_PER_PAGE);
+const paginatedFees = feeRecords.slice(
+  (feesPage - 1) * ITEMS_PER_PAGE,
+  feesPage * ITEMS_PER_PAGE
+);
+
+// ===== DOCUMENTS =====
+const docsTotalPages = Math.ceil(documents.length / ITEMS_PER_PAGE);
+const paginatedDocuments = documents.slice(
+  (docsPage - 1) * ITEMS_PER_PAGE,
+  docsPage * ITEMS_PER_PAGE
+);
+
+
 
 
 
@@ -303,7 +340,7 @@ const submitFees = async (e) => {
 </thead>
 
 <tbody>
-  {performance.map((p) => (
+  {paginatedPerformance.map((p) => (
     <tr key={p._id}>
       <td>{p.academicYear}</td>
       <td>{p.term}</td>
@@ -342,6 +379,29 @@ const submitFees = async (e) => {
 </tbody>
 
               </table>
+
+              {perfTotalPages > 1 && (
+  <div className="pagination">
+    <button disabled={perfPage === 1} onClick={() => setPerfPage(p => p - 1)}>
+      ◀
+    </button>
+
+    {[...Array(perfTotalPages)].map((_, i) => (
+      <button
+        key={i}
+        className={perfPage === i + 1 ? "active" : ""}
+        onClick={() => setPerfPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button disabled={perfPage === perfTotalPages} onClick={() => setPerfPage(p => p + 1)}>
+      ▶
+    </button>
+  </div>
+)}
+
             </div>
           </div>
         )}
@@ -367,7 +427,7 @@ const submitFees = async (e) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {feeRecords.map((f) => (
+                  {paginatedFees.map((f) => (
                     <tr key={f._id}>
                       <td>{f.academicYear}</td>
                       <td>{f.term}</td>
@@ -401,6 +461,25 @@ const submitFees = async (e) => {
                   )}
                 </tbody>
               </table>
+
+              {feesTotalPages > 1 && (
+  <div className="pagination">
+    <button disabled={feesPage === 1} onClick={() => setFeesPage(p => p - 1)}>◀</button>
+
+    {[...Array(feesTotalPages)].map((_, i) => (
+      <button
+        key={i}
+        className={feesPage === i + 1 ? "active" : ""}
+        onClick={() => setFeesPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button disabled={feesPage === feesTotalPages} onClick={() => setFeesPage(p => p + 1)}>▶</button>
+  </div>
+)}
+
             </div>
 
             
@@ -418,7 +497,7 @@ const submitFees = async (e) => {
             </div>
 
             <div className="docs-grid">
-              {documents.map((d) => (
+              {paginatedDocuments.map((d) => (
                 <div className="doc-item" key={d._id}>
                   <div>
                     <b>{d.title || d.originalName}</b>
