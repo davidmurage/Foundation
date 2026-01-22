@@ -13,6 +13,9 @@ export default function ForgotPassword() {
     try {
       const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
       setMessage(res.data.message);
+      //redirect to
+      window.location.href = "/reset-password";
+      
     } catch (err) {
       setMessage(err.response?.data?.message || "Error occurred");
     }
@@ -34,7 +37,7 @@ export default function ForgotPassword() {
           required
         />
 
-        <button type="submit">Send Reset Link</button>
+        <button type="submit">Send Reset Code</button>
       </form>
 
       <p className="switch-auth">

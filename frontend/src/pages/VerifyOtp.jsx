@@ -25,7 +25,9 @@ export default function VerifyOtp() {
       } else if (res.data.role === "highschool_admin") {
         window.location.href = "/hs-dashboard/overview";
       } else {
-        window.location.href = "/student-dashboard";
+        window.location.href = res.data.profileIncomplete 
+        ?"/profile-setup"
+        :"/student-dashboard";
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "OTP verification failed");

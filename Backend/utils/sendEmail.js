@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export async function sendEmail({ to, subject, html, text }) {
+export async function sendEmail({to, subject, html, text }) {
   if (!to) {
     throw new Error("No recipient email provided");
   }
