@@ -22,6 +22,10 @@ export default function AdminStudents() {
   // institutions list
   const [institutions, setInstitutions] = useState([]);
 
+  const ITEMS_PER_PAGE = 5;
+  const [page, setPage] = useState(1);
+
+
   /* ================= LOAD INSTITUTIONS ================= */
   const loadInstitutions = async (type) => {
     if (!type) {
@@ -92,6 +96,19 @@ export default function AdminStudents() {
   useEffect(() => {
     fetchRows();
   }, []);
+
+  useEffect(() => {
+  setPage(1);
+ }, [search, institutionType, institutionId, year]);
+
+ const totalPages = Math.ceil(rows.length / ITEMS_PER_PAGE);
+
+ const paginatedRows = rows.slice(
+  (page - 1) * ITEMS_PER_PAGE,
+  page * ITEMS_PER_PAGE
+ );
+
+
 
   return (
     <div className="admin-page-container">
@@ -173,7 +190,7 @@ export default function AdminStudents() {
             </thead>
 
             <tbody>
-              {rows.map((r) => (
+              {paginatedRows.map((r) => (
                 <tr key={r.userId}>
                   <td>
                     {r.photo ? (
@@ -219,6 +236,34 @@ export default function AdminStudents() {
               )}
             </tbody>
           </table>
+          {totalPages > 1 && (
+  <div className="pagination">
+    <button
+      disabled={page === 1}
+      onClick={() => setPage((p) => p - 1)}
+    >
+      ◀ Prev
+    </button>
+
+    {[...Array(totalPages)].map((_, i) => (
+      <button
+        key={i}
+        className={page === i + 1 ? "active" : ""}
+        onClick={() => setPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={page === totalPages}
+      onClick={() => setPage((p) => p + 1)}
+    >
+      Next ▶
+    </button>
+  </div>
+)}
+
         </div>
       </main>
     </div>

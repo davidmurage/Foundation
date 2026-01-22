@@ -36,6 +36,10 @@ export default function AdminInstitutions() {
   const [bulkFile, setBulkFile] = useState(null);
   const [bulkUploading, setBulkUploading] = useState(false);
 
+  const ITEMS_PER_PAGE = 5;
+  const [page, setPage] = useState(1);
+
+
   const handlePickBulkFile = (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
@@ -125,6 +129,12 @@ const uploadBulkFile = async () => {
   return () => clearTimeout(delay);
 }, [search, filters.type, filters.county, filters.active]);
 
+
+useEffect(() => {
+  setPage(1);
+}, [search, filters.type, filters.county, filters.active]);
+
+
   const openAddModal = () => {
     setForm({
       name: "",
@@ -193,6 +203,14 @@ const uploadBulkFile = async () => {
       alert(err.response?.data?.message || "Error deleting institution");
     }
   };
+
+  const totalPages = Math.ceil(institutions.length / ITEMS_PER_PAGE);
+
+  const paginatedInstitutions = institutions.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+
 
   return (
     <div className="admin-layout-wrapper">
@@ -305,7 +323,7 @@ const uploadBulkFile = async () => {
             </thead>
 
             <tbody>
-              {institutions.map((inst) => (
+              {paginatedInstitutions.map((inst) => (
                 <tr key={inst._id}>
   <td>{inst.name}</td>
   <td>{inst.type}</td>
@@ -336,6 +354,35 @@ const uploadBulkFile = async () => {
               )}
             </tbody>
           </table>
+
+          {totalPages > 1 && (
+  <div className="pagination">
+    <button
+      disabled={page === 1}
+      onClick={() => setPage((p) => p - 1)}
+    >
+      ◀ Prev
+    </button>
+
+    {[...Array(totalPages)].map((_, i) => (
+      <button
+        key={i}
+        className={page === i + 1 ? "active" : ""}
+        onClick={() => setPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={page === totalPages}
+      onClick={() => setPage((p) => p + 1)}
+    >
+      Next ▶
+    </button>
+  </div>
+)}
+
         </div>
 
         {/* Modal */}

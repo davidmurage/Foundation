@@ -99,6 +99,7 @@
 .admin-users-table th,
 .admin-users-table td {
   padding: 12px;
+
   border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
   white-space: normal !important;
@@ -110,6 +111,7 @@
   background: #f3fff3;
   font-weight: 700;
   color: #004d00;
+  padding-left: 0px;
 }
 
 .admin-users-table tr:last-child td {
