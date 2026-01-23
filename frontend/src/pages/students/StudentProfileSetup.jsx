@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../../styles/student/StudentDashboard.css";
+import "../../styles/student/StudentProfileSetup.css";
 import { API_URL } from "../../utils/config";
 
 export default function StudentProfileSetup() {
@@ -25,6 +25,10 @@ export default function StudentProfileSetup() {
 
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
+
+  const [instSearch, setInstSearch] = useState("");
+  const [showInstList, setShowInstList] = useState(false);
+
 
   // ---------------------------
   // LOAD INSTITUTIONS FROM DB
@@ -116,6 +120,11 @@ export default function StudentProfileSetup() {
       ? ["Term 1", "Term 2", "Term 3"]
       : [];
 
+  const filteredInstitutions = institutions.filter((inst) =>
+  inst.name.toLowerCase().includes(instSearch.toLowerCase())
+  );
+
+
   return (
     <div className="dashboard-container">
       <h2>🎓 Complete Your Profile</h2>
@@ -171,24 +180,47 @@ export default function StudentProfileSetup() {
         {/* INSTITUTION NAME */}
         {profile.institutionType && (
           <>
-            <select
-              name="institution"
-              value={profile.institution}
-              onChange={handleChange}
-              required
-              disabled={instLoading}
-            >
-              <option value="">
-                {instLoading ? "Loading institutions..." : "Select Institution"}
-              </option>
+            <div className="institution-search">
+  <input
+    type="text"
+    placeholder={
+      instLoading ? "Loading institutions..." : "Search institution..."
+    }
+    value={instSearch}
+    onChange={(e) => {
+      setInstSearch(e.target.value);
+      setShowInstList(true);
+    }}
+    onFocus={() => setShowInstList(true)}
+    disabled={instLoading}
+    required
+  />
 
-              {Array.isArray(institutions) &&
-                institutions.map((inst) => (
-                  <option key={inst._id} value={inst._id}>
-                    {inst.name}
-                  </option>
-                ))}
-            </select>
+  {showInstList && instSearch && (
+    <div className="institution-dropdown">
+      {filteredInstitutions.length > 0 ? (
+        filteredInstitutions.map((inst) => (
+          <div
+            key={inst._id}
+            className="institution-option"
+            onClick={() => {
+              setProfile({ ...profile, institution: inst._id });
+              setInstSearch(inst.name);
+              setShowInstList(false);
+            }}
+          >
+            {inst.name}
+          </div>
+        ))
+      ) : (
+        <div className="institution-option disabled">
+          No institutions found
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
 
             {instError && (
               <p className="message" style={{ color: "crimson" }}>
