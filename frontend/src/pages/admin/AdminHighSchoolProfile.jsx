@@ -27,6 +27,10 @@ export default function AdminHighSchoolProfile() {
     approvalStatus: "",
   });
 
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
+
   const load = async () => {
     try {
       setLoading(true);
@@ -89,12 +93,27 @@ export default function AdminHighSchoolProfile() {
     });
   }, [bundle, filters]);
 
-  if (loading && !bundle) return <p style={{ padding: 20 }}>Loading...</p>;
-  if (!bundle) return <p style={{ padding: 20 }}>No data</p>;
+  
 
-  const { institution, admins, stats, students, feesSummary, documents, activity } = bundle;
+  
 
- 
+
+ useEffect(() => {
+  setCurrentPage(1);
+}, [filters]);
+
+const totalPages = Math.ceil(filteredStudents.length / ITEMS_PER_PAGE);
+
+const paginatedStudents = useMemo(() => {
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  return filteredStudents.slice(start, end);
+}, [filteredStudents, currentPage]);
+
+if (loading && !bundle) return <p style={{ padding: 20 }}>Loading...</p>;
+if (!bundle) return <p style={{ padding: 20 }}>No data</p>;
+
+const { institution, admins, stats, students, feesSummary, documents, activity } = bundle;
 
   return (
     <div className="admin-layout-wrapper">
@@ -257,7 +276,7 @@ export default function AdminHighSchoolProfile() {
                   </tr>
                 </thead>
                 <tbody>
-  {filteredStudents.map((s) => {
+  {paginatedStudents.map((s) => {
     const status = (s.sponsorshipStatus || "Pending").toLowerCase();
 
     return (
@@ -315,11 +334,40 @@ export default function AdminHighSchoolProfile() {
 </tbody>
 
               </table>
+
+              {totalPages > 1 && (
+  <div className="pagination">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((p) => p - 1)}
+    >
+      Prev
+    </button>
+
+    {Array.from({ length: totalPages }).map((_, i) => (
+      <button
+        key={i}
+        className={currentPage === i + 1 ? "active" : ""}
+        onClick={() => setCurrentPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((p) => p + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
             </div>
           </div>
         )}
 
-        {/* Fees Summary */}
+        {/* Fees Summary 
         {tab === "fees" && (
           <div className="card">
             <h3>💰 Fees Summary</h3>
@@ -373,9 +421,9 @@ export default function AdminHighSchoolProfile() {
               </table>
             </div>
           </div>
-        )}
+        )}*/}
 
-        {/* Documents */}
+        {/* Documents 
         {tab === "documents" && (
           <div className="card">
             <h3>📎 Latest Documents</h3>
@@ -416,9 +464,9 @@ export default function AdminHighSchoolProfile() {
               </table>
             </div>
           </div>
-        )}
+        )}*/}
 
-        {/* Activity */}
+        {/* Activity 
         {tab === "activity" && (
           <div className="card">
             <h3>🧾 Activity Log</h3>
@@ -456,7 +504,7 @@ export default function AdminHighSchoolProfile() {
               </table>
             </div>
           </div>
-        )}
+        )}*/}
 
       </main>
     </div>
