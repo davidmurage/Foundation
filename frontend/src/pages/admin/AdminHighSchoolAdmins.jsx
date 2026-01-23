@@ -40,6 +40,10 @@ const [editForm, setEditForm] = useState({
   status: "",
   });
 
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
+
 
   const navigate = useNavigate();
 
@@ -165,6 +169,21 @@ const deleteAdmin = async (id) => {
   });
 }, [admins, filters]);
 
+//Pagination
+const totalPages = Math.ceil(filteredAdmins.length / ITEMS_PER_PAGE);
+
+const paginatedAdmins = useMemo(() => {
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  return filteredAdmins.slice(start, end);
+}, [filteredAdmins, currentPage]);
+
+
+useEffect(() => {
+  setCurrentPage(1);
+}, [filters]);
+
+
 
   return (
     <div className="admin-layout-wrapper">
@@ -255,7 +274,7 @@ const deleteAdmin = async (id) => {
             </thead>
 
             <tbody>
-  {filteredAdmins.map((a) => (
+  {paginatedAdmins.map((a) => (
     <tr key={a._id}>
       <td>{a.user?.fullName}</td>
       <td>{a.user?.email}</td>
@@ -301,6 +320,35 @@ const deleteAdmin = async (id) => {
 
 
           </table>
+
+          {totalPages > 1 && (
+  <div className="pagination">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((p) => p - 1)}
+    >
+      Prev
+    </button>
+
+    {Array.from({ length: totalPages }).map((_, i) => (
+      <button
+        key={i}
+        className={currentPage === i + 1 ? "active" : ""}
+        onClick={() => setCurrentPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((p) => p + 1)}
+    >
+      Next
+    </button>
+  </div>
+)}
+
         </div>
 
         {/* ================= MODAL ================= */}
