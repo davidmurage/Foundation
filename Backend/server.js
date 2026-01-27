@@ -31,6 +31,14 @@ import { applyTrafficGuards } from "./middleware/traffic.js";
 import { httpLogger } from "./middleware/logger.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
+//for license purpose
+import { publicIpv4 } from "public-ip";
+import licenseCheck from "./middleware/licenseCheck.js";
+
+const ip = await publicIpv4();
+console.log(ip);
+
+
 
 dotenv.config();
 const app = express();
@@ -55,6 +63,9 @@ applyTrafficGuards(app);
 app.use(httpLogger);
 
 app.use(requestLogger());
+
+//license
+app.use(licenseCheck);
 
 // Routes
 app.use("/api/auth", authRoutes);
