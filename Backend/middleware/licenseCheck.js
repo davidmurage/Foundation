@@ -1,17 +1,16 @@
 import axios from "axios";
-import { publicIpv4 } from "public-ip";
-import machineIdPkg from "node-machine-id";
+import crypto from "crypto";
 
+const SECRET = process.env.LICENSE_SECRET;
 let LICENSE_OK = false;
 
-const {machineIdSync} = machineIdPkg;
+function verify(payload, signature) {
+  const expected = crypto
+    .createHmac("sha256", SECRET)
+    .update(JSON.stringify(payload))
+    .digest("hex");
 
-async function getServerIp() {
-  try {
-    return await publicIpv4();
-  } catch {
-    return null;
-  }
+  return expected === signature;
 }
 
 async function checkLicense() {
@@ -20,43 +19,30 @@ async function checkLicense() {
       "https://kcb-license.onrender.com/license/KCB-PROD"
     );
 
-    if (!data.valid) {
-      console.log("LICENSE INVALID");
+    if (!verify(data.payload, data.signature)) {
+      console.log("INVALID LICENSE SIGNATURE");
       process.exit(1);
     }
 
-    const serverIp = await getServerIp();
-    const machineId = machineIdSync();
-
-    if (serverIp !== data.boundIp) {
-      console.log("SERVER IP NOT AUTHORIZED");
-      //console.log("REAL IP:", await getServerIp());
-      process.exit(1);
-    }
-    
-
-
-    if (machineId !== data.machineId) {
-      console.log("MACHINE NOT AUTHORIZED");
-      console.log("REAL MACHINE ID:", machineIdSync());
+    if (new Date() > new Date(data.payload.expires)) {
+      console.log("LICENSE EXPIRED");
       process.exit(1);
     }
 
     LICENSE_OK = true;
     console.log("LICENSE OK");
-  } catch (err) {
+  } catch {
     console.log("LICENSE SERVER UNREACHABLE");
     process.exit(1);
   }
 }
 
-// first check on startup
+// startup check
 await checkLicense();
 
-// recheck every 10 minutes
-setInterval(checkLicense, 10 * 60 * 1000);
+// heartbeat every 2 minutes
+setInterval(checkLicense, 2 * 60 * 1000);
 
-// DEFAULT EXPORT (this fixes your error)
 export default function licenseCheck(req, res, next) {
   if (!LICENSE_OK) {
     return res.status(403).json({ error: "System disabled" });
