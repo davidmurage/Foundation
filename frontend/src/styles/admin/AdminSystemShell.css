@@ -97,7 +97,7 @@
 }
 
 .btn {
-  background: rgba(148, 163, 184, 0.12);
+  /*background: rgba(148, 163, 184, 0.12);*/
   border: 1px solid rgba(148, 163, 184, 0.22);
   color: #e2e8f0;
   padding: 9px 12px;
