@@ -13,4 +13,9 @@ const institutionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// INDEXES
+institutionSchema.index({ type: 1 });
+institutionSchema.index({ name: 1 });
+institutionSchema.index({ isActive: 1 });
+
 export default mongoose.model("Institution", institutionSchema);

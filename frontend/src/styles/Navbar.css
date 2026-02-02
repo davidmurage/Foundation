@@ -28,8 +28,11 @@
 }
 
 .navbar-logo img {
-  height: 44px;
+  height: 60px;
+  width: 100px;
   filter: brightness(1.1);
+  border: none;
+  border-radius: 20px;
 }
 
 /* =============================

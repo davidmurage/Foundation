@@ -135,7 +135,8 @@
 }
 
 .cancel-btn {
-  background: #ddd;
+  background: grey;
+  color: black;
   border: none;
   padding: 10px 14px;
   border-radius: 6px;
