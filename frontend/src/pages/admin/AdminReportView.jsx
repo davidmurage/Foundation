@@ -7,7 +7,7 @@ import { downloadFile } from "../../utils/downloadFile";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
-  CartesianGrid, LineChart, Line, Legend
+  CartesianGrid, Legend
 } from "recharts";
 
 import "../../styles/admin/AdminReportView.css";
@@ -18,11 +18,12 @@ export default function AdminReportView() {
   const token = localStorage.getItem("token");
   const reportId = window.location.pathname.split("/").pop();
 
-  const [data, setData] = useState(null);
+  /* ================= STATE ================= */
+  const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* ---------------- FETCH REPORT ---------------- */
+  /* ================= FETCH ================= */
   useEffect(() => {
     const load = async () => {
       try {
@@ -30,7 +31,7 @@ export default function AdminReportView() {
           `${API_URL}/api/reports/report/${reportId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setData(res.data);
+        setReport(res.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load report");
@@ -41,224 +42,210 @@ export default function AdminReportView() {
     load();
   }, [reportId, token]);
 
-  /* ---------------- SAFE NORMALIZATION ---------------- */
-  const institution = data?.institution || {};
-  const institutionType = data?.institutionType || "Unknown";
+  /* ================= SAFE NORMALIZATION ================= */
+  const institution = report?.institution || {};
+  const institutionType = report?.institutionType || "Unknown";
+  const analysis = report?.analysis || {};
 
-  const analysis = data?.analysis || {};
   const overview = analysis.overview || {};
-  const feeStats = analysis.feeStats || {};
-  const byReviewStatus = feeStats.byReviewStatus || {};
-  const byProcessingStatus = feeStats.byProcessingStatus || {};
+  const breakdowns = analysis.breakdowns || {};
+  const fees = analysis.fees || {};
   const recommendations = analysis.recommendations || [];
-  const riskStudents = analysis.riskStudents || [];
 
-  /* ---------------- DATA PREP ---------------- */
-  const studentsByYear = useMemo(() => {
-    const src = analysis.studentsByYear || analysis.studentsByForm || {};
-    return Object.entries(src).map(([k, v]) => ({ label: k, value: v }));
-  }, [analysis]);
+  /* ================= MEMOS (ALWAYS RUN) ================= */
+  const studentsChart = useMemo(() => {
+    if (!breakdowns) return [];
+    if (institutionType === "HighSchool") {
+      return Object.entries(breakdowns.studentsByClass || {}).map(([k, v]) => ({
+        label: k,
+        value: v,
+      }));
+    }
+    return Object.entries(breakdowns.students || {}).map(([k, v]) => ({
+      label: k,
+      value: v,
+    }));
+  }, [breakdowns, institutionType]);
 
-  const docsByType = useMemo(() => {
-    const src = analysis.docsByType || {};
-    return Object.entries(src).map(([k, v]) => ({ name: k, value: v }));
-  }, [analysis]);
+  const feePie = useMemo(() => {
+    if (!fees) return [];
+    if (institutionType === "HighSchool") {
+      return [
+        { name: "Paid", value: fees.paid || 0 },
+        {
+          name: "Outstanding",
+          value: (fees.expected || 0) - (fees.paid || 0),
+        },
+      ];
+    }
+    return Object.entries(fees.byProcessingStatus || {}).map(([k, v]) => ({
+      name: k,
+      value: v,
+    }));
+  }, [fees, institutionType]);
 
-  const gpaTrend = Array.isArray(analysis.gpaByYear)
-    ? analysis.gpaByYear
-    : [];
-
-  const feeStatusChart = Object.entries(byProcessingStatus).map(
-    ([k, v]) => ({ name: k, value: v })
-  );
-
-  /* ---------------- DOWNLOADS ---------------- */
+  /* ================= DOWNLOADS ================= */
   const downloadPdf = () =>
     downloadFile({
-      url: `${API_URL}/api/reports/institution/${institution._id}/download/pdf`,
+      url: `${API_URL}/api/reports/report/${reportId}/download/pdf`,
       token,
-      filename: `${institution.name}_Report.pdf`,
+      filename: `${(institution.name || "Institution").replace(/[^\w\-]+/g, "_")}_Report.pdf`,
     });
 
   const downloadExcel = () =>
     downloadFile({
-      url: `${API_URL}/api/reports/institution/${institution._id}/download/excel`,
+      url: `${API_URL}/api/reports/report/${reportId}/download/excel`,
       token,
-      filename: `${institution.name}_Report.xlsx`,
+      filename: `${(institution.name || "Institution").replace(/[^\w\-]+/g, "_")}_Report.xlsx`,
     });
 
-  /* ---------------- STATES ---------------- */
-  if (loading) return <p className="muted">Loading report…</p>;
-  if (error) return <p className="error">{error}</p>;
-  if (!data) return <p className="error">No report data available</p>;
-
-  /* =================== RENDER =================== */
+  /* ================= RENDER ================= */
   return (
     <div className="admin-page-container">
       <AdminSidebar />
 
       <main className="admin-page-content report-page">
 
-        {/* ================= HEADER ================= */}
-        <div className="report-header">
-          <div>
-            <h1>{institution.name}</h1>
-            <p className="muted">
-              {institutionType} Institution Report • Generated on{" "}
-              {new Date(data.createdAt).toLocaleString()}
-            </p>
-          </div>
+        {loading && <p className="muted">Loading report…</p>}
+        {error && <p className="error">{error}</p>}
 
-          <div className="report-actions">
-            <button onClick={downloadPdf}>Download PDF</button>
-            <button onClick={downloadExcel}>Download Excel</button>
-          </div>
-        </div>
+        {!loading && !error && report && (
+          <>
+            {/* HEADER */}
+            <div className="report-header">
+              <div>
+                <h1>{institution.name}</h1>
+                <p className="muted">
+                  {institutionType} Institution Report • Generated on{" "}
+                  {new Date(report.createdAt).toLocaleString()}
+                </p>
+              </div>
 
-        {/* ================= A. EXECUTIVE SUMMARY ================= */}
-        <section className="report-section">
-          <h2>A. Executive Summary</h2>
-          <p>
-            This institutional report provides a comprehensive analysis of
-            <b> {institution.name}</b>, focusing on student enrollment,
-            academic performance, sponsorship funding, and compliance.
-          </p>
-          <p>
-            A total of <b>{overview.totalStudents || 0}</b> students are
-            currently registered, with an average academic performance of{" "}
-            <b>{overview.avgGpa ?? "N/A"}</b>.
-          </p>
-        </section>
+              <div className="report-actions">
+                <button onClick={downloadPdf}>Download PDF</button>
+                <button onClick={downloadExcel}>Download Excel</button>
+              </div>
+            </div>
 
-        {/* ================= B. INSTITUTION METRICS ================= */}
-        <section className="report-section">
-          <h2>B. Institutional Metrics</h2>
+            {/* SUMMARY */}
+            <section className="report-section">
+              <h2>Executive Summary</h2>
+              <p>
+                <b>{institution.name}</b> has{" "}
+                <b>{overview.totalStudents || 0}</b> registered students.
+              </p>
+            </section>
 
-          <div className="stats-grid">
-            <div><b>Total Students</b><br />{overview.totalStudents || 0}</div>
-            <div><b>Total Documents</b><br />{overview.totalDocuments || 0}</div>
-            <div><b>Avg GPA / Mean</b><br />{overview.avgGpa ?? "N/A"}</div>
-            <div><b>Fee Applications</b><br />{feeStats.totalApplications || 0}</div>
-          </div>
-        </section>
+            {/* STUDENTS */}
+            {/* ================= C. STUDENT LIST ================= */}
+<section className="report-section">
+  <h2>C. Students List</h2>
 
-        {/* ================= C. STUDENT DISTRIBUTION ================= */}
-        <section className="report-section">
-          <h2>C. Student Demographics</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={studentsByYear}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#0a7cff" />
-            </BarChart>
-          </ResponsiveContainer>
-        </section>
+  <div className="table-wrap">
+    <table className="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Admission No</th>
+          <th>Name</th>
+          {institutionType === "HighSchool" ? (
+            <th>Class / Form</th>
+          ) : (
+            <>
+              <th>Course</th>
+              <th>Year</th>
+            </>
+          )}
+        </tr>
+      </thead>
 
-        {/* ================= D. ACADEMIC PERFORMANCE ================= */}
-        {gpaTrend.length > 0 && (
-          <section className="report-section">
-            <h2>D. Academic Performance Trend</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={gpaTrend}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="avgGpa"
-                  stroke="#28a745"
-                  strokeWidth={3}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </section>
+      <tbody>
+        {(analysis.students || []).length === 0 && (
+          <tr>
+            <td colSpan={institutionType === "HighSchool" ? 4 : 5} style={{ textAlign: "center" }}>
+              No student data available in this report
+            </td>
+          </tr>
         )}
 
-        {/* ================= E. FINANCIAL ANALYSIS ================= */}
-        <section className="report-section">
-          <h2>E. Financial & Sponsorship Analysis</h2>
+        {(analysis.students || []).map((s, i) => (
+          <tr key={i}>
+            <td>{i + 1}</td>
+            <td>{s.admissionNo || "—"}</td>
+            <td>{s.fullName || "—"}</td>
 
-          <div className="stats-grid">
-            <div><b>Total Applications</b><br />{feeStats.totalApplications || 0}</div>
-            <div><b>Approved</b><br />{byReviewStatus.approved || 0}</div>
-            <div><b>Rejected</b><br />{byReviewStatus.rejected || 0}</div>
-            <div><b>Paid</b><br />{byProcessingStatus.paid || 0}</div>
-            <div><b>Processing</b><br />{byProcessingStatus.processing || 0}</div>
-          </div>
+            {institutionType === "HighSchool" ? (
+              <td>{s.class || s.form || "—"}</td>
+            ) : (
+              <>
+                <td>{s.course || "—"}</td>
+                <td>{s.year || "—"}</td>
+              </>
+            )}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie data={feeStatusChart} dataKey="value" nameKey="name" label>
-                {feeStatusChart.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
+ {/* ================= F. FINANCIAL ANALYSIS ================= */}
+<section className="report-section">
+  <h2>F. Financial Summary</h2>
+
+  <div className="stats-grid">
+    <div>
+      <b>Total Expected</b><br />
+      KES {Number(fees.expected || 0).toLocaleString()}
+    </div>
+
+    <div>
+      <b>Total Paid</b><br />
+      KES {Number(fees.paid || 0).toLocaleString()}
+    </div>
+
+    <div>
+      <b>Outstanding Balance</b><br />
+      KES {Number((fees.expected || 0) - (fees.paid || 0)).toLocaleString()}
+    </div>
+  </div>
+
+  {/* OPTIONAL VISUAL */}
+  <ResponsiveContainer width="100%" height={280}>
+    <PieChart>
+      <Pie
+        data={[
+          { name: "Paid", value: fees.paid || 0 },
+          {
+            name: "Outstanding",
+            value: (fees.expected || 0) - (fees.paid || 0),
+          },
+        ]}
+        dataKey="value"
+        nameKey="name"
+        label
+      >
+        <Cell fill="#28a745" />
+        <Cell fill="#dc3545" />
+      </Pie>
+      <Tooltip />
+      <Legend />
+    </PieChart>
+  </ResponsiveContainer>
+</section>
+
+
+            {/* RECOMMENDATIONS */}
+            <section className="report-section">
+              <h2>Recommendations</h2>
+              <ol>
+                {recommendations.map((r, i) => (
+                  <li key={i}>{r}</li>
                 ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* ================= F. RISK & COMPLIANCE ================= */}
-        <section className="report-section">
-          <h2>F. Risk & Compliance Assessment</h2>
-
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Admission</th>
-                <th>Issue</th>
-                <th>Score / GPA</th>
-              </tr>
-            </thead>
-            <tbody>
-              {riskStudents.length === 0 && (
-                <tr>
-                  <td colSpan="4" style={{ textAlign: "center" }}>
-                    No risk indicators detected
-                  </td>
-                </tr>
-              )}
-              {riskStudents.map((r, i) => (
-                <tr key={i}>
-                  <td>{r.name || "—"}</td>
-                  <td>{r.admissionNo || "—"}</td>
-                  <td>{r.reason || "—"}</td>
-                  <td>{r.gpa ?? r.meanScore ?? "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        {/* ================= G. RECOMMENDATIONS ================= */}
-        <section className="report-section">
-          <h2>G. Recommendations</h2>
-          <ol>
-            {recommendations.map((r, i) => (
-              <li key={i}>{r}</li>
-            ))}
-          </ol>
-        </section>
-
-        {/* ================= H. APPENDIX ================= */}
-        <section className="report-section">
-          <h2>H. Appendix & Methodology</h2>
-          <p>
-            This report was generated using institutional student profiles,
-            academic performance records, document compliance data, and
-            sponsorship application workflows stored in the KCB system.
-          </p>
-          <p>
-            Metrics reflect data available at the time of generation and may
-            change as new records are submitted or updated.
-          </p>
-        </section>
-
+              </ol>
+            </section>
+          </>
+        )}
       </main>
     </div>
   );
