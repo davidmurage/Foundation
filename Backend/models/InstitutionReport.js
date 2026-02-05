@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
 const InstitutionReportSchema = new mongoose.Schema(
   {
@@ -7,27 +6,39 @@ const InstitutionReportSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Institution",
       required: true,
+      index: true,
     },
+
     institutionType: {
       type: String,
       enum: ["University", "TVET", "HighSchool"],
       required: true,
+      index: true,
     },
+
     generatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
-    summary: Object,     // snapshot of analysis
-    analysis:{
+
+    /**
+     * FULL analysis snapshot.
+     * This is the single source of truth.
+     * Frontend, PDF, Excel all read from here.
+     */
+    analysis: {
       type: Object,
-      required: true
-    },
-    generatedAt: {
-      type: Date,
-      default: Date.now,
+      required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // creates createdAt & updatedAt
+  }
 );
+
+/* Helpful indexes for performance */
+InstitutionReportSchema.index({ createdAt: -1 });
+InstitutionReportSchema.index({ institution: 1, createdAt: -1 });
 
 export default mongoose.model("InstitutionReport", InstitutionReportSchema);
