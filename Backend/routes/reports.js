@@ -135,14 +135,14 @@ function analyzeUniversity(ds) {
 /* ---------- HIGH SCHOOL ---------- */
 function analyzeHighSchool(ds) {
   const studentsSnapshot = ds.students.map((s) => ({
-    admissionNo: s.admissionNo || "",
+    admissionNo: s.registrationNo || "",
     fullName: s.fullName || "",
-    class: s.class || s.form || "",
+    class: s.level || s.level || "",
   }));
 
   const studentsByClass = {};
   ds.students.forEach((s) => {
-    const c = s.class || s.form || "Unknown";
+    const c = s.level || s.level || "Unknown";
     studentsByClass[c] = (studentsByClass[c] || 0) + 1;
   });
 
