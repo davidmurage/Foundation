@@ -3,7 +3,7 @@ import axios from "axios";
 import { API_URL } from "../../utils/config";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { socket } from "../../utils/socket";
-import "../../styles/admin/AdminFeedback.css";
+import "../../styles/admin/AdminFeedBack.css";
 
 export default function AdminFeedback() {
   const token = localStorage.getItem("token");
