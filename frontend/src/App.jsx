@@ -37,6 +37,7 @@ import AdminSystemShell from "./pages/admin/AdminSystemShell";
 import VerifyOtp from "./pages/VerifyOtp";
 import ResetPassword from "./pages/ResetPassword";
 import AdminFeedback from "./pages/admin/AdminFeedBack";
+import AdminFeedbackAnalytics from "./pages/admin/AdminFeedBackAnalytics";
 
 
 
@@ -138,6 +139,7 @@ function App() {
 
   {/* FeedBack*/}
   <Route path="feedback" element={<AdminFeedback/>}/>
+  <Route path="feedback-analytics" element={<AdminFeedbackAnalytics/>}/>
 
   
 

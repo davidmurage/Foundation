@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 import "../../styles/student/FeesApplication.css";
+import ChatWidget from "../../components/ChatWidget";
 
 
 export default function FeesApplication() {
@@ -518,6 +519,7 @@ export default function FeesApplication() {
           </div>
         </div>
       )}
+      <ChatWidget/>
     </div>
   );
 }

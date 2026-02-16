@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/Documents.css";
 import { API_URL } from "../../utils/config";
+import ChatWidget from "../../components/ChatWidget";
 
 export default function Documents() {
   const token = localStorage.getItem("token");
@@ -317,6 +318,7 @@ export default function Documents() {
           ))}
         </tbody>
       </table>
+      <ChatWidget/>
     </div>
   );
 }

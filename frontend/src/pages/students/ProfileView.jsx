@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 import "../../styles/student/ProfileView.css";
+import ChatWidget from "../../components/ChatWidget";
 
 export default function ProfileView({ setActiveTab }) {
   const token = localStorage.getItem("token");
@@ -35,6 +36,8 @@ export default function ProfileView({ setActiveTab }) {
         </div>
       </div>
       <button onClick={() => setActiveTab("profile-edit")}>Edit Profile</button>
+
+      <ChatWidget/>
     </div>
   );
 }
