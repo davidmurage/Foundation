@@ -1,0 +1,30 @@
+.perf-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.perf-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.perf-table th, .perf-table td {
+  border: 1px solid #eee;
+  padding: 10px;
+  text-align: left;
+}
+
+.perf-table th {
+  background: #006400;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .perf-container { padding: 15px; }
+  .perf-table th, .perf-table td { font-size: 13px; }
+}

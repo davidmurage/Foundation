@@ -1,0 +1,146 @@
+/* ================================
+   HAMBURGER BUTTON
+================================ */
+
+.hs-hamburger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #0f3d2e;
+  color: #ffffff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1100;
+  display: none;
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.hs-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f3d2e, #145a3a);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+/* Collapsed state (mobile) */
+.hs-sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+/* Open state */
+.hs-sidebar.open {
+  transform: translateX(0);
+}
+
+/* ================================
+   BRAND
+================================ */
+
+.hs-brand {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* ================================
+   NAV
+================================ */
+
+.hs-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.hs-sidebar nav a {
+  text-decoration: none;
+  color: #e5f5ec;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.25s ease;
+}
+
+.hs-sidebar nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hs-sidebar nav a.active {
+  background: #ffffff;
+  color: #0f3d2e;
+  font-weight: 600;
+}
+
+/* ================================
+   LOGOUT
+================================ */
+
+.logout-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #c0392b;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* ================================
+   MAIN CONTENT OFFSET
+================================ */
+
+.hs-main-content {
+  margin-left: 260px;
+  padding: 24px;
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 992px) {
+  .hs-main-content {
+    margin-left: 220px;
+  }
+
+  .hs-sidebar {
+    width: 220px;
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+  .hs-hamburger {
+    display: block;
+  }
+
+  .hs-sidebar {
+    width: 240px;
+  }
+
+  .hs-main-content {
+    margin-left: 0;
+    padding-top: 70px;
+  }
+}

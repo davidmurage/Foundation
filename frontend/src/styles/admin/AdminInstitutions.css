@@ -1,0 +1,380 @@
+/* HEADER */
+.institutions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.institutions-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #003300;
+}
+
+/* Add button – reuse from admin users if you like */
+.institutions-header .add-btn {
+  background: #009639;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.institutions-header .add-btn:hover {
+  background: #007c30;
+}
+
+/* FILTER BAR */
+.institutions-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.institutions-filterbar input,
+.institutions-filterbar select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.institutions-filterbar input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.institutions-filterbar button {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #0055cc;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.institutions-filterbar button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  .institutions-filterbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .institutions-filterbar button {
+    width: 100%;
+  }
+}
+
+/* TABLE */
+.institutions-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.institutions-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+.institutions-table th,
+.institutions-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+
+.institutions-table th {
+  background: #f3fff3;
+  text-align: left;
+  font-weight: 700;
+  color: #004d00;
+}
+
+.institutions-table tr:last-child td {
+  border-bottom: none;
+}
+
+.institutions-actions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upload-btn,
+.upload-confirm-btn{
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.upload-btn{
+  background: #eef6ff;
+  color: #1d4ed8;
+}
+
+.upload-confirm-btn{
+  background: #0a7c3a;
+  color: #fff;
+}
+
+.upload-btn:disabled,
+.upload-confirm-btn:disabled,
+.add-btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bulk-file-name{
+  font-size: 13px;
+  color: #475467;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-active {
+  background: #e3ffe7;
+  color: #006b1f;
+}
+
+.badge-inactive {
+  background: #ffe9e9;
+  color: #c62828;
+}
+
+/* Actions cell */
+.actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actions-cell .btn-link {
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #009639;
+  color: #009639;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.actions-cell .btn-link:hover {
+  background: #eafff0;
+}
+
+.actions-cell .edit-btn,
+.actions-cell .delete-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions-cell .edit-btn {
+  background: #0055cc;
+  color: #fff;
+}
+
+.actions-cell .edit-btn:hover {
+  background: #003f99;
+}
+
+.actions-cell .delete-btn {
+  background: #c62828;
+  color: #fff;
+}
+
+.actions-cell .delete-btn:hover {
+  background: #9b1c1c;
+}
+
+@media (max-width: 600px) {
+  .institutions-table th,
+  .institutions-table td {
+    padding: 10px 8px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+  }
+
+  .actions-cell .btn-link,
+  .actions-cell .edit-btn,
+  .actions-cell .delete-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ===============================
+   FULLY RESPONSIVE MODAL
+================================ */
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.55);
+  
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px;
+  z-index: 9999 !important;
+}
+
+/* Modal box */
+.modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+
+  /* IMPORTANT — this makes the modal scrollable */
+  max-height: 90vh;
+  overflow-y: auto;
+
+  padding: 24px;
+  border-radius: 12px;
+  box-sizing: border-box;
+
+  /* pop out animation */
+  transform: scale(0.7);
+  opacity: 0;
+  animation: popOut 0.25s ease forwards;
+}
+
+/* Pop-out animation */
+@keyframes popOut {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #003300;
+}
+
+/* Form fields */
+.modal label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.modal textarea {
+  resize: vertical;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-btn {
+  background: #009639;
+  color: white;
+}
+
+.cancel-btn {
+  background: #777;
+  color: white;
+}
+
+/* MOBILE FIX */
+@media (max-width: 480px) {
+  .modal {
+    padding: 18px;
+    max-height: 85vh; /* slightly lower for small screens */
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}

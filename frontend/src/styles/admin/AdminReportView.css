@@ -1,0 +1,244 @@
+/* src/styles/admin/AdminReports.css */
+
+/* ---------- Base ---------- */
+.report-page {
+  padding: 18px;
+  background: #f6f7fb;
+  min-height: 100vh;
+  color: #111827;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+.error {
+  color: #dc3545;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+/* ---------- Header ---------- */
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+  margin-bottom: 16px;
+}
+
+.report-header h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.report-header .muted {
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+.report-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.report-actions button {
+  border: 1px solid #dbe2ea;
+  background: #0a7cff;
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.06s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 14px rgba(10, 124, 255, 0.18);
+}
+
+.report-actions button:nth-child(2) {
+  background: #111827;
+  box-shadow: 0 6px 14px rgba(17, 24, 39, 0.18);
+}
+
+.report-actions button:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.report-actions button:active {
+  transform: translateY(0px);
+}
+
+.report-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- Sections ---------- */
+.report-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.05);
+  margin-bottom: 16px;
+}
+
+.report-section h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.report-section p {
+  margin: 8px 0;
+  line-height: 1.6;
+  color: #111827;
+}
+
+/* ---------- Stats grid (metrics cards) ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.stats-grid > div {
+  background: #f9fafb;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 12px;
+  line-height: 1.35;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.stats-grid > div b {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.stats-grid > div br + * {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #0a7cff;
+}
+
+/* ---------- Charts area ---------- */
+.recharts-wrapper {
+  margin-top: 10px;
+}
+
+.recharts-responsive-container {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ---------- Tables ---------- */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.admin-table thead th {
+  text-align: left;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #f3f4f6;
+  padding: 12px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 800;
+}
+
+.admin-table tbody td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #eef2f7;
+  color: #111827;
+  font-size: 0.92rem;
+}
+
+.admin-table tbody tr:hover td {
+  background: #f9fafb;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- Lists ---------- */
+ol {
+  padding-left: 18px;
+  margin: 8px 0 0 0;
+}
+
+ol li {
+  margin: 8px 0;
+  line-height: 1.55;
+  color: #111827;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .report-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .report-actions {
+    justify-content: flex-start;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .report-page {
+    padding: 12px;
+  }
+  .report-section {
+    padding: 14px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .report-actions button {
+    width: 100%;
+  }
+}
+
+/* ---------- Print-friendly (optional) ---------- */
+@media print {
+  .admin-page-container aside,
+  .report-actions {
+    display: none !important;
+  }
+  .report-page {
+    background: #fff;
+    padding: 0;
+  }
+  .report-section,
+  .report-header {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
