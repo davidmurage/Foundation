@@ -10,10 +10,13 @@ import {
 } from "recharts";
 
 import "../../styles/admin/AdminFeedbackAnalytics.css";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminFeedbackAnalytics() {
   const token = localStorage.getItem("token");
   const [data, setData] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     load();
@@ -38,6 +41,12 @@ export default function AdminFeedbackAnalytics() {
       <AdminSidebar />
 
       <main className="admin-page-content analytics-page">
+        <button
+              className="back-btn"
+              onClick={() => navigate(-1)}
+            >
+               ← Back
+            </button>
         <h2>📊 Support Analytics</h2>
 
         <div className="cards">
