@@ -6,10 +6,6 @@ import { API_URL } from "../../utils/config";
 import "../../styles/highschool/HighSchoolStudents.css";
 import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar.jsx";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-=======
-import ChatWidget from "../../components/ChatWidget.jsx";
->>>>>>> Chats
 
 export default function HighSchoolStudents() {
   const token = localStorage.getItem("token");
@@ -466,10 +462,6 @@ const handleBulkUpload = async (e) => {
           </div>
         )}
       </main>
-<<<<<<< HEAD
-=======
-      <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }

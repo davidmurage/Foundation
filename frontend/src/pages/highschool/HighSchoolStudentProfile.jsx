@@ -5,10 +5,6 @@ import { API_URL } from "../../utils/config";
 
 import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar.jsx";
 import "../../styles/highschool/HighSchoolStudentProfile.css";
-<<<<<<< HEAD
-=======
-import ChatWidget from "../../components/ChatWidget.jsx";
->>>>>>> Chats
 
 export default function HighSchoolStudentProfile() {
   const { id } = useParams();
@@ -770,10 +766,6 @@ const submitFees = async (e) => {
         )}
 
       </main>
-<<<<<<< HEAD
-=======
-      <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }

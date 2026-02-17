@@ -14,10 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 
 import "../../styles/Performance.css";
-<<<<<<< HEAD
-=======
 import ChatWidget from "../../components/ChatWidget";
->>>>>>> Chats
 
 ChartJS.register(
   LineElement,
@@ -187,10 +184,7 @@ export default function Performance() {
           </tbody>
         </table>
       </div>
-<<<<<<< HEAD
-=======
       <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }

@@ -1,12 +1,9 @@
 // routes/reports.js
 import express from "express";
 import auth, { requireRole } from "../middleware/auth.js";
-<<<<<<< HEAD
-=======
 import PDFDocument from "pdfkit";
 import ExcelJS from "exceljs";
 
->>>>>>> Chats
 
 import Institution from "../models/Institution.js";
 import InstitutionReport from "../models/InstitutionReport.js";
@@ -254,8 +251,6 @@ router.get("/report/:id", auth, requireRole("admin"), async (req, res) => {
   res.json(report);
 });
 
-<<<<<<< HEAD
-=======
 router.get(
   "/report/:id/download/pdf",
   auth,
@@ -403,5 +398,4 @@ router.get("/report/:id/download/excel", auth, requireRole("admin"), async (req,
 });
 
 
->>>>>>> Chats
 export default router;

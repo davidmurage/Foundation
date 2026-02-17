@@ -244,10 +244,7 @@ export default function AdminReportView() {
                 ))}
               </ol>
             </section>
-<<<<<<< HEAD
-=======
             
->>>>>>> Chats
           </>
         )}
       </main>

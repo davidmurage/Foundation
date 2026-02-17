@@ -5,10 +5,7 @@ import { API_URL } from "../../utils/config";
 
 import "../../styles/highschool/HighSchoolDashboard.css";
 import HighSchoolSidebar from "../../components/HighSchool/HighSchoolSidebar.jsx";
-<<<<<<< HEAD
-=======
 import ChatWidget from "../../components/ChatWidget.jsx";
->>>>>>> Chats
 
 
 
@@ -99,10 +96,7 @@ export default function HighSchoolDashboard() {
   </ul>
 </div>
       </main>
-<<<<<<< HEAD
-=======
       <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }

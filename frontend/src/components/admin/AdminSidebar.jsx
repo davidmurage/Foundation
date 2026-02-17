@@ -82,12 +82,9 @@ export default function AdminSidebar() {
           <div className="sidebar-divider" />
           <NavLink to="/admin-dashboard/reports/institutions">📊 Reports</NavLink>
 
-<<<<<<< HEAD
-=======
           {/*=======FeedBack=========*/}
            <div className="sidebar-divider" />
            <NavLink to="/admin-dashboard/feedback">💬 FeedBack</NavLink>
->>>>>>> Chats
 
           {/* ================= SETTINGS ================= */}
           <div className="sidebar-divider" />

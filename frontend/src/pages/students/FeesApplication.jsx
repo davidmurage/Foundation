@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 import "../../styles/student/FeesApplication.css";
-<<<<<<< HEAD
-=======
 import ChatWidget from "../../components/ChatWidget";
->>>>>>> Chats
 
 
 export default function FeesApplication() {
@@ -522,10 +519,7 @@ export default function FeesApplication() {
           </div>
         </div>
       )}
-<<<<<<< HEAD
-=======
       <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }

@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/config";
 import "../../styles/student/ProfileEdit.css"
-<<<<<<< HEAD
-=======
 import ChatWidget from "../../components/ChatWidget";
->>>>>>> Chats
 
 export default function ProfileEdit({ setActiveTab }) {
   const token = localStorage.getItem("token");
@@ -168,10 +165,7 @@ export default function ProfileEdit({ setActiveTab }) {
 
         <button type="submit">Save Changes</button>
       </form>
-<<<<<<< HEAD
-=======
       <ChatWidget/>
->>>>>>> Chats
     </div>
   );
 }
