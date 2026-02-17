@@ -3,6 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/student/StudentProfileSetup.css";
 import { API_URL } from "../../utils/config";
+<<<<<<< HEAD
+=======
+import ChatWidget from "../../components/ChatWidget";
+>>>>>>> Chats
 
 export default function StudentProfileSetup() {
   const token = localStorage.getItem("token");
@@ -273,6 +277,10 @@ export default function StudentProfileSetup() {
 
         <button type="submit">Save Profile</button>
       </form>
+<<<<<<< HEAD
+=======
+      <ChatWidget/>
+>>>>>>> Chats
     </div>
   );
 }

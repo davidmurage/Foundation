@@ -10,6 +10,10 @@ import FeesApplication from "./FeesApplication"
 
 import { API_URL } from "../../utils/config";
 import "../../styles/student/StudentDashboard.css";
+<<<<<<< HEAD
+=======
+import ChatWidget from "../../components/ChatWidget";
+>>>>>>> Chats
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("home");
@@ -389,6 +393,11 @@ export default function StudentDashboard() {
         {activeTab === "performance" && <Performance />}
         {activeTab === "fees" && <FeesApplication/>}
       </main>
+<<<<<<< HEAD
+=======
+
+      <ChatWidget/>
+>>>>>>> Chats
     </div>
   );
 }

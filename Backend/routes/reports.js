@@ -1,6 +1,12 @@
 // routes/reports.js
 import express from "express";
 import auth, { requireRole } from "../middleware/auth.js";
+<<<<<<< HEAD
+=======
+import PDFDocument from "pdfkit";
+import ExcelJS from "exceljs";
+
+>>>>>>> Chats
 
 import Institution from "../models/Institution.js";
 import InstitutionReport from "../models/InstitutionReport.js";
@@ -248,4 +254,154 @@ router.get("/report/:id", auth, requireRole("admin"), async (req, res) => {
   res.json(report);
 });
 
+<<<<<<< HEAD
+=======
+router.get(
+  "/report/:id/download/pdf",
+  auth,
+  requireRole("admin"),
+  async (req, res) => {
+    let doc;
+
+    try {
+      const report = await InstitutionReport.findById(req.params.id)
+        .populate("institution", "name type")
+        .lean();
+
+      if (!report) {
+        return res.status(404).json({ message: "Report not found" });
+      }
+
+      // ---------- SAFE NORMALIZATION ----------
+      const institutionName = report.institution?.name || "Institution";
+      const analysis = report.analysis || {};
+      const students = analysis.students || [];
+      const fees = analysis.fees || {};
+
+      const expected = Number(fees.expected || 0);
+      const paid = Number(fees.paid || 0);
+      const balance = expected - paid;
+
+      // ---------- HEADERS ----------
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${institutionName.replace(/[^\w\-]+/g, "_")}_Report.pdf"`
+      );
+
+      // ---------- PDF ----------
+      doc = new PDFDocument({ margin: 40, size: "A4" });
+      doc.pipe(res);
+
+      // ---------- TITLE ----------
+      doc.fontSize(18).text(institutionName, { underline: true });
+      doc.moveDown(0.5);
+
+      doc.fontSize(11);
+      doc.text(`Institution Type: ${report.institutionType}`);
+      doc.text(`Generated At: ${new Date(report.createdAt).toLocaleString()}`);
+      doc.moveDown();
+
+      // ---------- STUDENTS ----------
+      doc.fontSize(14).text("Students");
+      doc.moveDown(0.5);
+
+      if (students.length === 0) {
+        doc.fontSize(10).text("No student data available.");
+      } else {
+        students.forEach((s, i) => {
+          doc.fontSize(10).text(
+            `${i + 1}. ${s.fullName || "—"} | ${s.admissionNo || "—"} | ${
+              s.class || s.course || "—"
+            }`
+          );
+        });
+      }
+
+      doc.moveDown();
+
+      // ---------- FINANCIALS ----------
+      doc.fontSize(14).text("Financial Summary");
+      doc.moveDown(0.5);
+
+      doc.fontSize(11).text(
+        `Total Expected: KES ${expected.toLocaleString()}`
+      );
+      doc.text(`Total Paid: KES ${paid.toLocaleString()}`);
+      doc.text(`Outstanding Balance: KES ${balance.toLocaleString()}`);
+
+      doc.moveDown();
+
+      // ---------- FOOTER ----------
+      doc
+        .fontSize(9)
+        .fillColor("gray")
+        .text(
+          "This document is system-generated and valid without signature.",
+          { align: "center" }
+        );
+
+      doc.end();
+    } catch (err) {
+      console.error("PDF ERROR:", err);
+
+      // IMPORTANT: only respond if headers not sent
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Failed to generate PDF" });
+      }
+
+      // IMPORTANT: safely end PDF stream if open
+      if (doc && !doc.ended) {
+        try {
+          doc.end();
+        } catch (_) {}
+      }
+    }
+  }
+);
+
+
+router.get("/report/:id/download/excel", auth, requireRole("admin"), async (req, res) => {
+  const report = await InstitutionReport.findById(req.params.id)
+    .populate("institution", "name type")
+    .lean();
+
+  if (!report) return res.status(404).end();
+
+  const wb = new ExcelJS.Workbook();
+
+  // Students sheet
+  const studentsSheet = wb.addWorksheet("Students");
+  studentsSheet.columns = [
+    { header: "Admission No", key: "admissionNo" },
+    { header: "Name", key: "fullName" },
+    { header: "Class / Course", key: "class" },
+  ];
+
+  report.analysis.students.forEach((s) => {
+    studentsSheet.addRow({
+      admissionNo: s.admissionNo,
+      fullName: s.fullName,
+      class: s.class || s.course || "",
+    });
+  });
+
+  // Finance sheet
+  const financeSheet = wb.addWorksheet("Finance");
+  financeSheet.addRow(["Expected", report.analysis.fees.expected]);
+  financeSheet.addRow(["Paid", report.analysis.fees.paid]);
+  financeSheet.addRow(["Balance", report.analysis.fees.balance]);
+
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${report.institution.name}_Report.xlsx"`
+  );
+  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+  await wb.xlsx.write(res);
+  res.end();
+});
+
+
+>>>>>>> Chats
 export default router;

@@ -31,6 +31,12 @@ import { applyTrafficGuards } from "./middleware/traffic.js";
 import { httpLogger } from "./middleware/logger.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
+<<<<<<< HEAD
+=======
+//feedback
+import feedbackRoutes from "./routes/feedback.js";
+
+>>>>>>> Chats
 //for license purpose
 import { publicIpv4 } from "public-ip";
 import licenseCheck from "./middleware/licenseCheck.js";
@@ -89,6 +95,12 @@ app.use("/api/highschool/student", highSchoolStudentProfileRoutes);
 //shell
 app.use("/api/admin/monitoring", monitoringRoutes);
 
+<<<<<<< HEAD
+=======
+//feedback
+app.use("/api/feedback", feedbackRoutes);
+
+>>>>>>> Chats
 
 /* Health check for load balancers
 app.get("/api/health", async (req, res) => {

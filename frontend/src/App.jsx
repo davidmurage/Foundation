@@ -36,6 +36,11 @@ import AdminReportView from "./pages/admin/AdminReportView";
 import AdminSystemShell from "./pages/admin/AdminSystemShell";
 import VerifyOtp from "./pages/VerifyOtp";
 import ResetPassword from "./pages/ResetPassword";
+<<<<<<< HEAD
+=======
+import AdminFeedback from "./pages/admin/AdminFeedBack";
+import AdminFeedbackAnalytics from "./pages/admin/AdminFeedBackAnalytics";
+>>>>>>> Chats
 
 
 
@@ -135,6 +140,13 @@ function App() {
   {/*HighSchools*/}
   <Route path="highschools" element={<AdminHighSchools/>}/>
 
+<<<<<<< HEAD
+=======
+  {/* FeedBack*/}
+  <Route path="feedback" element={<AdminFeedback/>}/>
+  <Route path="feedback-analytics" element={<AdminFeedbackAnalytics/>}/>
+
+>>>>>>> Chats
   
 
   <Route

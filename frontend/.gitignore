@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+<<<<<<< HEAD
+=======
+*.tar
+*.tar.gz
+*.zip
+
+>>>>>>> Chats
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
