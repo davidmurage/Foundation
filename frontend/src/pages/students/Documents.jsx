@@ -187,8 +187,8 @@ export default function Documents() {
           }
         >
           <option value="">All Types</option>
-          <option value="Fee Structure">Fee Structure</option>
-          <option value="Fee Statement">Fee Statement</option>
+          {/*<option value="Fee Structure">Fee Structure</option>
+          <option value="Fee Statement">Fee Statement</option>*/}
           <option value="Transcript">Transcript</option>
           <option value="Department Letter">Department Letter</option>
         </select>
@@ -261,8 +261,8 @@ export default function Documents() {
                 required
               >
                 <option value="">Select Document Type</option>
-                <option value="Fee Structure">Fee Structure</option>
-                <option value="Fee Statement">Fee Statement</option>
+                {/*<option value="Fee Structure">Fee Structure</option>
+                <option value="Fee Statement">Fee Statement</option>*/}
                 <option value="Transcript">Transcript</option>
                 <option value="Department Letter">Department Letter</option>
               </select>
