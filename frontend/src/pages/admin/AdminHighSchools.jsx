@@ -144,7 +144,7 @@ export default function AdminHighSchools() {
               <tr>
                 <th>Name</th>
                 <th>County</th>
-                <th>Location</th>
+                <th>Sub-county</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -219,7 +219,7 @@ export default function AdminHighSchools() {
                 />
 
                 <input
-                  placeholder="Location"
+                  placeholder="Sub-county"
                   value={form.location}
                   onChange={(e) =>
                     setForm({ ...form, location: e.target.value })

@@ -121,7 +121,6 @@ export default function StudentDashboard() {
   // ---------- MAIN UI ----------
   return (
     <div className="dashboard-layout">
-      Sidebar
       <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
         <h2>KCB Portal</h2>
         <ul>
@@ -267,7 +266,7 @@ export default function StudentDashboard() {
                   <div className="home-card">
                     <div className="home-card-header">
                       <span className="card-icon">📄</span>
-                      <span className="card-title">Documents</span>
+                      <span className="card-title">Attachments</span>
                     </div>
                     <div className="home-card-main">
                       <span className="home-card-number">

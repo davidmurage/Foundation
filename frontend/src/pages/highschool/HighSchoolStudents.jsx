@@ -17,8 +17,10 @@ export default function HighSchoolStudents() {
   fullName: "",
   registrationNo: "",
   gender: "",
-  curriculum: "CBC",        // CBC or 844
+  curriculum: "",        // CBE or 844
   level: "",                // Grade / Form
+  assessmentNo: "",
+  indexNo: "",
   academicYear: "",
   term: "",
   feesAmount: "",
@@ -108,8 +110,10 @@ useEffect(() => {
       fullName: "",
       registrationNo: "",
       gender: "",
-      curriculum: "CBC",
+      curriculum: "Education System",
       level: "",
+      assessmentNo: "",
+      indexNo: "",
       academicYear: "",
       term: "",
       feesAmount: "",
@@ -144,6 +148,8 @@ const handleEditOpen = (student) => {
     gender: student.gender,
     curriculum: student.curriculum,
     level: student.level,
+    assessmentNo: student.assessmentNo,
+    indexNo: student.indexNo,
     academicYear: student.academicYear,
     term: student.term,
     feesAmount: student.feesAmount,
@@ -215,8 +221,8 @@ const handleBulkUpload = async (e) => {
       setFilters({ ...filters, curriculum: e.target.value })
     }
   >
-    <option value="">System</option>
-    <option value="CBC">CBC</option>
+    <option value="">Education System</option>
+    <option value="CBE">CBE</option>
     <option value="844">8-4-4</option>
   </select>
 
@@ -229,7 +235,7 @@ const handleBulkUpload = async (e) => {
   />
 
   <input
-    placeholder="Year"
+    placeholder="Year Of Admission"
     value={filters.academicYear}
     onChange={(e) =>
       setFilters({ ...filters, academicYear: e.target.value })
@@ -254,11 +260,12 @@ const handleBulkUpload = async (e) => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>RegNo</th>
+                <th>Admission No</th>
                 <th>Gender</th>
-                <th>System</th>
+                <th>Education System</th>
+                <th>Assessment No/Index No</th>
                 <th>Grade / Form</th>
-                <th>year</th>
+                <th>Year of Admission</th>
                 <th>Term</th>
                 <th>Fees</th>
                 <th>status</th>
@@ -273,6 +280,7 @@ const handleBulkUpload = async (e) => {
       <td>{s.registrationNo || "—"}</td>
       <td>{s.gender}</td>
       <td>{s.curriculum}</td>
+      <td>{s.assessmentNo || s.indexNo || "—"}</td>
       <td>{s.level}</td>
       <td>{s.academicYear}</td>
       <td>{s.term}</td>
@@ -364,7 +372,7 @@ const handleBulkUpload = async (e) => {
                 />
 
                 <input
-                  placeholder="Registration No"
+                  placeholder="Admission No"
                   value={form.registrationNo}
                   onChange={(e) =>
                     setForm({ ...form, registrationNo: e.target.value })
@@ -390,20 +398,40 @@ const handleBulkUpload = async (e) => {
                   }
                   required
                 >
-                 <option value="CBC">CBC</option>
+                 <option value="">Education System</option>
+                 <option value="CBE">CBE</option>
                  <option value="844">8-4-4</option>
                 </select>
 
-                {form.curriculum === "CBC" ? (
-                 <input
-                    placeholder="Grade (e.g Grade 7)"
-                    value={form.level}
-                    onChange={(e) =>
-                    setForm({ ...form, level: e.target.value })
-                    }
-                     required
-                 />
+                {form.curriculum === "CBE" ? (
+                 <>
+                  <input
+                    placeholder="Assessment No"
+                    value={form.assessmentNo}
+                    onChange={(e) => setForm({ ...form, assessmentNo: e.target.value })}
+                    required />
+
+                  <select
+                      value={form.level}
+                      onChange={(e) => setForm({ ...form, level: e.target.value })}
+                      required
+                  >
+                    <option value="">Grade</option>
+                    <option value="Grade 10">Grade 10</option>
+                    <option value="Grade 11">Grade 11</option>
+                    <option value="Grade 12">Grade 12</option>
+                  </select>
+                    
+                  </>
+                 
                   ) : (
+                <>    
+                 <input
+                    placeholder="Index No"
+                    value={form.indexNo}
+                    onChange={(e) => setForm({ ...form, indexNo: e.target.value })}
+                    required
+                 />
                  <select
                     value={form.level}
                     onChange={(e) =>
@@ -415,6 +443,7 @@ const handleBulkUpload = async (e) => {
                     <option value="Form 3">Form 3</option>
                     <option value="Form 4">Form 4</option>
                  </select>
+                 </>
                 )}
                 
                 <input

@@ -188,7 +188,7 @@ export default function AdminStudentDetail() {
 
         {/* ================= TABS ================= */}
         <div className="admin-tabs">
-          {["overview", "fees", "documents", "approval"].map(
+          {["overview", "fees", "Attachments", "approval"].map(
             (t) => (
               <button
                 key={t}
@@ -235,7 +235,7 @@ export default function AdminStudentDetail() {
           <th>Amount</th>
           <th>Review</th>
           <th>Processing</th>
-          <th>Documents</th>
+          <th>Attachments</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -356,7 +356,7 @@ export default function AdminStudentDetail() {
         )}*/}
 
         {/* ================= DOCUMENTS ================= */}
-        {activeTab === "documents" && (
+        {activeTab === "Attachments" && (
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>

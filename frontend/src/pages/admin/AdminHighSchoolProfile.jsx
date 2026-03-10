@@ -238,8 +238,8 @@ const { institution, admins, stats, students, feesSummary, documents, activity }
                   value={filters.curriculum}
                   onChange={(e) => setFilters({ ...filters, curriculum: e.target.value })}
                 >
-                  <option value="">System</option>
-                  <option value="CBC">CBC</option>
+                  <option value="">Education System</option>
+                  <option value="CBE">CBE</option>
                   <option value="844">8-4-4</option>
                 </select>
 
@@ -266,9 +266,9 @@ const { institution, admins, stats, students, feesSummary, documents, activity }
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>RegNo</th>
+                    <th>Admission No</th>
                     <th>Gender</th>
-                    <th>System</th>
+                    <th>Curriculum</th>
                     <th>Level</th>
                     <th>Year</th>
                     <th>Approval</th>
