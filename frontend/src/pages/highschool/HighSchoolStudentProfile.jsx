@@ -287,7 +287,7 @@ const submitFees = async (e) => {
             Fees
           </button>
           <button className={tab === "documents" ? "active" : ""} onClick={() => setTab("documents")}>
-            Documents
+            Attachments
           </button>
         </div>
 
@@ -490,9 +490,9 @@ const submitFees = async (e) => {
         {tab === "documents" && (
           <div className="card">
             <div className="card-head">
-              <h3>📎 Uploaded Documents</h3>
+              <h3>📎 Uploaded Attachments</h3>
               <button className="btn" onClick={() => setDocModal(true)}>
-                + Upload Document
+                + Upload Attachments
               </button>
             </div>
 
@@ -737,7 +737,7 @@ const submitFees = async (e) => {
                   onChange={(e) => setDocForm({ ...docForm, type: e.target.value })}
                   required
                 >
-                  <option value="performance">Performance</option>
+                  <option value="performance">Performance Report</option>
                   <option value="fee_structure">Fee Structure</option>
                   <option value="fee_statement">Fee Statement</option>
                   <option value="other">Other</option>

@@ -81,7 +81,7 @@ router.post("/:id/performance", auth, async (req, res) => {
   createdBy: req.user.id,
 };
 
-if (student.curriculum === "CBC") {
+if (student.curriculum === "CBE") {
   payload.learningArea = req.body.learningArea;
   payload.competencyLevel = req.body.competencyLevel;
 } else {

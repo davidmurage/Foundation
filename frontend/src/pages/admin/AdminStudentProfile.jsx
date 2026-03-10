@@ -68,7 +68,7 @@ export default function AdminStudentProfile() {
             Fees
           </button>
           <button className={tab === "documents" ? "active" : ""} onClick={() => setTab("documents")}>
-            Documents
+            Attachments
           </button>
         </div>
 
@@ -200,7 +200,7 @@ export default function AdminStudentProfile() {
 
         {tab === "documents" && (
           <div className="card">
-            <h3>📎 Documents</h3>
+            <h3>📎 Attachments</h3>
             <div className="table-wrapper">
               <table className="admin-table">
                 <thead>

@@ -206,7 +206,7 @@ export default function FeesApplication() {
               <th>Amount</th>
               <th>Review</th>
               <th>Processing</th>
-              <th>Documents</th>
+              <th>Attachments</th>
               <th>Admin FeedBack</th>
               <th>Actions</th>
             </tr>

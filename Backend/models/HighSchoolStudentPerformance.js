@@ -16,7 +16,7 @@ const highSchoolStudentPerformanceSchema = new mongoose.Schema(
 
     curriculum: {
       type: String,
-      enum: ["CBC", "844"],
+      enum: ["CBE", "844"],
       required: true,
     },
 
@@ -64,7 +64,7 @@ const highSchoolStudentPerformanceSchema = new mongoose.Schema(
         "Below Expectations",
       ],
       required: function () {
-        return this.curriculum === "CBC";
+        return this.curriculum === "CBE";
       },
     },
 
@@ -72,7 +72,7 @@ const highSchoolStudentPerformanceSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: function () {
-        return this.curriculum === "CBC";
+        return this.curriculum === "CBE";
       },
     },
 

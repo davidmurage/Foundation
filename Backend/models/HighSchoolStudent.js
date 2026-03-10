@@ -30,19 +30,28 @@ const highSchoolStudentSchema = new mongoose.Schema(
     /**
      * Education system
      * - "844" → Form-based
-     * - "CBC" → Grade-based
+     * - "CBE" → Grade-based
      */
     curriculum: {
       type: String,
-      enum: ["844", "CBC"],
+      enum: ["844", "CBE"],
       required: true,
+    },
+    assessmentNo: {
+      type: String,
+      trim: true,
+    },
+
+    indexNo: {
+      type: String,
+      trim: true,
     },
 
     /**
      * Level within curriculum
      * Examples:
      *  - 8-4-4 → "Form 3"
-     *  - CBC → "Grade 9"
+     *  - CBE → "Grade 9"
      */
     level: {
       type: String,

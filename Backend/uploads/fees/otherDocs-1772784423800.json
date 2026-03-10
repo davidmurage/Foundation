@@ -1,0 +1,15 @@
+{
+  "name": "avlc-group-react-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/web",
+    "packages/studio"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @avlc/web",
+    "build": "npm run build -w @avlc/web",
+    "preview": "npm run preview -w @avlc/web",
+    "studio:dev": "npm run dev -w @avlc/studio",
+    "studio:deploy": "npm run deploy -w @avlc/studio"
+  }
+}
