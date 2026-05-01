@@ -43,6 +43,8 @@ export default function StudentDashboard() {
   const [notifOpen, setNotifOpen] = useState(false);
 
   const token = localStorage.getItem("token");
+  const isProfileApproved = profileStatus.status === "approved";
+  const lockedTabs = ["fees", "documents", "performance"];
 
   // ---------- LOGOUT ----------
   const handleLogout = () => {
@@ -53,6 +55,16 @@ export default function StudentDashboard() {
 
   // Close sidebar after clicking a menu item (for mobile)
   const handleMenuClick = (tab) => {
+    if (lockedTabs.includes(tab) && !isProfileApproved) {
+      setActiveTab("home");
+      setHomeError(
+        profileStatus.status === "rejected"
+          ? "Your profile was rejected. Please correct your profile and resubmit it before using this section."
+          : "Your profile must be approved by admin before you can use this section."
+      );
+      return;
+    }
+
     setActiveTab(tab);
     if (window.innerWidth <= 768) {
       setSidebarOpen(false);
@@ -118,6 +130,15 @@ export default function StudentDashboard() {
       ? "status-badge rejected"
       : "status-badge pending";
 
+  const handleProfileSubmitted = () => {
+    setProfileStatus({
+      status: "pending",
+      message: "Your profile corrections have been submitted for admin review.",
+      rejectionReason: null,
+    });
+    setActiveTab("profile");
+  };
+
   // ---------- MAIN UI ----------
   return (
     <div className="dashboard-layout">
@@ -137,7 +158,9 @@ export default function StudentDashboard() {
             👤 My Profile
           </li>
           <li
-            className={activeTab === "fees" ? "active" : ""}
+            className={`${activeTab === "fees" ? "active" : ""} ${
+              !isProfileApproved ? "locked" : ""
+            }`}
             onClick={() => handleMenuClick("fees")}
 
           
@@ -145,7 +168,9 @@ export default function StudentDashboard() {
            💰 Fees Application
           </li>
           <li
-            className={activeTab === "documents" ? "active" : ""}
+            className={`${activeTab === "documents" ? "active" : ""} ${
+              !isProfileApproved ? "locked" : ""
+            }`}
             onClick={() => handleMenuClick("documents")}
           >
             📄 Academic Documents
@@ -302,7 +327,8 @@ export default function StudentDashboard() {
 
                     <button
                       className="home-card-btn"
-                      onClick={() => setActiveTab("documents")}
+                      disabled={!isProfileApproved}
+                      onClick={() => handleMenuClick("documents")}
                     >
                       Manage Documents
                     </button>
@@ -346,7 +372,8 @@ export default function StudentDashboard() {
                         ✏️ Update Profile
                       </button>
                       <button
-                        onClick={() => setActiveTab("documents")}
+                        onClick={() => handleMenuClick("documents")}
+                        disabled={!isProfileApproved}
                         className="qa-btn"
                       >
                         ⬆️ Upload Documents
@@ -380,14 +407,17 @@ export default function StudentDashboard() {
         )}
 
         {activeTab === "profile" && (
-          <ProfileView setActiveTab={setActiveTab} />
+          <ProfileView setActiveTab={setActiveTab} profileStatus={profileStatus} />
         )}
         {activeTab === "profile-edit" && (
-          <ProfileEdit setActiveTab={setActiveTab} />
+          <ProfileEdit
+            setActiveTab={setActiveTab}
+            onProfileSubmitted={handleProfileSubmitted}
+          />
         )}
-        {activeTab === "documents" && <Documents />}
-        {activeTab === "performance" && <Performance />}
-        {activeTab === "fees" && <FeesApplication/>}
+        {activeTab === "documents" && isProfileApproved && <Documents />}
+        {activeTab === "performance" && isProfileApproved && <Performance />}
+        {activeTab === "fees" && isProfileApproved && <FeesApplication/>}
       </main>
 
       <ChatWidget/>

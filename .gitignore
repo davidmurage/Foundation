@@ -3,3 +3,13 @@ Backend/foundation-backend.tar
 *.tar
 node_modules
 .env
+
+#bmad
+_bmad/
+_bmad-output/
+docs/
+.agents
+.claude
+.cursor
+.github
+.codebuddy

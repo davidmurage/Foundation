@@ -3,10 +3,10 @@
 ========================= */
 .dashboard-container {
   max-width: 720px;
-  margin: 40px auto;
+  margin: 32px auto;
   padding: 24px;
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -14,7 +14,7 @@
 .dashboard-container h2 {
   text-align: center;
   margin-bottom: 24px;
-  color: #1f2937;
+  color: #063b2b;
 }
 
 /* =========================
@@ -43,7 +43,7 @@
 .profile-form button {
   padding: 12px 14px;
   font-size: 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
@@ -51,12 +51,12 @@
 
 .profile-form input:focus,
 .profile-form select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  border-color: #009639;
+  box-shadow: 0 0 0 3px rgba(0, 150, 57, 0.14);
 }
 
 .profile-form button {
-  background: #2563eb;
+  background: #009639;
   color: white;
   border: none;
   cursor: pointer;
@@ -65,7 +65,7 @@
 }
 
 .profile-form button:hover {
-  background: #1d4ed8;
+  background: #087a45;
 }
 
 /* =========================
@@ -82,14 +82,14 @@
   width: 120px;
   height: 120px;
   object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #e5e7eb;
+  border-radius: 8px;
+  border: 3px solid #e8f7ef;
 }
 
 .profile-photo .placeholder {
   width: 120px;
   height: 120px;
-  border-radius: 50%;
+  border-radius: 8px;
   background: #f3f4f6;
   display: flex;
   align-items: center;
@@ -124,7 +124,7 @@
   margin-top: 4px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border-radius: 8px;
   max-height: 220px;
   overflow-y: auto;
   z-index: 50;
@@ -160,7 +160,7 @@
 ========================= */
 @media (max-width: 600px) {
   .dashboard-container {
-    margin: 20px;
+    margin: 0;
     padding: 18px;
   }
 

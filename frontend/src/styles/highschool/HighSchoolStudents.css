@@ -45,7 +45,7 @@
 }
 
 .filters-bar {
-  display: flex;
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
   margin-bottom: 16px;
@@ -78,7 +78,7 @@
   width: 100%;
   overflow-x: auto;
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
@@ -222,7 +222,7 @@
   background: white;
   width: 100%;
   max-width: 500px;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   
@@ -299,10 +299,6 @@
   .hs-main {
     padding: 14px;
   }
-  .filters-bar{
-    display: grid;
-  }
-
   .hs-header h2 {
     font-size: 18px;
   }

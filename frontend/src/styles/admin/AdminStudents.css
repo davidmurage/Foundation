@@ -185,6 +185,31 @@
   background: #c9302c;
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge.approved {
+  background: #e7f7ef;
+  color: #087a3d;
+}
+
+.status-badge.rejected {
+  background: #fdecec;
+  color: #a51e2d;
+}
+
+.status-badge.pending {
+  background: #fff4d6;
+  color: #8a6500;
+}
+
 
 /* ===========================================
    CELL FORMATTING

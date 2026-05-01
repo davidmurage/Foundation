@@ -4,12 +4,13 @@ import { API_URL } from "../../utils/config";
 import "../../styles/student/ProfileEdit.css"
 import ChatWidget from "../../components/ChatWidget";
 
-export default function ProfileEdit({ setActiveTab }) {
+export default function ProfileEdit({ setActiveTab, onProfileSubmitted }) {
   const token = localStorage.getItem("token");
   const [profile, setProfile] = useState({
   admissionNo: "",
   course: "",
   year: "",
+  institutionType: "",
   academicPeriod: "",
   institution: "",
   contact: "",
@@ -30,8 +31,9 @@ export default function ProfileEdit({ setActiveTab }) {
   admissionNo: res.data.admissionNo,
   course: res.data.course,
   year: res.data.year,
+  institutionType: res.data.institutionType || "",
   academicPeriod: res.data.academicPeriod,
-  institution: res.data.institution?._id || "",
+  institution: res.data.institution?._id || res.data.institution || "",
   contact: res.data.contact,
   photo: null,
 });
@@ -66,6 +68,7 @@ export default function ProfileEdit({ setActiveTab }) {
     formData.append("admissionNo", profile.admissionNo);
     formData.append("course", profile.course);
     formData.append("year", profile.year);
+    formData.append("institutionType", profile.institutionType);
     formData.append("academicPeriod", profile.academicPeriod);
     formData.append("institution", profile.institution); // ObjectId ONLY
     formData.append("contact", profile.contact);
@@ -81,8 +84,11 @@ export default function ProfileEdit({ setActiveTab }) {
       },
     });
 
-    setMessage("Profile updated successfully!");
-    setTimeout(() => setActiveTab("profile"), 1000);
+    setMessage("Profile updated and submitted for admin review.");
+    setTimeout(() => {
+      if (onProfileSubmitted) onProfileSubmitted();
+      else setActiveTab("profile");
+    }, 1000);
   } catch (err) {
     setMessage(err.response?.data?.message || "Error updating profile");
   }

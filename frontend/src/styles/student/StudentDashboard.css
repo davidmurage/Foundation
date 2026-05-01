@@ -4,7 +4,7 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background: #f7f9fb;
+  background: #f5f8f6;
   font-family: "Inter", sans-serif;
   position: relative;
 }
@@ -14,7 +14,7 @@
 =========================================================== */
 .sidebar {
   width: 240px;
-  background: #003300;
+  background: linear-gradient(180deg, #063b2b 0%, #07543a 100%);
   color: #fff;
   padding: 25px 18px;
   position: fixed;
@@ -44,7 +44,7 @@
 .sidebar ul li {
   padding: 12px 14px;
   margin-bottom: 6px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   cursor: pointer;
   transition: 0.25s;
@@ -95,7 +95,8 @@
 .dashboard-content {
   flex: 1;
   margin-left: 240px;
-  padding: 25px;
+  padding: 28px;
+  max-width: 1480px;
   transition: 0.3s ease;
 }
 
@@ -235,13 +236,9 @@
 .home-card {
   background: white;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
   transition: 0.25s;
-}
-
-.home-card:hover {
-  transform: translateY(-4px);
 }
 
 .home-card-header {
@@ -306,6 +303,17 @@
 .status-badge.incomplete {
   background: #fff3cd;
   color: #a67c00;
+}
+
+.sidebar li.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.home-card-btn:disabled,
+.qa-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .home-card-note {
@@ -392,7 +400,7 @@
 .info-card {
   background: white;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
 
@@ -407,7 +415,7 @@
 .quick-actions-grid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   margin-bottom: 12px;
 }
 

@@ -5,6 +5,7 @@
 .profile-edit {
   padding: 20px;
   animation: fadeIn 0.3s ease;
+  max-width: 760px;
 }
 
 .profile-edit h2 {
@@ -35,9 +36,10 @@
   gap: 16px;
   background: #ffffff;
   padding: 20px;
-  border-radius: 14px;
+  border-radius: 8px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  max-width: 520px;
+  max-width: 620px;
+  width: 100%;
 }
 
 /* =======================================
@@ -117,7 +119,6 @@
 
 .profile-form button:hover {
   background: #007c30;
-  transform: translateY(-2px);
 }
 
 /* =======================================

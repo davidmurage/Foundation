@@ -8,6 +8,7 @@ import Performance from "../models/Performance.js";
 import StudentProfile from "../models/StudentProfile.js";
 
 import auth, { requireRole } from "../middleware/auth.js";
+import requireApprovedStudentProfile from "../middleware/requireApprovedStudentProfile.js";
 
 import axios from "axios";
 import { toPlainText, extractGpa } from "../utils/transcriptParser.js";
@@ -51,6 +52,7 @@ router.post(
   "/upload",
   auth,
   requireRole("student"),
+  requireApprovedStudentProfile,
   upload.single("document"),
   
   async (req, res) => {
@@ -130,7 +132,7 @@ router.get("/", auth, requireRole("student"), async (req, res) => {
 /* ---------------------------------------------
    DELETE DOCUMENT
 ----------------------------------------------*/
-router.delete("/:id", auth, requireRole("student"), async (req, res) => {
+router.delete("/:id", auth, requireRole("student"), requireApprovedStudentProfile, async (req, res) => {
   try {
     const doc = await StudentDocument.findOneAndDelete({
       _id: req.params.id,

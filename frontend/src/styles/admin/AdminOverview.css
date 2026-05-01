@@ -132,7 +132,7 @@ input:checked + .slider:before {
 .stat-card {
   background: #ffffff;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 8px;
   border-left: 6px solid #006400;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease-in-out;
@@ -142,11 +142,6 @@ input:checked + .slider:before {
   background: #1c1c1c;
   border-left-color: #00b050;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .stat-header {
@@ -222,7 +217,7 @@ input:checked + .slider:before {
 .chart-area {
   background: #ffffff;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
@@ -278,7 +273,7 @@ input:checked + .slider:before {
 .latest-docs-card {
   background: #ffffff;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
 }
@@ -338,7 +333,7 @@ input:checked + .slider:before {
 .institutions-card {
   background: #ffffff;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 

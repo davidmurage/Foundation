@@ -185,6 +185,7 @@ export default function AdminStudents() {
                 <th>Institution</th>
                 <th>Course</th>
                 <th>Year</th>
+                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -209,6 +210,11 @@ export default function AdminStudents() {
                   <td>{r.institution}</td>
                   <td>{r.course}</td>
                   <td>{r.year}</td>
+                  <td>
+                    <span className={`status-badge ${r.status || "pending"}`}>
+                      {r.status || "pending"}
+                    </span>
+                  </td>
 
                   <td className="action-buttons">
                     <Link
@@ -229,7 +235,7 @@ export default function AdminStudents() {
 
               {!rows.length && !loading && (
                 <tr>
-                  <td colSpan={7} style={{ textAlign: "center" }}>
+                  <td colSpan={8} style={{ textAlign: "center" }}>
                     No students found
                   </td>
                 </tr>

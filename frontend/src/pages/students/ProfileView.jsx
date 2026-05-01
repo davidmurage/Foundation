@@ -4,7 +4,7 @@ import { API_URL } from "../../utils/config";
 import "../../styles/student/ProfileView.css";
 import ChatWidget from "../../components/ChatWidget";
 
-export default function ProfileView({ setActiveTab }) {
+export default function ProfileView({ setActiveTab, profileStatus }) {
   const token = localStorage.getItem("token");
   const [profile, setProfile] = useState(null);
 
@@ -33,8 +33,14 @@ export default function ProfileView({ setActiveTab }) {
           <p><strong>academicPeriod:</strong>{profile.academicPeriod}</p>
           <p><strong>Institution:</strong> {profile.institutionName}</p>
           <p><strong>Contact:</strong> {profile.contact}</p>
+          <p><strong>Profile Status:</strong> {profile.status || "pending"}</p>
         </div>
       </div>
+      {profileStatus?.status === "rejected" && profileStatus.rejectionReason && (
+        <div className="profile-feedback">
+          <strong>Correction requested:</strong> {profileStatus.rejectionReason}
+        </div>
+      )}
       <button onClick={() => setActiveTab("profile-edit")}>Edit Profile</button>
 
       <ChatWidget/>

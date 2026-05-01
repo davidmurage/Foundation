@@ -103,6 +103,19 @@
   overflow-y: auto;
 }
 
+.hs-admin-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .hs-admin-form label {
   font-size: 13px;
   margin-top: 10px;
@@ -113,7 +126,7 @@
 .hs-admin-form select {
   width: 100%;
   padding: 10px;
-  margin-top: 4px;
+  margin-top: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
