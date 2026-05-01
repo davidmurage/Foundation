@@ -64,6 +64,11 @@ router.post(
         photo: req.file ? req.file.path : existingProfile?.photo || null,
       };
 
+      if (!existingProfile || existingProfile.status === "rejected") {
+        profileData.status = "pending";
+        profileData.adminFeedback = "";
+      }
+
       // SAVE PROFILE
       const profile = await StudentProfile.findOneAndUpdate(
         { userId: req.user.id },
@@ -137,7 +142,7 @@ router.get(
         message = "Your profile has been approved by the KCB admin team.";
       } else if (status === "rejected") {
         message =
-          profile.rejectionMessage ||
+          profile.adminFeedback ||
           "Your profile was rejected. Please review the feedback and update your details.";
       } else {
         message = "Your profile is awaiting review from the admin team.";
@@ -146,7 +151,7 @@ router.get(
       res.json({
         status,
         message,
-        rejectionReason: profile.rejectionReason || null,
+        rejectionReason: profile.adminFeedback || null,
       });
     } catch (err) {
       console.error("STATUS ERROR:", err);

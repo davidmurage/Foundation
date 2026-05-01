@@ -28,7 +28,9 @@ const [editForm, setEditForm] = useState({
   const [form, setForm] = useState({
     institutionId: "",
     fullName: "",
+    contact: "",
     email: "",
+    schoolContact: "",
     password: "",
     role: "Principal",
   });
@@ -137,7 +139,9 @@ const deleteAdmin = async (id) => {
       setForm({
         institutionId: "",
         fullName: "",
+        contact: "",
         email: "",
+        schoolContact: "",
         password: "",
         role: "Principal",
       });
@@ -352,85 +356,121 @@ useEffect(() => {
         </div>
 
         {/* ================= MODAL ================= */}
-        {modalOpen && (
-          <div className="modal-overlay">
-            <div className="modal modal-scroll">
-              <h3>Create High School Admin</h3>
+{modalOpen && (
+  <div className="modal-overlay">
+    <div className="modal modal-scroll">
+      <h3>Create High School Admin</h3>
 
-              <form onSubmit={submit} className="hs-admin-form">
-                <label>High School</label>
-                <select
-                  value={form.institutionId}
-                  onChange={(e) =>
-                    setForm({ ...form, institutionId: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">Select High School</option>
-                  {schools.map((s) => (
-                    <option key={s._id} value={s._id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
+      <form onSubmit={submit} className="hs-admin-form">
 
-                <label>Full Name</label>
-                <input
-                  type="text"
-                  value={form.fullName}
-                  onChange={(e) =>
-                    setForm({ ...form, fullName: e.target.value })
-                  }
-                  required
-                />
+        <div className="form-group full-width">
+          <label>High School</label>
+          <select
+            value={form.institutionId}
+            onChange={(e) =>
+              setForm({ ...form, institutionId: e.target.value })
+            }
+            required
+          >
+            <option value="">Select High School</option>
+            {schools.map((s) => (
+              <option key={s._id} value={s._id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm({ ...form, email: e.target.value })
-                  }
-                  required
-                />
+        <div className="form-group">
+          <label>Teacher's Full Name</label>
+          <input
+            type="text"
+            value={form.fullName}
+            onChange={(e) =>
+              setForm({ ...form, fullName: e.target.value })
+            }
+            required
+          />
+        </div>
 
-                <label>Password</label>
-                <input
-                  type="password"
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
-                  required
-                />
+        <div className="form-group">
+          <label>Teacher's Contact</label>
+          <input
+            type="text"
+            value={form.contact}
+            onChange={(e) =>
+              setForm({ ...form, contact: e.target.value })
+            }
+            required
+          />
+        </div>
 
-                <label>Role</label>
-                <select
-                  value={form.role}
-                  onChange={(e) =>
-                    setForm({ ...form, role: e.target.value })
-                  }
-                >
-                  <option value="Principal">Principal</option>
-                  <option value="AcademicMaster">Academic Master</option>
-                </select>
+        <div className="form-group">
+          <label>School Email</label>
+          <input
+            type="email"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+            required
+          />
+        </div>
 
-                <div className="modal-actions">
-                  <button type="submit" className="save-btn">
-                    Create
-                  </button>
-                  <button
-                    type="button"
-                    className="cancel-btn"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+        <div className="form-group">
+          <label>School Contact</label>
+          <input
+            type="text"
+            value={form.schoolContact}
+            onChange={(e) =>
+              setForm({ ...form, schoolContact: e.target.value })
+            }
+            required
+          />
+        </div>
+
+        <div className="form-group full-width">
+          <label>Password</label>
+          <input
+            type="password"
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+            required
+          />
+        </div>
+
+        <div className="form-group full-width">
+          <label>Role</label>
+          <select
+            value={form.role}
+            onChange={(e) =>
+              setForm({ ...form, role: e.target.value })
+            }
+          >
+            <option value="Principal">Principal</option>
+            <option value="AcademicMaster">Academic Master</option>
+          </select>
+        </div>
+
+        <div className="modal-actions full-width">
+          <button type="submit" className="save-btn">
+            Create
+          </button>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => setModalOpen(false)}
+          >
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+)}
 
      {/* Modal for Edits */}
         {editModalOpen && (

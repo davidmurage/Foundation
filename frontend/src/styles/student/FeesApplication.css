@@ -3,8 +3,9 @@
   padding: 20px;
   max-width: 1200px;
   margin: auto;
-  font-family: Arial, Helvetica, sans-serif;
   color: #222;
+  background: #ffffff;
+  border-radius: 8px;
 }
 
 /* ================= HEADER ================= */
@@ -29,14 +30,15 @@
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #ddd;
+  border: 1px solid #edf2ef;
   background: #fff;
+  border-radius: 8px;
 }
 
 /* Force horizontal scrolling on small screens */
 .fees-table {
   width: 100%;
-  min-width: 100px; /* IMPORTANT: enables slider */
+  min-width: 980px;
   border-collapse: collapse;
 }
 
@@ -143,7 +145,7 @@
   width: 100%;
   max-width: 480px;
   padding: 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   max-height: 90vh;
   overflow-y: auto;
 }

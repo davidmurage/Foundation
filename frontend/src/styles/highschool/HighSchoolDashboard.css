@@ -5,14 +5,15 @@
 .hs-layout {
   display: flex;
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #f5f8f6;
   margin-left: 300px;
 }
 
 /* Main content */
 .hs-main {
   flex: 1;
-  padding: 24px;
+  padding: 28px;
+  max-width: 1480px;
   transition: padding 0.3s ease;
 }
 
@@ -37,7 +38,7 @@
 .stat-card {
   background: #ffffff;
   padding: 18px;
-  border-radius: 14px;
+  border-radius: 8px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
@@ -60,7 +61,7 @@
 .section-card {
   background: #ffffff;
   padding: 18px;
-  border-radius: 14px;
+  border-radius: 8px;
   margin-bottom: 24px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }

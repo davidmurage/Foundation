@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 
 import auth, { requireRole } from "../middleware/auth.js";
+import requireApprovedStudentProfile from "../middleware/requireApprovedStudentProfile.js";
 import FeeApplication from "../models/FeesApplication.js";
 import Institution from "../models/Institution.js";
 
@@ -42,6 +43,7 @@ router.post(
   "/",
   auth,
   requireRole("student"),
+  requireApprovedStudentProfile,
   upload.fields([
     { name: "feeStructure", maxCount: 1 },
     { name: "feeStatement", maxCount: 1 },
@@ -153,6 +155,7 @@ router.put(
   "/:id/update",
   auth,
   requireRole("student"),
+  requireApprovedStudentProfile,
   upload.fields([
     { name: "feeStructure", maxCount: 1 },
     { name: "feeStatement", maxCount: 1 },
@@ -230,7 +233,7 @@ router.put(
 /* ======================================================
    DELETE APPLICATION (ONLY IF REJECTED)
 ====================================================== */
-router.delete("/:id", auth, requireRole("student"), async (req, res) => {
+router.delete("/:id", auth, requireRole("student"), requireApprovedStudentProfile, async (req, res) => {
   try {
     const app = await FeeApplication.findById(req.params.id);
     if (!app) return res.status(404).json({ message: "Not found" });
@@ -268,7 +271,7 @@ router.delete("/:id", auth, requireRole("student"), async (req, res) => {
 /* ======================================================
    RESUBMIT (NO FILE CHANGE)
 ====================================================== */
-router.put("/:id/resubmit", auth, requireRole("student"), async (req, res) => {
+router.put("/:id/resubmit", auth, requireRole("student"), requireApprovedStudentProfile, async (req, res) => {
   try {
     const app = await FeeApplication.findById(req.params.id);
     if (!app) return res.status(404).json({ message: "Not found" });

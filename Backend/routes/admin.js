@@ -124,6 +124,8 @@ router.get("/students", auth, requireRole("admin"), async (req, res) => {
       course: p.course,
       year: p.year,
       photo: p.photo || null,
+      status: p.status || "pending",
+      adminFeedback: p.adminFeedback || "",
     }));
 
     //SEARCH (client-style but backend-safe)

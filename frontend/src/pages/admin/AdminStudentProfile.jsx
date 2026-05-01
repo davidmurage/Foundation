@@ -80,17 +80,17 @@ export default function AdminStudentProfile() {
                 <b>{student.gender}</b>
               </div>
               <div className="info">
-                <span>Academic Year</span>
+                <span>Year of admission</span>
                 <b>{student.academicYear}</b>
               </div>
               <div className="info">
                 <span>Term</span>
                 <b>{student.term}</b>
               </div>
-              <div className="info">
+              {/*<div className="info">
                 <span>Fees Amount</span>
                 <b>KES {Number(student.feesAmount || 0).toLocaleString()}</b>
-              </div>
+              </div>*/}
             </div>
           </div>
         )}

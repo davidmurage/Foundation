@@ -297,11 +297,11 @@ export default function Documents() {
           {filteredDocs.map((doc) => (
             <tr key={doc._id}>
               {/*<td>{doc.admissionNo}</td>*/}
-              <td>{doc.yearOfStudy}</td>
-              <td>{doc.academicPeriod}</td>
-              <td>{doc.documentType}</td>
-              <td>{new Date(doc.createdAt).toLocaleDateString()}</td>
-              <td>
+              <td data-label="Year">{doc.yearOfStudy}</td>
+              <td data-label="Period">{doc.academicPeriod}</td>
+              <td data-label="Type">{doc.documentType}</td>
+              <td data-label="Uploaded">{new Date(doc.createdAt).toLocaleDateString()}</td>
+              <td data-label="Action">
                 <a href={`${API_URL}${doc.fileUrl}`} target="_blank" rel="noreferrer">
                   View
                 </a>{" "}

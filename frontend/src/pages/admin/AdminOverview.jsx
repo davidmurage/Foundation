@@ -112,7 +112,7 @@ export default function AdminOverview() {
             <div className="stat-subtext">All uploads</div>
           </div>
 
-          <div className="stat-card">
+          {/*<div className="stat-card">
             <div className="stat-header">
               <span className="stat-icon">⭐</span>
               <span className="stat-title">Average GPA</span>
@@ -121,10 +121,10 @@ export default function AdminOverview() {
               {stats?.avgGpa ? Number(stats.avgGpa).toFixed(2) : "N/A"}
             </div>
             <div className="stat-subtext">Performance analysis</div>
-          </div>
+          </div>*/}
         </div>
 
-        {/* ==== GPA CHART ==== */}
+        {/* ==== GPA CHART ==== 
         <div className="chart-area full-width">
           <h3>Average GPA by Year of Study</h3>
 
@@ -141,7 +141,7 @@ export default function AdminOverview() {
               </LineChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </div>*/}
 
         {/* ==== LATEST DOCS ==== */}
         <div className="latest-docs-card">

@@ -70,6 +70,15 @@
   transform: translateY(-2px);
 }
 
+.profile-feedback {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-left: 4px solid #dc3545;
+  background: #fff5f5;
+  color: #7a1d1d;
+  border-radius: 6px;
+}
+
 /* ================================
    RESPONSIVE DESIGN
 ================================ */

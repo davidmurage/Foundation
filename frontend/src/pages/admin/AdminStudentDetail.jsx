@@ -94,6 +94,12 @@ export default function AdminStudentDetail() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      setData((prev) => ({
+        ...prev,
+        profile: prev.profile
+          ? { ...prev.profile, status: "approved", adminFeedback: "" }
+          : prev.profile,
+      }));
       alert("Profile approved successfully.");
     } catch {
       alert("Error approving profile");
@@ -109,14 +115,24 @@ export default function AdminStudentDetail() {
     try {
       await axios.put(
         `${API_URL}/api/student/${userId}/reject`,
-        { message: rejectionMessage },
+        { feedback: rejectionMessage },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      setData((prev) => ({
+        ...prev,
+        profile: prev.profile
+          ? {
+              ...prev.profile,
+              status: "rejected",
+              adminFeedback: rejectionMessage,
+            }
+          : prev.profile,
+      }));
       alert("Profile rejected successfully.");
       setRejectModal(false);
       setRejectionMessage("");
-    } catch {
-      alert("Error rejecting profile");
+    } catch (err) {
+      alert(err.response?.data?.message || "Error rejecting profile");
     }
   };
 
@@ -217,6 +233,10 @@ export default function AdminStudentDetail() {
               <div><strong>Course:</strong> {profile?.course}</div>
               <div><strong>Year:</strong> {profile?.year}</div>
               <div><strong>Institution:</strong> {profile?.institutionName}</div>
+              <div><strong>Status:</strong> {profile?.status || "pending"}</div>
+              {profile?.adminFeedback && (
+                <div><strong>Admin Feedback:</strong> {profile.adminFeedback}</div>
+              )}
             </div>
           </div>
         )}
@@ -386,6 +406,12 @@ export default function AdminStudentDetail() {
         {/* ================= APPROVAL ================= */}
         {activeTab === "approval" && (
           <div className="approval-actions">
+            <div className="approval-status">
+              Current status: <strong>{profile?.status || "pending"}</strong>
+              {profile?.adminFeedback ? (
+                <p>Last rejection reason: {profile.adminFeedback}</p>
+              ) : null}
+            </div>
             <button className="approve-btn" onClick={handleApprove}>
               Approve Profile
             </button>

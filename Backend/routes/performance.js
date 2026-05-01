@@ -1,5 +1,6 @@
 import express from "express";
 import auth, { requireRole } from "../middleware/auth.js";
+import requireApprovedStudentProfile from "../middleware/requireApprovedStudentProfile.js";
 import Performance from "../models/Performance.js";
 import StudentProfile from "../models/StudentProfile.js";
 
@@ -42,7 +43,7 @@ function generateExpected(institutionName = "", year = "1") {
 /**
  * GET /api/performance
  */
-router.get("/", auth, requireRole("student"), async (req, res) => {
+router.get("/", auth, requireRole("student"), requireApprovedStudentProfile, async (req, res) => {
   try {
     const profile = await StudentProfile.findOne({ userId: req.user.id });
 
@@ -131,7 +132,7 @@ const gradeToGpa = { A: 5, B: 4, C: 3, D: 2, E: 1 };
 /**
  * GET yearly performance trend
  */
-router.get("/yearly", auth, requireRole("student"), async (req, res) => {
+router.get("/yearly", auth, requireRole("student"), requireApprovedStudentProfile, async (req, res) => {
   try {
     const profile = await StudentProfile.findOne({ userId: req.user.id });
     if (!profile) return res.json([]);
