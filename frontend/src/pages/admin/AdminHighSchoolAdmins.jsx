@@ -21,13 +21,14 @@ export default function AdminHighSchoolAdmins() {
 
 const [editForm, setEditForm] = useState({
   fullName: "",
+  contact: "",
+  schoolContact: "",
   role: "Principal",
   institutionId: "",
 });
 
   const [form, setForm] = useState({
     institutionId: "",
-    fullName: "",
     contact: "",
     email: "",
     schoolContact: "",
@@ -52,7 +53,7 @@ const [editForm, setEditForm] = useState({
   /* ================= LOAD DATA ================= */
   const loadHighSchools = async () => {
     const res = await axios.get(
-      `${API_URL}/api/institutions?type=HighSchool`,
+      `${API_URL}/api/institutions?scope=highschool`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setSchools(res.data || []);
@@ -79,6 +80,8 @@ const [editForm, setEditForm] = useState({
   setEditingAdmin(admin);
   setEditForm({
     fullName: admin.user.fullName,
+    contact: admin.contact || "",
+    schoolContact: admin.schoolContact || "",
     role: admin.role,
     institutionId: admin.institution._id,
   });
@@ -138,7 +141,6 @@ const deleteAdmin = async (id) => {
       setModalOpen(false);
       setForm({
         institutionId: "",
-        fullName: "",
         contact: "",
         email: "",
         schoolContact: "",
@@ -156,7 +158,6 @@ const deleteAdmin = async (id) => {
   return admins.filter((a) => {
     const searchOk =
       !filters.search ||
-      a.user?.fullName?.toLowerCase().includes(filters.search.toLowerCase()) ||
       a.user?.email?.toLowerCase().includes(filters.search.toLowerCase());
 
     const roleOk = !filters.role || a.role === filters.role;
@@ -204,7 +205,7 @@ useEffect(() => {
         <div className="filters-bar">
   <input
     type="text"
-    placeholder="Search name or email..."
+    placeholder="Search school email..."
     value={filters.search}
     onChange={(e) =>
       setFilters({ ...filters, search: e.target.value })
@@ -268,8 +269,9 @@ useEffect(() => {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Full Name</th>
-                <th>Email</th>
+                <th>School Email</th>
+                <th>Teacher Contact</th>
+                <th>School Contact</th>
                 <th>Role</th>
                 <th>High School</th>
                 <th>Status</th>
@@ -280,8 +282,9 @@ useEffect(() => {
             <tbody>
   {paginatedAdmins.map((a) => (
     <tr key={a._id}>
-      <td>{a.user?.fullName}</td>
       <td>{a.user?.email}</td>
+      <td>{a.contact || "N/A"}</td>
+      <td>{a.schoolContact || "N/A"}</td>
       <td>
         <span className="badge">{a.role}</span>
       </td>
@@ -357,13 +360,23 @@ useEffect(() => {
 
         {/* ================= MODAL ================= */}
 {modalOpen && (
-  <div className="modal-overlay">
-    <div className="modal modal-scroll">
-      <h3>Create High School Admin</h3>
+  <div className="modal-overlay hs-admin-modal-overlay">
+    <div className="modal modal-scroll hs-admin-modal">
+      <div className="modal-header">
+        <h3>Create High School Admin</h3>
+        <button
+          type="button"
+          className="modal-close-btn"
+          onClick={() => setModalOpen(false)}
+          aria-label="Close"
+        >
+          x
+        </button>
+      </div>
 
       <form onSubmit={submit} className="hs-admin-form">
 
-        <div className="form-group full-width">
+        <div className="form-group full-width school-select-field">
           <label>High School</label>
           <select
             value={form.institutionId}
@@ -371,29 +384,25 @@ useEffect(() => {
               setForm({ ...form, institutionId: e.target.value })
             }
             required
+            disabled={!schools.length}
           >
-            <option value="">Select High School</option>
+            <option value="">
+              {schools.length ? "Select High School" : "No high schools found"}
+            </option>
             {schools.map((s) => (
               <option key={s._id} value={s._id}>
                 {s.name}
               </option>
             ))}
           </select>
+          {!schools.length && (
+            <p className="field-help">
+              Add a high school first, then return here to create its admin.
+            </p>
+          )}
         </div>
 
-        <div className="form-group">
-          <label>Teacher's Full Name</label>
-          <input
-            type="text"
-            value={form.fullName}
-            onChange={(e) =>
-              setForm({ ...form, fullName: e.target.value })
-            }
-            required
-          />
-        </div>
-
-        <div className="form-group">
+        <div className="form-group half-field">
           <label>Teacher's Contact</label>
           <input
             type="text"
@@ -405,7 +414,7 @@ useEffect(() => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group half-field">
           <label>School Email</label>
           <input
             type="email"
@@ -417,7 +426,7 @@ useEffect(() => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group half-field">
           <label>School Contact</label>
           <input
             type="text"
@@ -474,51 +483,89 @@ useEffect(() => {
 
      {/* Modal for Edits */}
         {editModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal modal-scroll">
-      <h3>Edit High School Admin</h3>
+  <div className="modal-overlay hs-admin-modal-overlay">
+    <div className="modal modal-scroll hs-admin-modal hs-admin-edit-modal">
+      <div className="modal-header">
+        <h3>Edit High School Admin</h3>
+        <button
+          type="button"
+          className="modal-close-btn"
+          onClick={() => setEditModalOpen(false)}
+          aria-label="Close"
+        >
+          x
+        </button>
+      </div>
 
       <form onSubmit={submitEdit} className="hs-admin-form">
-        <label>Full Name</label>
-        <input
-          type="text"
-          value={editForm.fullName}
-          onChange={(e) =>
-            setEditForm({ ...editForm, fullName: e.target.value })
-          }
-          required
-        />
+        <div className="form-group full-width">
+          <label>Full Name</label>
+          <input
+            type="text"
+            value={editForm.fullName}
+            onChange={(e) =>
+              setEditForm({ ...editForm, fullName: e.target.value })
+            }
+            required
+          />
+        </div>
 
-        <label>Role</label>
-        <select
-          value={editForm.role}
-          onChange={(e) =>
-            setEditForm({ ...editForm, role: e.target.value })
-          }
-        >
-          <option value="Principal">Principal</option>
-          <option value="AcademicMaster">Academic Master</option>
-        </select>
+        <div className="form-group">
+          <label>Teacher's Contact</label>
+          <input
+            type="text"
+            value={editForm.contact}
+            onChange={(e) =>
+              setEditForm({ ...editForm, contact: e.target.value })
+            }
+          />
+        </div>
 
-        <label>High School</label>
-        <select
-          value={editForm.institutionId}
-          onChange={(e) =>
-            setEditForm({
-              ...editForm,
-              institutionId: e.target.value,
-            })
-          }
-          required
-        >
-          {schools.map((s) => (
-            <option key={s._id} value={s._id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
+        <div className="form-group">
+          <label>School Contact</label>
+          <input
+            type="text"
+            value={editForm.schoolContact}
+            onChange={(e) =>
+              setEditForm({ ...editForm, schoolContact: e.target.value })
+            }
+          />
+        </div>
 
-        <div className="modal-actions">
+        <div className="form-group">
+          <label>Role</label>
+          <select
+            value={editForm.role}
+            onChange={(e) =>
+              setEditForm({ ...editForm, role: e.target.value })
+            }
+          >
+            <option value="Principal">Principal</option>
+            <option value="AcademicMaster">Academic Master</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>High School</label>
+          <select
+            value={editForm.institutionId}
+            onChange={(e) =>
+              setEditForm({
+                ...editForm,
+                institutionId: e.target.value,
+              })
+            }
+            required
+          >
+            {schools.map((s) => (
+              <option key={s._id} value={s._id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="modal-actions full-width">
           <button type="submit" className="save-btn">
             Save Changes
           </button>

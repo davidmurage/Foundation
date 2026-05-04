@@ -378,3 +378,117 @@
     width: 100%;
   }
 }
+
+/* Scoped popout styling for Add/Edit Institution */
+.institution-modal-overlay {
+  align-items: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.institution-modal {
+  width: min(100%, 620px);
+  max-width: 620px;
+  max-height: calc(100vh - 36px);
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  transform: translateY(10px) scale(0.98);
+}
+
+.institution-modal .modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px;
+  background: #ffffff;
+  border-bottom: 1px solid #edf2ef;
+}
+
+.institution-modal h3 {
+  margin: 0;
+  color: #063b2b;
+}
+
+.modal-close-btn {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: #f3f6f4;
+  color: #344054;
+  font-weight: 700;
+}
+
+.modal-close-btn:hover {
+  background: #e6eee9;
+}
+
+.institution-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  padding: 22px;
+}
+
+.institution-form .form-field-full {
+  grid-column: 1 / -1;
+}
+
+.institution-form label {
+  margin: 0 0 6px;
+}
+
+.institution-form input,
+.institution-form select,
+.institution-form textarea {
+  min-height: 44px;
+}
+
+.institution-form .checkbox-label {
+  min-height: 44px;
+  margin-top: 2px;
+  padding: 10px 12px;
+  background: #f8faf9;
+  border: 1px solid #edf2ef;
+  border-radius: 8px;
+}
+
+.institution-form .checkbox-label input[type="checkbox"] {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin: 0;
+  accent-color: #009639;
+}
+
+.institution-modal .modal-actions {
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+@media (max-width: 560px) {
+  .institution-modal-overlay {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .institution-modal {
+    max-height: calc(100vh - 24px);
+  }
+
+  .institution-modal .modal-header,
+  .institution-form {
+    padding: 16px;
+  }
+
+  .institution-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -292,6 +292,98 @@
   background: #e0e0e0;
 }
 
+/* Scoped Add/Edit Student popout */
+.hs-student-modal-overlay {
+  background: rgba(15, 23, 42, 0.58);
+  padding: 18px;
+  z-index: 9999;
+}
+
+.hs-student-modal {
+  width: min(100%, 760px);
+  max-width: 760px;
+  max-height: calc(100vh - 36px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.hs-student-modal .modal-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px;
+  background: #ffffff;
+  border-bottom: 1px solid #edf2ef;
+}
+
+.hs-student-modal h3 {
+  margin: 0;
+  color: #063b2b;
+  font-size: 20px;
+}
+
+.modal-close-btn {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: #f3f6f4;
+  color: #344054;
+  font-weight: 700;
+}
+
+.modal-close-btn:hover {
+  background: #e6eee9;
+}
+
+.hs-student-modal .hs-student-form {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  padding: 22px;
+}
+
+.hs-student-form .form-field {
+  min-width: 0;
+}
+
+.hs-student-form .form-field-full {
+  grid-column: 1 / -1;
+}
+
+.hs-student-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hs-student-form input,
+.hs-student-form select {
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+}
+
+.hs-student-modal .modal-actions {
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
 /* ===============================
    MOBILE RESPONSIVENESS
 ================================ */
@@ -309,5 +401,31 @@
 
   .modal {
     max-width: 100%;
+  }
+
+  .hs-student-modal-overlay {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .hs-student-modal {
+    max-height: calc(100vh - 24px);
+  }
+
+  .hs-student-modal .modal-header,
+  .hs-student-modal .hs-student-form {
+    padding: 16px;
+  }
+
+  .hs-student-modal .hs-student-form {
+    grid-template-columns: 1fr;
+  }
+
+  .hs-student-modal .modal-actions {
+    flex-direction: column;
+  }
+
+  .hs-student-modal .modal-actions button {
+    width: 100%;
   }
 }
