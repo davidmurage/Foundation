@@ -110,7 +110,14 @@ router.post(
   requireRole("admin"),
   async (req, res) => {
     try {
-      const { fullName, email, password, institutionId, role } = req.body;
+      const {
+        email,
+        password,
+        institutionId,
+        role,
+        contact,
+        schoolContact,
+      } = req.body;
 
       if (!email || !password || !institutionId || !role) {
         return res.status(400).json({ message: "Missing fields" });
@@ -136,7 +143,7 @@ router.post(
       const hashed = await bcrypt.hash(password, 10);
 
       const user = await User.create({
-        fullName,
+        fullName: email,
         email,
         password: hashed,
         role: "highschool_admin",
@@ -146,6 +153,8 @@ router.post(
         user: user._id,
         institution: institution._id,
         role, // Principal | AcademicMaster
+        contact: contact || "",
+        schoolContact: schoolContact || "",
       });
 
       res.status(201).json({
@@ -168,7 +177,7 @@ router.get(
   requireRole("admin"),
   async (req, res) => {
     try {
-      const admins = await HighSchoolAdmin.find({ isActive: true })
+      const admins = await HighSchoolAdmin.find({})
         .populate("user", "fullName email")
         .populate("institution", "name")
         .sort({ createdAt: -1 });
@@ -183,7 +192,7 @@ router.get(
 
 router.put("/admins/:id", auth, requireRole("admin"), async (req, res) => {
   try {
-    const { fullName, role, institutionId } = req.body;
+    const { fullName, role, institutionId, contact, schoolContact } = req.body;
 
     const admin = await HighSchoolAdmin.findById(req.params.id)
       .populate("user");
@@ -199,6 +208,8 @@ router.put("/admins/:id", auth, requireRole("admin"), async (req, res) => {
     // Update admin record
     if (role) admin.role = role;
     if (institutionId) admin.institution = institutionId;
+    if (contact !== undefined) admin.contact = contact;
+    if (schoolContact !== undefined) admin.schoolContact = schoolContact;
 
     await admin.save();
 

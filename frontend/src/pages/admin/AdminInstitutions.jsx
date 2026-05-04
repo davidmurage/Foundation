@@ -387,46 +387,64 @@ useEffect(() => {
 
         {/* Modal */}
         {modalOpen && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>{editMode ? "Edit Institution" : "Add Institution"}</h3>
-
-              <form onSubmit={handleSave}>
-                <label>Name *</label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                />
-
-                <label>Type *</label>
-                <select
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  required
+          <div className="modal-overlay institution-modal-overlay">
+            <div className="modal institution-modal">
+              <div className="modal-header">
+                <h3>{editMode ? "Edit Institution" : "Add Institution"}</h3>
+                <button
+                  type="button"
+                  className="modal-close-btn"
+                  onClick={() => setModalOpen(false)}
+                  aria-label="Close"
                 >
-                  <option value="University">University</option>
-                  <option value="TVET">TVET</option>
-                </select>
+                  x
+                </button>
+              </div>
 
-                <label>County</label>
-                <input
-                  type="text"
-                  value={form.county}
-                  onChange={(e) =>
-                    setForm({ ...form, county: e.target.value })
-                  }
-                />
+              <form onSubmit={handleSave} className="institution-form">
+                <div className="form-field form-field-full">
+                  <label>Name *</label>
+                  <input
+                    type="text"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                  />
+                </div>
 
-                <label>Location / Campus</label>
-                <input
-                  type="text"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
-                />
+                <div className="form-field">
+                  <label>Type *</label>
+                  <select
+                    value={form.type}
+                    onChange={(e) => setForm({ ...form, type: e.target.value })}
+                    required
+                  >
+                    <option value="University">University</option>
+                    <option value="TVET">TVET</option>
+                  </select>
+                </div>
+
+                <div className="form-field">
+                  <label>County</label>
+                  <input
+                    type="text"
+                    value={form.county}
+                    onChange={(e) =>
+                      setForm({ ...form, county: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="form-field form-field-full">
+                  <label>Location / Campus</label>
+                  <input
+                    type="text"
+                    value={form.location}
+                    onChange={(e) =>
+                      setForm({ ...form, location: e.target.value })
+                    }
+                  />
+                </div>
 
                 {/*<label>Institution Code</label>
                 <input
@@ -454,7 +472,7 @@ useEffect(() => {
                   }
                 />*/}
 
-                <label className="checkbox-label">
+                <label className="checkbox-label form-field-full">
                   <input
                     type="checkbox"
                     checked={form.isActive}
@@ -465,7 +483,7 @@ useEffect(() => {
                   <span>Active institution</span>
                 </label>
 
-                <div className="modal-actions">
+                <div className="modal-actions form-field-full">
                   <button type="submit" className="save-btn">
                     Save
                   </button>

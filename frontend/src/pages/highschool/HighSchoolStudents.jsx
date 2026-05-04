@@ -357,129 +357,175 @@ const handleBulkUpload = async (e) => {
 
         {/* MODAL */}
         {modalOpen && (
-          <div className="modal-overlay">
-            <div className="modal modal-scroll">
-              <h3>Add Student</h3>
-
-              <form onSubmit={submit}>
-                <input
-                  placeholder="Full Name"
-                  value={form.fullName}
-                  onChange={(e) =>
-                    setForm({ ...form, fullName: e.target.value })
-                  }
-                  required
-                />
-
-                <input
-                  placeholder="Admission No"
-                  value={form.registrationNo}
-                  onChange={(e) =>
-                    setForm({ ...form, registrationNo: e.target.value })
-                  }
-                />
-
-                <select
-                  value={form.gender}
-                  onChange={(e) =>
-                    setForm({ ...form, gender: e.target.value })
-                  }
-                  required
+          <div className="modal-overlay hs-student-modal-overlay">
+            <div className="modal modal-scroll hs-student-modal">
+              <div className="modal-header">
+                <h3>{editingStudent ? "Edit Student" : "Add Student"}</h3>
+                <button
+                  type="button"
+                  className="modal-close-btn"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setEditingStudent(null);
+                  }}
+                  aria-label="Close"
                 >
-                  <option value="">Gender</option>
-                  <option>Male</option>
-                  <option>Female</option>
-                </select>
+                  x
+                </button>
+              </div>
 
-                <select
-                  value={form.curriculum}
-                  onChange={(e) =>
-                  setForm({ ...form, curriculum: e.target.value, level: "" })
-                  }
-                  required
-                >
-                 <option value="">Education System</option>
-                 <option value="CBE">CBE</option>
-                 <option value="844">8-4-4</option>
-                </select>
+              <form onSubmit={submit} className="hs-student-form">
+                <div className="form-field form-field-full">
+                  <label>Full Name</label>
+                  <input
+                    placeholder="Full Name"
+                    value={form.fullName}
+                    onChange={(e) =>
+                      setForm({ ...form, fullName: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Admission No</label>
+                  <input
+                    placeholder="Admission No"
+                    value={form.registrationNo}
+                    onChange={(e) =>
+                      setForm({ ...form, registrationNo: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Gender</label>
+                  <select
+                    value={form.gender}
+                    onChange={(e) =>
+                      setForm({ ...form, gender: e.target.value })
+                    }
+                    required
+                  >
+                    <option value="">Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                  </select>
+                </div>
+
+                <div className="form-field">
+                  <label>Education System</label>
+                  <select
+                    value={form.curriculum}
+                    onChange={(e) =>
+                    setForm({ ...form, curriculum: e.target.value, level: "" })
+                    }
+                    required
+                  >
+                   <option value="">Education System</option>
+                   <option value="CBE">CBE</option>
+                   <option value="844">8-4-4</option>
+                  </select>
+                </div>
 
                 {form.curriculum === "CBE" ? (
                  <>
-                  <input
-                    placeholder="Assessment No"
-                    value={form.assessmentNo}
-                    onChange={(e) => setForm({ ...form, assessmentNo: e.target.value })}
-                    required />
+                  <div className="form-field">
+                    <label>Assessment No</label>
+                    <input
+                      placeholder="Assessment No"
+                      value={form.assessmentNo}
+                      onChange={(e) => setForm({ ...form, assessmentNo: e.target.value })}
+                      required />
+                  </div>
 
-                  <select
-                      value={form.level}
-                      onChange={(e) => setForm({ ...form, level: e.target.value })}
-                      required
-                  >
-                    <option value="">Grade</option>
-                    <option value="Grade 10">Grade 10</option>
-                    <option value="Grade 11">Grade 11</option>
-                    <option value="Grade 12">Grade 12</option>
-                  </select>
+                  <div className="form-field">
+                    <label>Grade</label>
+                    <select
+                        value={form.level}
+                        onChange={(e) => setForm({ ...form, level: e.target.value })}
+                        required
+                    >
+                      <option value="">Grade</option>
+                      <option value="Grade 10">Grade 10</option>
+                      <option value="Grade 11">Grade 11</option>
+                      <option value="Grade 12">Grade 12</option>
+                    </select>
+                  </div>
                     
                   </>
                  
                   ) : (
                 <>    
-                 <input
-                    placeholder="Index No"
-                    value={form.indexNo}
-                    onChange={(e) => setForm({ ...form, indexNo: e.target.value })}
-                    required
-                 />
-                 <select
-                    value={form.level}
-                    onChange={(e) =>
-                    setForm({ ...form, level: e.target.value })
-                    }
-                     required
-                 >
-                    <option value="">Select Form</option>
-                    <option value="Form 3">Form 3</option>
-                    <option value="Form 4">Form 4</option>
-                 </select>
+                 <div className="form-field">
+                   <label>Index No</label>
+                   <input
+                      placeholder="Index No"
+                      value={form.indexNo}
+                      onChange={(e) => setForm({ ...form, indexNo: e.target.value })}
+                      required
+                   />
+                 </div>
+                 <div className="form-field">
+                   <label>Form</label>
+                   <select
+                      value={form.level}
+                      onChange={(e) =>
+                      setForm({ ...form, level: e.target.value })
+                      }
+                       required
+                   >
+                      <option value="">Select Form</option>
+                      <option value="Form 3">Form 3</option>
+                      <option value="Form 4">Form 4</option>
+                   </select>
+                 </div>
                  </>
                 )}
                 
-                <input
-                  placeholder="Academic Year (e.g 2025)"
-                  value={form.academicYear}
-                  onChange={(e) =>
-                  setForm({ ...form, academicYear: e.target.value })
-                  }
-                  required
-                />
+                <div className="form-field">
+                  <label>Year of Admission</label>
+                  <input
+                    placeholder="Academic Year (e.g 2025)"
+                    value={form.academicYear}
+                    onChange={(e) =>
+                    setForm({ ...form, academicYear: e.target.value })
+                    }
+                    required
+                  />
+                </div>
 
-                <select
-                  value={form.term}
-                  onChange={(e) =>
-                  setForm({ ...form, term: e.target.value })
-                  }
+                <div className="form-field">
+                  <label>Term</label>
+                  <select
+                    value={form.term}
+                    onChange={(e) =>
+                    setForm({ ...form, term: e.target.value })
+                    }
+                     required
+                  >
+                     <option value="">Select Term</option>
+                     <option value="Term 1">Term 1</option>
+                     <option value="Term 2">Term 2</option>
+                     <option value="Term 3">Term 3</option>
+                  </select>
+                </div>
+
+
+                <div className="form-field form-field-full">
+                  <label>Fees Amount (KES)</label>
+                  <input
+                    type="number"
+                    placeholder="Fees Amount (KES)"
+                    value={form.feesAmount}
+                    onChange={(e) =>
+                    setForm({ ...form, feesAmount: e.target.value })
+                    }
                    required
-                >
-                   <option value="">Select Term</option>
-                   <option value="Term 1">Term 1</option>
-                   <option value="Term 2">Term 2</option>
-                   <option value="Term 3">Term 3</option>
-                </select>
+                  />
+                </div>
 
-
-                <input
-                  type="number"
-                  placeholder="Fees Amount (KES)"
-                  value={form.feesAmount}
-                  onChange={(e) =>
-                  setForm({ ...form, feesAmount: e.target.value })
-                  }
-                 required
-                />
-
-                <div className="modal-actions">
+                <div className="modal-actions form-field-full">
                   <button type="submit">Save</button>
                   <button type="button" onClick={() => setModalOpen(false)}>
                     Cancel

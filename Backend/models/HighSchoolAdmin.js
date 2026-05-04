@@ -21,6 +21,18 @@ const highSchoolAdminSchema = new mongoose.Schema(
       required: true,
     },
 
+    contact: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    schoolContact: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
     isActive: {
       type: Boolean,
       default: true,
