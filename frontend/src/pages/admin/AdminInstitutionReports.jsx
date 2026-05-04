@@ -13,6 +13,7 @@ export default function AdminInstitutionReports() {
      GENERATE REPORT
   ======================= */
   const [type, setType] = useState("");
+  const [scope, setScope] = useState("institution");
   const [institutions, setInstitutions] = useState([]);
   const [institutionId, setInstitutionId] = useState("");
 
@@ -102,7 +103,7 @@ export default function AdminInstitutionReports() {
      GENERATE REPORT
   ======================= */
   const generateReport = async () => {
-    if (!institutionId) return;
+    if (scope === "institution" && !institutionId) return;
 
     setLoadingGenerate(true);
     setMessage("");
@@ -111,7 +112,7 @@ export default function AdminInstitutionReports() {
     try {
       const res = await axios.post(
         `${API_URL}/api/reports/generate`,
-        { institutionId },
+        { scope, institutionId: scope === "institution" ? institutionId : null },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -157,8 +158,43 @@ export default function AdminInstitutionReports() {
   }, [report]);
 
   const renderFinancialPreview = () => {
+    const finance = report?.analysis?.finance;
     const fees = report?.analysis?.fees;
-    if (!fees) return null;
+    if (!finance && !fees) return null;
+
+    if (finance) {
+      const campus = finance.campus || {};
+      const highSchool = finance.highSchool || {};
+      return (
+        <div className="preview-section">
+          <h5>Financial Summary</h5>
+          <div className="preview-grid">
+            <div className="metric">
+              <div className="metric-key">Campus Fee Applications</div>
+              <div className="metric-val">{campus.totalApplications || 0}</div>
+            </div>
+            <div className="metric">
+              <div className="metric-key">Campus Amount Requested</div>
+              <div className="metric-val">
+                KES {Number(campus.amountRequested || 0).toLocaleString()}
+              </div>
+            </div>
+            <div className="metric">
+              <div className="metric-key">High School Expected</div>
+              <div className="metric-val">
+                KES {Number(highSchool.expected || 0).toLocaleString()}
+              </div>
+            </div>
+            <div className="metric">
+              <div className="metric-key">High School Balance</div>
+              <div className="metric-val">
+                KES {Number(highSchool.balance || 0).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     // High School fees
     if ("expected" in fees || "paid" in fees) {
@@ -207,7 +243,7 @@ export default function AdminInstitutionReports() {
      GROUP HISTORY
   ======================= */
   const groupedHistory = useMemo(() => {
-    const g = { University: [], TVET: [], HighSchool: [] };
+    const g = { All: [], Campus: [], University: [], TVET: [], HighSchool: [] };
     history.forEach((r) => {
       if (g[r.institutionType]) g[r.institutionType].push(r);
     });
@@ -231,9 +267,32 @@ export default function AdminInstitutionReports() {
 
           <div className="report-row">
             <div className="field">
+              <label>Report Coverage</label>
+              <select
+                value={scope}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setScope(next);
+                  setReport(null);
+                  setInstitutionId("");
+                  if (next !== "institution") {
+                    setType("");
+                    setInstitutions([]);
+                  }
+                }}
+              >
+                <option value="institution">Single Institution</option>
+                <option value="campus">All University & TVET</option>
+                <option value="highschool">All High Schools</option>
+                <option value="all">Everything</option>
+              </select>
+            </div>
+
+            <div className="field">
               <label>Institution Type</label>
               <select
                 value={type}
+                disabled={scope !== "institution"}
                 onChange={(e) => {
                   setType(e.target.value);
                   loadInstitutions(e.target.value);
@@ -251,10 +310,14 @@ export default function AdminInstitutionReports() {
               <select
                 value={institutionId}
                 onChange={(e) => setInstitutionId(e.target.value)}
-                disabled={!type || loadingInstitutions}
+                disabled={scope !== "institution" || !type || loadingInstitutions}
               >
                 <option value="">
-                  {loadingInstitutions ? "Loading..." : "Select Institution"}
+                  {scope !== "institution"
+                    ? "General report"
+                    : loadingInstitutions
+                    ? "Loading..."
+                    : "Select Institution"}
                 </option>
                 {institutions.map((i) => (
                   <option key={i._id} value={i._id}>
@@ -269,7 +332,7 @@ export default function AdminInstitutionReports() {
               <button
                 className="btn primary"
                 onClick={generateReport}
-                disabled={!institutionId || loadingGenerate}
+                disabled={(scope === "institution" && !institutionId) || loadingGenerate}
               >
                 {loadingGenerate ? "Generating..." : "Generate Report"}
               </button>
@@ -280,7 +343,7 @@ export default function AdminInstitutionReports() {
           {report && (
             <div className="preview">
               <h4>
-                Preview: {report.institution?.name} ({report.institutionType})
+                Preview: {report.analysis?.overview?.title || report.institution?.name} ({report.institutionType})
               </h4>
 
               <div className="preview-section">
@@ -301,10 +364,10 @@ export default function AdminInstitutionReports() {
                 <button className="btn primary" onClick={() => viewReport(report._id)}>
                   View Full Report
                 </button>
-                <button className="btn" onClick={() => downloadPdf(report._id, report.institution?.name)}>
+                <button className="btn" onClick={() => downloadPdf(report._id, report.analysis?.overview?.title || report.institution?.name)}>
                   PDF
                 </button>
-                <button className="btn" onClick={() => downloadExcel(report._id, report.institution?.name)}>
+                <button className="btn" onClick={() => downloadExcel(report._id, report.analysis?.overview?.title || report.institution?.name)}>
                   Excel
                 </button>
               </div>
@@ -316,7 +379,7 @@ export default function AdminInstitutionReports() {
         <section className="card">
           <h3 className="card-title">B) Reports History</h3>
 
-          {["University", "TVET", "HighSchool"].map((k) => (
+          {["All", "Campus", "University", "TVET", "HighSchool"].map((k) => (
             <div key={k} className="history-group">
               <h4 className="group-title">{k === "HighSchool" ? "High Schools" : k}</h4>
               <div className="table-wrap">
@@ -331,7 +394,7 @@ export default function AdminInstitutionReports() {
                   <tbody>
                     {(groupedHistory[k] || []).map((r) => (
                       <tr key={r._id}>
-                        <td>{r.institution?.name}</td>
+                        <td>{r.institution?.name || r.analysis?.overview?.title || "General Report"}</td>
                         <td>{new Date(r.createdAt).toLocaleString()}</td>
                         <td>
                           <button className="btn small" onClick={() => viewReport(r._id)}>View</button>

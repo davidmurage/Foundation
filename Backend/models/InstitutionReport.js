@@ -5,14 +5,21 @@ const InstitutionReportSchema = new mongoose.Schema(
     institution: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Institution",
-      required: true,
+      default: null,
       index: true,
     },
 
     institutionType: {
       type: String,
-      enum: ["University", "TVET", "HighSchool"],
+      enum: ["University", "TVET", "HighSchool", "Campus", "All"],
       required: true,
+      index: true,
+    },
+
+    reportScope: {
+      type: String,
+      enum: ["institution", "campus", "highschool", "all"],
+      default: "institution",
       index: true,
     },
 
