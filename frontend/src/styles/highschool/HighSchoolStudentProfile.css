@@ -217,6 +217,17 @@
   border-color:#0a7c3a;
 }
 
+.modal-form input.readonly-input{
+  background:#f8fafc;
+  color:#374151;
+  border-color:#d1d5db;
+  cursor:not-allowed;
+}
+
+.fee-auto-hint{
+  margin:-2px 0 12px;
+}
+
 /* small screens */
 @media (max-width: 768px){
   .profile-top{

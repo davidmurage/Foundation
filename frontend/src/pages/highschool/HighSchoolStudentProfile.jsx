@@ -151,6 +151,19 @@ const paginatedDocuments = documents.slice(
   docsPage * ITEMS_PER_PAGE
 );
 
+const openAddFee = () => {
+  setEditingFee(null);
+  setFeeForm({
+    academicYear: student.academicYear || "",
+    term: student.term || "Term 1",
+    totalFees: student.feesAmount || "",
+    paidAmount: "",
+    feeStructure: null,
+    feeStatement: null,
+  });
+  setFeeModal(true);
+};
+
 
 
 
@@ -410,7 +423,7 @@ const submitFees = async (e) => {
         {tab === "fees" && (
           <div className="card">
             <h3>💰 Fee Records</h3>
-            <button className="btn" onClick={() => setFeeModal(true)}>
+            <button className="btn" onClick={openAddFee}>
               + Add Fee Record
             </button>
             <div className="table-wrapper">
@@ -672,8 +685,15 @@ const submitFees = async (e) => {
           onChange={(e) =>
             setFeeForm({ ...feeForm, totalFees: e.target.value })
           }
+          readOnly={!editingFee}
+          className={!editingFee ? "readonly-input" : ""}
           required
         />
+        {/*{!editingFee && (
+          <p className="hint fee-auto-hint">
+            Total Fees is fetched from the Overview fee amount.
+          </p>
+        )}*/}
 
         <input
           type="number"
