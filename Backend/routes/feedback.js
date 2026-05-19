@@ -1,6 +1,6 @@
 import express from "express";
 import auth, { requireRole } from "../middleware/auth.js";
-import Feedback from "../models/Feedback.js";
+import Feedback from "../models/FeedBack.js";
 import { upload } from "../utils/upload.js";
 
 const router = express.Router();
