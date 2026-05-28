@@ -6,6 +6,14 @@
   margin-left: 0rem;
 }
 
+.admin-content.admin-student-detail-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
 .admin-tabs {
   display: flex;
   gap: 10px;
@@ -188,6 +196,11 @@
 ================================ */
 
 @media (max-width: 768px) {
+  .admin-content.admin-student-detail-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .admin-student-card {
     flex-direction: column;
     align-items: center;
