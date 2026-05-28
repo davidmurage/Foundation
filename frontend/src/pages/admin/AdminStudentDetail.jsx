@@ -199,7 +199,7 @@ export default function AdminStudentDetail() {
     <div className="admin-layout">
       <AdminSidebar />
 
-      <main className="admin-content">
+      <main className="admin-content admin-student-detail-content">
         <h2>👤 Student Profile</h2>
 
         {/* ================= TABS ================= */}
