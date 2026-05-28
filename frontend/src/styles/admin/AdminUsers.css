@@ -94,6 +94,22 @@
   width: 100%;
   min-width: 420px; /* Reduced to fit tiny screens */
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.admin-users-table th:nth-child(1),
+.admin-users-table td:nth-child(1) {
+  width: 30%;
+}
+
+.admin-users-table th:nth-child(2),
+.admin-users-table td:nth-child(2) {
+  width: 45%;
+}
+
+.admin-users-table th:nth-child(3),
+.admin-users-table td:nth-child(3) {
+  width: 25%;
 }
 
 .admin-users-table th,
@@ -111,7 +127,7 @@
   background: #f3fff3;
   font-weight: 700;
   color: #004d00;
-  padding-left: 0px;
+  text-align: left;
 }
 
 .admin-users-table tr:last-child td {
@@ -130,14 +146,21 @@
    ACTION BUTTONS
 ================================ */
 .actions-cell {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  white-space: nowrap !important;
+}
+
+.actions-cell .edit-btn,
+.actions-cell .delete-btn {
+  margin-right: 6px;
+}
+
+.actions-cell .delete-btn {
+  margin-right: 0;
 }
 
 @media (max-width: 500px) {
   .actions-cell {
-    flex-direction: column;
+    white-space: normal !important;
   }
 
   .edit-btn,
